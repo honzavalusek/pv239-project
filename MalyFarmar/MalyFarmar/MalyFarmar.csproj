@@ -60,8 +60,22 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="AathifMahir.Maui.MauiIcons.Material.Outlined" Version="4.0.0" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <MauiXaml Update="Pages\HomePage.xaml">
+        <SubType>Designer</SubType>
+      </MauiXaml>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Pages\HomePage.xaml.cs">
+        <DependentUpon>MainPage.xaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 
 </Project>
