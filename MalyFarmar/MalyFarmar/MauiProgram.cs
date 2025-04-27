@@ -1,5 +1,4 @@
-﻿using MauiIcons.Material;
-using MauiIcons.Material.Outlined;
+﻿using MauiIcons.Material.Outlined;
 using Microsoft.Extensions.Logging;
 
 namespace MalyFarmar;
