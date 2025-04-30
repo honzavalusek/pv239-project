@@ -9,6 +9,11 @@
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
+      <PackageReference Include="NetTopologySuite" Version="2.6.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Common\Common.csproj" />
     </ItemGroup>
 
     <ItemGroup>

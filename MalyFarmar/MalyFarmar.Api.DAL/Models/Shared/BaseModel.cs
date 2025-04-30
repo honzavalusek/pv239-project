@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace MalyFarmar.Api.DAL.Models;
+namespace MalyFarmar.Api.DAL.Models.Shared;
 
 public abstract class BaseModel
 {

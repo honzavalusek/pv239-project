@@ -1,4 +1,5 @@
 using MalyFarmar.Api.DAL;
+using MalyFarmar.Api.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +12,12 @@ var connectionString = $"Data Source={Path.Combine(basePath, sqliteDbDefaultName
 
 builder.Services.AddDbContext<MalyFarmarDbContext>(options =>
     options
-        .UseSqlite(connectionString, x => x.MigrationsAssembly("MalyFarmar.Api.DAL")));
+        .UseSqlite(
+            connectionString,
+            x => x
+                .UseNetTopologySuite()
+                .MigrationsAssembly("MalyFarmar.Api.DAL")
+            ));
 
 // Add services to the container.
 
