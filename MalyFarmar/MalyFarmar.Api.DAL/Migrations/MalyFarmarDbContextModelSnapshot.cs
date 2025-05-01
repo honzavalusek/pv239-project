@@ -4,7 +4,6 @@ using MalyFarmar.Api.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NetTopologySuite.Geometries;
 
 #nullable disable
 
@@ -16,7 +15,11 @@ namespace MalyFarmar.Api.DAL.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true);
 
             modelBuilder.Entity("MalyFarmar.Api.DAL.Models.Order", b =>
                 {
@@ -181,9 +184,11 @@ namespace MalyFarmar.Api.DAL.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<Point>("Location")
-                        .HasColumnType("POINT")
-                        .HasAnnotation("Sqlite:Srid", 4326);
+                    b.Property<double?>("LocationLatitude")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("LocationLongitude")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()

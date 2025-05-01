@@ -54,7 +54,6 @@ public class Program
                         .UseSqlite(
                             connectionString,
                             x => x
-                                .UseNetTopologySuite()
                                 .MigrationsAssembly("MalyFarmar.Api.DAL")
                         ));
 

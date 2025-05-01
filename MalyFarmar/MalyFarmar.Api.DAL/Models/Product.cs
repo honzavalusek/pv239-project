@@ -37,7 +37,7 @@ public class Product : BaseModel
     public int SellerId { get; set; }
 
     [ForeignKey("SellerId")]
-    public virtual User? Seller { get; set; }
+    public virtual User Seller { get; set; }
 
-    public virtual ICollection<OrderItem>? OrderItems { get; set; } = new List<OrderItem>();
+    public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 }

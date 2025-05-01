@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using NetTopologySuite.Geometries;
 
 #nullable disable
 
@@ -14,9 +13,6 @@ namespace MalyFarmar.Api.DAL.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterDatabase()
-                .Annotation("Sqlite:InitSpatialMetaData", true);
-
             migrationBuilder.CreateTable(
                 name: "OrderStatuses",
                 columns: table => new
@@ -39,8 +35,8 @@ namespace MalyFarmar.Api.DAL.Migrations
                     LastName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
                     PhoneNumber = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
-                    Location = table.Column<Point>(type: "POINT", nullable: true)
-                        .Annotation("Sqlite:Srid", 4326),
+                    LocationLatitude = table.Column<double>(type: "REAL", nullable: true),
+                    LocationLongitude = table.Column<double>(type: "REAL", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },

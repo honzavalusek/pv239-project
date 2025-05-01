@@ -13,16 +13,16 @@ public class Order : BaseModel
     public int BuyerId { get; set; }
 
     [ForeignKey("BuyerId")]
-    public virtual User? Buyer { get; set; }
+    public virtual User Buyer { get; set; }
 
     [Required]
     public OrderStatusEnum StatusId { get; set; }
 
     [ForeignKey("StatusId")]
-    public virtual OrderStatus? Status { get; set; }
+    public virtual OrderStatus Status { get; set; }
 
-    public virtual ICollection<OrderItem>? Items { get; set; } = new List<OrderItem>();
+    public virtual ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
 
     [NotMapped]
-    public decimal TotalPrice => Items?.Sum(i => i.Amount * i.PricePerUnit) ?? 0;
+    public decimal TotalPrice => Items.Sum(i => i.Amount * i.PricePerUnit);
 }

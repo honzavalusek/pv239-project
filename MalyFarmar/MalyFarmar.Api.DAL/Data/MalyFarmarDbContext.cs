@@ -49,10 +49,6 @@ public class MalyFarmarDbContext : DbContext
             .WithMany(p => p.OrderItems)
             .HasForeignKey(oi => oi.ProductId);
 
-        // Set location column type
-        modelBuilder.Entity<User>().Property(c => c.Location)
-            .HasSrid(4326);
-
         // Seed order statuses
         modelBuilder.Entity<OrderStatus>()
             .HasData(new List<OrderStatus>

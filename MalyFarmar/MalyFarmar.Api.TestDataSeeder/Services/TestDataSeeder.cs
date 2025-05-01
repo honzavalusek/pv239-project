@@ -2,7 +2,6 @@ using Common.Enums;
 using MalyFarmar.Api.DAL.Data;
 using MalyFarmar.Api.DAL.Models;
 using Microsoft.EntityFrameworkCore;
-using NetTopologySuite.Geometries;
 
 namespace MalyFarmar.Api.TestDataSeeder.Services;
 
@@ -17,6 +16,9 @@ public class TestDataSeeder : IDataSeeder
 
     public async Task SeedAsync()
     {
+        Console.WriteLine("Deleting Existing Data...");
+        await DeleteExisting();
+
         Console.WriteLine("Seeding Users...");
         await SeedUsersAsync();
 
@@ -25,6 +27,17 @@ public class TestDataSeeder : IDataSeeder
 
         Console.WriteLine("Seeding Orders...");
         await SeedOrdersAsync();
+    }
+
+    private async Task DeleteExisting()
+    {
+        foreach (var tableName in new[] { "OrderItems", "Orders", "Products", "Users" })
+        {
+#pragma warning disable EF1002
+            await _context.Database.ExecuteSqlRawAsync($"DELETE FROM {tableName}");
+            await _context.Database.ExecuteSqlRawAsync($"DELETE FROM sqlite_sequence WHERE name='{tableName}'");
+#pragma warning restore EF1002
+        }
     }
 
     private async Task SeedUsersAsync()
@@ -37,7 +50,8 @@ public class TestDataSeeder : IDataSeeder
                 LastName = "Nováková",
                 Email = "janka.nov@gmail.com",
                 PhoneNumber = "+420 123 456 789",
-                Location = new Point(16.606836, 49.195061) { SRID = 4326 } // Brno
+                LocationLatitude = 49.195061,
+                LocationLongitude = 16.606836,
             },
             new User
             {
@@ -45,7 +59,8 @@ public class TestDataSeeder : IDataSeeder
                 LastName = "Prempl",
                 Email = "peta.p@seznam.cz",
                 PhoneNumber = "+420 987 654 321",
-                Location = new Point(16.612467, 49.191238) { SRID = 4326 } // Brno
+                LocationLatitude = 49.191238,
+                LocationLongitude = 16.612467,
             },
             new User
             {
@@ -53,7 +68,8 @@ public class TestDataSeeder : IDataSeeder
                 LastName = "Procházka",
                 Email = "tomas.prochazka@gmail.com",
                 PhoneNumber = "+420 601 234 567",
-                Location = new Point(16.599743, 49.196824) { SRID = 4326 } // Brno
+                LocationLatitude = 49.196824,
+                LocationLongitude = 16.599743,
             },
             new User
             {
@@ -61,7 +77,8 @@ public class TestDataSeeder : IDataSeeder
                 LastName = "Dvořáková",
                 Email = "lenka.dvorak@seznam.cz",
                 PhoneNumber = "+420 702 345 678",
-                Location = new Point(16.603912, 49.192376) { SRID = 4326 } // Brno
+                LocationLatitude = 49.192376,
+                LocationLongitude = 16.603912,
             },
             new User
             {
@@ -69,7 +86,8 @@ public class TestDataSeeder : IDataSeeder
                 LastName = "Svoboda",
                 Email = "michal.svoboda@email.cz",
                 PhoneNumber = "+420 728 456 789",
-                Location = new Point(16.617584, 49.198247) { SRID = 4326 } // Brno
+                LocationLatitude = 49.198247,
+                LocationLongitude = 16.617584,
             },
             new User
             {
@@ -77,7 +95,8 @@ public class TestDataSeeder : IDataSeeder
                 LastName = "Horáková",
                 Email = "veronika.h@centrum.cz",
                 PhoneNumber = "+420 608 567 890",
-                Location = new Point(16.608953, 49.202183) { SRID = 4326 } // Brno
+                LocationLatitude = 49.202183,
+                LocationLongitude = 16.608953,
             },
             new User
             {
@@ -85,7 +104,8 @@ public class TestDataSeeder : IDataSeeder
                 LastName = "Kučera",
                 Email = "jan.kucera@post.cz",
                 PhoneNumber = "+420 777 678 901",
-                Location = new Point(16.594217, 49.193865) { SRID = 4326 } // Brno
+                LocationLatitude = 49.193865,
+                LocationLongitude = 16.594217,
             },
             new User
             {
@@ -93,7 +113,8 @@ public class TestDataSeeder : IDataSeeder
                 LastName = "Veselá",
                 Email = "marketka.vesela@gmail.com",
                 PhoneNumber = "+420 603 789 012",
-                Location = new Point(17.250879, 49.593778) { SRID = 4326 } // Olomouc
+                LocationLatitude = 49.593778,
+                LocationLongitude = 17.250879,
             },
             new User
             {
@@ -101,7 +122,8 @@ public class TestDataSeeder : IDataSeeder
                 LastName = "Novotný",
                 Email = "david.novotny@seznam.cz",
                 PhoneNumber = "+420 724 890 123",
-                Location = new Point(17.258341, 49.595623) { SRID = 4326 } // Olomouc
+                LocationLatitude = 49.595623,
+                LocationLongitude = 17.258341,
             },
             new User
             {
@@ -109,7 +131,8 @@ public class TestDataSeeder : IDataSeeder
                 LastName = "Marková",
                 Email = "lucie.markova@email.cz",
                 PhoneNumber = "+420 775 901 234",
-                Location = new Point(17.246152, 49.591497) { SRID = 4326 } // Olomouc
+                LocationLatitude = 49.591497,
+                LocationLongitude = 17.246152,
             },
             new User
             {
@@ -117,7 +140,8 @@ public class TestDataSeeder : IDataSeeder
                 LastName = "Černý",
                 Email = "jakub.cerny@centrum.cz",
                 PhoneNumber = "+420 606 012 345",
-                Location = new Point(17.253765, 49.589246) { SRID = 4326 } // Olomouc
+                LocationLatitude = 49.589246,
+                LocationLongitude = 17.253765,
             },
             new User
             {
@@ -125,7 +149,8 @@ public class TestDataSeeder : IDataSeeder
                 LastName = "Šimková",
                 Email = "karolina.simkova@post.cz",
                 PhoneNumber = "+420 731 123 456",
-                Location = new Point(17.242839, 49.596852) { SRID = 4326 } // Olomouc
+                LocationLatitude = 49.596852,
+                LocationLongitude = 17.242839,
             },
             new User
             {
@@ -133,7 +158,8 @@ public class TestDataSeeder : IDataSeeder
                 LastName = "Pospíšil",
                 Email = "martin.pospisil@gmail.com",
                 PhoneNumber = "+420 604 234 567",
-                Location = new Point(14.418540, 50.073658) { SRID = 4326 } // Prague
+                LocationLatitude = 50.073658,
+                LocationLongitude = 14.418540,
             },
             new User
             {
@@ -141,7 +167,8 @@ public class TestDataSeeder : IDataSeeder
                 LastName = "Němcová",
                 Email = "tereza.nemcova@seznam.cz",
                 PhoneNumber = "+420 722 345 678",
-                Location = new Point(14.424678, 50.076231) { SRID = 4326 } // Prague
+                LocationLatitude = 50.076231,
+                LocationLongitude = 14.424678,
             },
             new User
             {
@@ -149,7 +176,8 @@ public class TestDataSeeder : IDataSeeder
                 LastName = "Marek",
                 Email = "filip.marek@email.cz",
                 PhoneNumber = "+420 776 456 789",
-                Location = new Point(14.412396, 50.071042) { SRID = 4326 } // Prague
+                LocationLatitude = 50.071042,
+                LocationLongitude = 14.412396,
             },
             new User
             {
@@ -157,7 +185,8 @@ public class TestDataSeeder : IDataSeeder
                 LastName = "Benešová",
                 Email = "katerina.b@centrum.cz",
                 PhoneNumber = "+420 607 567 890",
-                Location = new Point(14.421853, 50.079724) { SRID = 4326 } // Prague
+                LocationLatitude = 50.079724,
+                LocationLongitude = 14.421853,
             },
             new User
             {
@@ -165,7 +194,8 @@ public class TestDataSeeder : IDataSeeder
                 LastName = "Doležal",
                 Email = "ondrej.dolezal@post.cz",
                 PhoneNumber = "+420 730 678 901",
-                Location = new Point(14.409231, 50.076985) { SRID = 4326 } // Prague
+                LocationLatitude = 50.076985,
+                LocationLongitude = 14.409231,
             }
         };
 
