@@ -82,7 +82,7 @@ public class ProductController : Controller
 
     [HttpPost]
     [Route("create")]
-    public async Task<ActionResult> CreateProduct([FromBody] ProductCreateDto productDto)
+    public async Task<ActionResult> CreateProduct([FromForm] ProductCreateDto productDto)
     {
         if (!ModelState.IsValid)
         {
@@ -97,7 +97,7 @@ public class ProductController : Controller
 
     [HttpPost]
     [Route("{productId:int}/update")]
-    public async Task<ActionResult> UpdateProduct([FromRoute] int productId, [FromBody] ProductCreateDto productDto)
+    public async Task<ActionResult> UpdateProduct([FromRoute] int productId, [FromBody] ProductEditDto productDto)
     {
         if (!ModelState.IsValid)
         {
@@ -122,7 +122,6 @@ public class ProductController : Controller
         product.Name = productDto.Name;
         product.Description = productDto.Description;
         product.TotalAmount = productDto.TotalAmount;
-        product.Unit = productDto.Unit;
         product.PricePerUnit = productDto.PricePerUnit;
         product.UpdatedAt = DateTime.UtcNow;
 
