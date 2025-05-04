@@ -32,6 +32,8 @@ builder.Services.AddSwaggerGen(c =>
             Title = "MalyFarmar API",
             Version = "v1"
         });
+
+        c.CustomOperationIds(e => $"{e.ActionDescriptor.RouteValues["action"]}");
     });
 
 var app = builder.Build();

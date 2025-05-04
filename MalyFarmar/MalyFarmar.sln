@@ -7,9 +7,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MalyFarmar.Api", "MalyFarmar.Api\MalyFarmar.Api.csproj", "{2F67B3E5-3F08-4083-942E-C81DCCC2EEBB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{EEA0CB45-27C3-4E0A-95A8-D2FFD80A399B}"
-	ProjectSection(SolutionItems) = preProject
-		README.md = README.md
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MalyFarmar.Api.DAL", "MalyFarmar.Api.DAL\MalyFarmar.Api.DAL.csproj", "{EB8A3178-B420-459F-9525-82F69A1D33EF}"
 EndProject

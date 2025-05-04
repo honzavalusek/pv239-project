@@ -21,7 +21,7 @@ public class ProductController : Controller
 
     [HttpGet]
     [Route("{productId:int}")]
-    public async Task<IActionResult> GetProduct([FromRoute] int productId)
+    public async Task<ActionResult<ProductDetailViewDto>> GetProduct([FromRoute] int productId)
     {
         var product = await _context.Products
             .FirstOrDefaultAsync(p => p.Id == productId);
@@ -36,7 +36,7 @@ public class ProductController : Controller
 
     [HttpPost]
     [Route("get-products")]
-    public async Task<IActionResult> GetProducts([FromBody] ProductSearchDto searchDto)
+    public async Task<ActionResult<ProductsListDto>> GetProducts([FromBody] ProductSearchDto searchDto)
     {
         if (!ModelState.IsValid)
         {
@@ -68,7 +68,7 @@ public class ProductController : Controller
 
     [HttpGet]
     [Route("get-products-by-seller/{sellerId:int}")]
-    public async Task<IActionResult> GetProductsBySeller([FromRoute] int sellerId)
+    public async Task<ActionResult<ProductsListDto>> GetProductsBySeller([FromRoute] int sellerId)
     {
         var products = await _context.Products
             .Where(p => p.SellerId == sellerId)
@@ -82,7 +82,7 @@ public class ProductController : Controller
 
     [HttpPost]
     [Route("create")]
-    public async Task<IActionResult> CreateProduct([FromBody] ProductCreateDto productDto)
+    public async Task<ActionResult> CreateProduct([FromBody] ProductCreateDto productDto)
     {
         if (!ModelState.IsValid)
         {
@@ -97,7 +97,7 @@ public class ProductController : Controller
 
     [HttpPost]
     [Route("{productId:int}/update")]
-    public async Task<IActionResult> UpdateProduct([FromRoute] int productId, [FromBody] ProductCreateDto productDto)
+    public async Task<ActionResult> UpdateProduct([FromRoute] int productId, [FromBody] ProductCreateDto productDto)
     {
         if (!ModelState.IsValid)
         {
@@ -133,7 +133,7 @@ public class ProductController : Controller
 
     [HttpDelete]
     [Route("{productId:int}")]
-    public async Task<IActionResult> DeleteProduct([FromRoute] int productId)
+    public async Task<ActionResult> DeleteProduct([FromRoute] int productId)
     {
         var product = await _context.Products
             .FirstOrDefaultAsync(p => p.Id == productId);

@@ -39,6 +39,8 @@ public static class OrderMapper
             Seller = entity.Items.First().Product.Seller.MapToViewDto(),
             Buyer = entity.Buyer.MapToViewDto(),
             TotalPrice = entity.TotalPrice,
+            CreatedAt = entity.CreatedAt,
+            UpdatedAt = entity.UpdatedAt
         };
     }
 
@@ -61,6 +63,8 @@ public static class OrderMapper
             PickUpAt = entity.PickUpAt,
             StatusId = entity.StatusId,
             TotalPrice = entity.TotalPrice,
+            CreatedAt = entity.CreatedAt,
+            UpdatedAt = entity.UpdatedAt
         };
     }
 }

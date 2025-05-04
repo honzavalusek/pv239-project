@@ -5,6 +5,7 @@ using MalyFarmar.Api.DTOs.Output;
 using MalyFarmar.Api.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace MalyFarmar.Api.Controllers;
 
@@ -21,7 +22,7 @@ public class OrderController : Controller
 
     [HttpGet]
     [Route("{orderId:int}")]
-    public async Task<IActionResult> GetOrder([FromRoute] int orderId)
+    public async Task<ActionResult<OrderDetailViewDto>> GetOrder([FromRoute] int orderId)
     {
         var order = await _context.Orders
             .FirstOrDefaultAsync(o => o.Id == orderId);
@@ -36,7 +37,7 @@ public class OrderController : Controller
 
 
     [HttpPost]
-    public async Task<IActionResult> CreateOrder([FromBody] OrderCreateDto orderDto)
+    public async Task<ActionResult> CreateOrder([FromBody] OrderCreateDto orderDto)
     {
         if (!ModelState.IsValid)
         {
@@ -52,7 +53,7 @@ public class OrderController : Controller
 
     [HttpPost]
     [Route("{orderId:int}/set-pick-up-date-time")]
-    public async Task<IActionResult> SetPickUpDateTime([FromRoute] int orderId, [FromBody] OrderSetPickUpDateDto pickUpDateDto)
+    public async Task<ActionResult> SetPickUpDateTime([FromRoute] int orderId, [FromBody] OrderSetPickUpDateDto pickUpDateDto)
     {
         if (!ModelState.IsValid)
         {
@@ -77,7 +78,7 @@ public class OrderController : Controller
 
     [HttpPost]
     [Route("{orderId:int}/set-order-completed")]
-    public async Task<IActionResult> SetOrderCompleted([FromRoute] int orderId)
+    public async Task<ActionResult> SetOrderCompleted([FromRoute] int orderId)
     {
         if (!ModelState.IsValid)
         {
@@ -101,13 +102,13 @@ public class OrderController : Controller
 
     [HttpPost]
     [Route("get-orders/{buyerId:int}")]
-    public async Task<IActionResult> GetOrders([FromRoute] int buyerId)
+    public async Task<ActionResult<OrdersListDto>> GetOrders([FromRoute] int buyerId)
     {
         var orders = await _context.Orders
             .Where(o => o.BuyerId == buyerId)
             .ToListAsync();
 
-        return Ok(new OrderListDto
+        return Ok(new OrdersListDto
         {
             Orders = orders.Select(o => o.MapToListViewDto()).ToList()
         });
@@ -115,13 +116,13 @@ public class OrderController : Controller
 
     [HttpPost]
     [Route("ger-reservations/{sellerId:int}")]
-    public async Task<IActionResult> GetReservations([FromRoute] int sellerId)
+    public async Task<ActionResult<OrdersListDto>> GetReservations([FromRoute] int sellerId)
     {
         var orders = await _context.Orders
             .Where(o => o.Items.Any(i => i.Product.SellerId == sellerId))
             .ToListAsync();
 
-        return Ok(new OrderListDto
+        return Ok(new OrdersListDto
         {
             Orders = orders.Select(o => o.MapToListViewDto()).ToList()
         });

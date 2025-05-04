@@ -33,4 +33,16 @@ public static class UserMapper
             LocationLatitude = dto.UserLatitude,
         };
     }
+
+    public static UserListViewDto MapToListViewDto(this User entity)
+    {
+        return new UserListViewDto()
+        {
+            Id = entity.Id,
+            FirstName = entity.FirstName,
+            LastName = entity.LastName,
+            Email = entity.Email,
+            FullName = entity.FullName
+        };
+    }
 }

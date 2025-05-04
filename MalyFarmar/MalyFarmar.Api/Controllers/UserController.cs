@@ -1,7 +1,9 @@
 using MalyFarmar.Api.DAL.Data;
 using MalyFarmar.Api.DTOs.Input;
+using MalyFarmar.Api.DTOs.Output;
 using MalyFarmar.Api.Mappers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MalyFarmar.Api.Controllers;
 
@@ -18,7 +20,7 @@ public class UserController : Controller
 
     [HttpGet]
     [Route("{userId:int}")]
-    public async Task<IActionResult> GetUser([FromRoute] int userId)
+    public async Task<ActionResult<UserViewDto>> GetUser([FromRoute] int userId)
     {
         var user = await _context.Users.FindAsync(userId);
 
@@ -30,8 +32,20 @@ public class UserController : Controller
         return Ok(user.MapToViewDto());
     }
 
+    [HttpGet]
+    [Route("get-all")]
+    public async Task<ActionResult<UsersListDto>> GetAllUsers()
+    {
+        var users = await _context.Users.ToListAsync();
+
+        return Ok(new UsersListDto
+        {
+            Users = users.Select(u => u.MapToListViewDto()).ToList()
+        });
+    }
+
     [HttpPost]
-    public async Task<IActionResult> CreateUser([FromBody] UserCreateDto userDto)
+    public async Task<ActionResult> CreateUser([FromBody] UserCreateDto userDto)
     {
         if (!ModelState.IsValid)
         {
@@ -46,7 +60,7 @@ public class UserController : Controller
 
     [HttpPost]
     [Route("{userId:int}/set-location")]
-    public async Task<IActionResult> SetUserLocation([FromRoute] int userId, [FromBody] UserSetLocationDto userSetLocationDto)
+    public async Task<ActionResult> SetUserLocation([FromRoute] int userId, [FromBody] UserSetLocationDto userSetLocationDto)
     {
         if (!ModelState.IsValid)
         {

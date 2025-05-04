@@ -6,7 +6,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5138",
+      "applicationUrl": "http://0.0.0.0:5138",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DYLD_LIBRARY_PATH": "/opt/homebrew/lib:$DYLD_LIBRARY_PATH"
