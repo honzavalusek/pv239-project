@@ -8,4 +8,5 @@ public class ProductListViewDto
     public string Unit { get; set; }
     public decimal PricePerUnit { get; set; }
     public double? DistanceInMeters { get; set; }
+    public string? ImageUrl { get; set; }
 }

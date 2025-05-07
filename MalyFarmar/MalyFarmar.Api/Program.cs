@@ -38,6 +38,13 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+// Create uploads directory if it doesn't exist
+var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+if (!Directory.Exists(uploadsDir))
+{
+    Directory.CreateDirectory(uploadsDir);
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -47,6 +54,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Enable static files for serving uploaded images
+app.UseStaticFiles();
 
 app.UseAuthorization();
 

@@ -89,7 +89,25 @@ public class ProductController : Controller
             return BadRequest(ModelState);
         }
 
-        _context.Products.Add(productDto.MapToEntity());
+        string? imageUrl = null;
+
+        if (productDto.Image != null && productDto.Image.Length > 0)
+        {
+            // Generate a unique file name
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(productDto.Image.FileName)}";
+            var filePath = Path.Combine("uploads", fileName);
+            var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", filePath);
+            
+            // Save the image
+            using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+                await productDto.Image.CopyToAsync(stream);
+            }
+            
+            imageUrl = $"/uploads/{fileName}";
+        }
+
+        _context.Products.Add(productDto.MapToEntity(imageUrl));
         await _context.SaveChangesAsync();
 
         return Ok();

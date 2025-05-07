@@ -57,7 +57,7 @@ public static class ProductMapper
         };
     }
 
-    public static Product MapToEntity(this ProductCreateDto dto)
+    public static Product MapToEntity(this ProductCreateDto dto, string? imageUrl)
     {
         return new Product
         {
@@ -67,7 +67,8 @@ public static class ProductMapper
             RemainingAmount = dto.TotalAmount,
             Unit = dto.Unit,
             PricePerUnit = dto.PricePerUnit,
-            SellerId = dto.SellerId
+            SellerId = dto.SellerId,
+            ImageUrl = imageUrl
         };
     }
 }

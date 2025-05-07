@@ -13,6 +13,9 @@ public class Product : BaseModel
     [StringLength(1000)]
     public string? Description { get; set; }
 
+    [StringLength(200)]
+    public string? ImageUrl { get; set; }
+
     [Required]
     public decimal TotalAmount { get; set; }
 

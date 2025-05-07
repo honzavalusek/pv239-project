@@ -10,4 +10,5 @@ public class ProductDetailViewDto
     public string Unit { get; set; }
     public decimal PricePerUnit { get; set; }
     public UserViewDto Seller { get; set; }
+    public string? ImageUrl { get; set; }
 }
