@@ -1,22 +1,22 @@
-﻿namespace MalyFarmar.Pages;
+﻿using MalyFarmar.Clients;
+
+namespace MalyFarmar.Pages;
 
 public partial class HomePage : ContentPage
 {
-    int count = 0;
+    private readonly ApiClient _client;
 
-    public HomePage()
+    public HomePage(ApiClient client)
     {
         InitializeComponent();
+        _client = client;
     }
 
-    private void OnCounterClicked(object sender, EventArgs e)
+    private async void OnCounterClicked(object sender, EventArgs e)
     {
-        count++;
+        var response = await _client.GetOrdersAsync(2);
 
-        if (count == 1)
-            CounterBtn.Text = $"Clicked {count} time";
-        else
-            CounterBtn.Text = $"Clicked {count} times";
+        CounterBtn.Text = $"User 2 has {response.Orders.Count} orders";
 
         SemanticScreenReader.Announce(CounterBtn.Text);
     }
