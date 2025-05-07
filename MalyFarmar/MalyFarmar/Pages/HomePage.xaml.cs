@@ -16,7 +16,9 @@ public partial class HomePage : ContentPage
     {
         var response = await _client.GetOrdersAsync(2);
 
-        CounterBtn.Text = $"User 2 has {response.Orders.Count} orders";
+        var user = SecureStorage.Default.GetAsync("CurrentUserId").Result;
+
+        CounterBtn.Text = $"hello {user}, User 2 has {response.Orders.Count} orders";
 
         SemanticScreenReader.Announce(CounterBtn.Text);
     }
