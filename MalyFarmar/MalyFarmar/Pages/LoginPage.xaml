@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MalyFarmar.Pages.LoginPage">
+             xmlns:viewmodels="clr-namespace:MalyFarmar.ViewModels"
+             x:Class="MalyFarmar.Pages.LoginPage"
+             x:DataType="viewmodels:LoginViewModel">
     <ContentPage.Content>
         <StackLayout Padding="20" Spacing="20"
                      VerticalOptions="Center"
@@ -12,11 +14,11 @@
             </StackLayout>
 
             <CollectionView
-                x:Name="UsersCollectionView"
+                ItemsSource="{Binding Users}"
+                SelectedItem="{Binding SelectedUser}"
                 ItemsLayout="HorizontalList"
                 HeightRequest="120"
-                SelectionMode="Single"
-                SelectionChanged="OnUserSelected">
+                SelectionMode="Single">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout Padding="10" Spacing="5" HorizontalOptions="Center" VerticalOptions="Center">
@@ -38,11 +40,11 @@
             </CollectionView>
 
             <Button Text="Sign in"
-                    Clicked="OnSignInClicked"
+                    Command="{Binding SignInCommand}"
                     HorizontalOptions="FillAndExpand" />
 
             <Button Text="Create New User"
-                    Clicked="OnCreateUserClicked"
+                    Command="{Binding CreateUserCommand}"
                     HorizontalOptions="FillAndExpand" />
         </StackLayout>
     </ContentPage.Content>
