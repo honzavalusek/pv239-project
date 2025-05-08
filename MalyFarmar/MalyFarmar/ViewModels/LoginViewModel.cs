@@ -3,59 +3,56 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 using MalyFarmar.Pages;
 using MalyFarmar.Resources.Strings;
 
 namespace MalyFarmar.ViewModels
 {
-    public class LoginViewModel : INotifyPropertyChanged
+    public partial class LoginViewModel : ObservableObject
     {
         private readonly ApiClient _client;
-        private UserListViewDto _selectedUser;
-
-        public event PropertyChangedEventHandler PropertyChanged;
+        private UserListViewDto? _selectedUser;
 
         public ObservableCollection<UserListViewDto> Users { get; private set; }
-
-        public UserListViewDto SelectedUser
+        
+        public UserListViewDto? SelectedUser
         {
             get => _selectedUser;
             set
             {
-                if (_selectedUser != value)
+                if (_selectedUser == value) return;
+                _selectedUser = value;
+                OnPropertyChanged();
+                    
+                if (_selectedUser != null)
                 {
-                    _selectedUser = value;
-                    OnPropertyChanged();
-
-                    if (_selectedUser != null)
-                    {
-                        Preferences.Default.Set("CurrentUserId", _selectedUser.Id.ToString() ?? string.Empty);
-                    }
-                    else
-                    {
-                        Preferences.Default.Remove("CurrentUserId");
-                    }
-
-                    // Refresh SignIn command's can execute status
-                    (SignInCommand as Command)?.ChangeCanExecute();
+                    Preferences.Default.Set("CurrentUserId", _selectedUser.Id.ToString() ?? string.Empty); // todo konstanta místo "CurrentUserId"
                 }
+                else
+                {
+                    Preferences.Default.Remove("CurrentUserId");
+                }
+                    
+                // Refresh SignIn command's can execute status
+                (SignInCommand as Command)?.ChangeCanExecute();
             }
         }
 
-        public ICommand SignInCommand { get; }
+        public ICommand SignInCommand { get; } // todo smazat -> relay command
         public ICommand CreateUserCommand { get; }
 
         public LoginViewModel(ApiClient client)
         {
             _client = client;
             Users = new ObservableCollection<UserListViewDto>();
-
+            
             SignInCommand = new Command(
                 execute: SignInAsync,
                 canExecute: () => SelectedUser != null);
-
+                
             CreateUserCommand = new Command(CreateUserAsync);
-
+            
             _ = LoadUsersAsync();
         }
 
@@ -105,11 +102,6 @@ namespace MalyFarmar.ViewModels
         private void CreateUserAsync()
         {
             Application.Current.MainPage = new CreateUserPage(_client);
-        }
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
