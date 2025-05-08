@@ -45,21 +45,18 @@ public class UserController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult> CreateUser([FromBody] UserCreateDto userDto)
+    [Route("create")]
+    public async Task<ActionResult<UserViewDto>> CreateUser([FromBody] UserCreateDto userDto)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        var userEntity = userDto.MapToEntity();
-        
-        _context.Users.Add(userEntity);
+        var addResult = await _context.Users.AddAsync(userDto.MapToEntity());
         await _context.SaveChangesAsync();
-        
-        var createdUserDto = userEntity.MapToViewDto();
 
-        return CreatedAtAction(nameof(GetUser), new { id = userEntity.Id }, createdUserDto);
+        return Ok(addResult.Entity.MapToViewDto());
     }
 
     [HttpPost]
