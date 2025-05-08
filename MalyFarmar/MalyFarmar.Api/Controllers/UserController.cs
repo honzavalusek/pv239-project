@@ -52,10 +52,14 @@ public class UserController : Controller
             return BadRequest(ModelState);
         }
 
-        _context.Users.Add(userDto.MapToEntity());
+        var userEntity = userDto.MapToEntity();
+        
+        _context.Users.Add(userEntity);
         await _context.SaveChangesAsync();
+        
+        var createdUserDto = userEntity.MapToViewDto();
 
-        return Ok();
+        return CreatedAtAction(nameof(GetUser), new { id = userEntity.Id }, createdUserDto);
     }
 
     [HttpPost]
