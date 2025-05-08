@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:MalyFarmar.ViewModels"
+             xmlns:clients="clr-namespace:MalyFarmar.Clients"
              x:Class="MalyFarmar.Pages.LoginPage"
              x:DataType="viewmodels:LoginViewModel">
     <ContentPage.Content>
@@ -20,7 +21,7 @@
                 HeightRequest="120"
                 SelectionMode="Single">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="clients:UserListViewDto">
                         <StackLayout Padding="10" Spacing="5" HorizontalOptions="Center" VerticalOptions="Center">
                             <Border WidthRequest="70"
                                     HeightRequest="70"
