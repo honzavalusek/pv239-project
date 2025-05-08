@@ -23,13 +23,15 @@
             <Entry Text="{Binding PhoneNumber}" Placeholder="e.g., +420123456789" Keyboard="Telephone" />
             <Label Text="{Binding PhoneNumberError}" TextColor="Red" IsVisible="{Binding PhoneNumberError, Converter={StaticResource StringToBoolConverter}}" />
 
-            <Label Text="Longitude (Optional)" />
-            <Entry Text="{Binding UserLongitude}" Placeholder="e.g., 16.6068" Keyboard="Numeric" />
-            <Label Text="{Binding LongitudeError}" TextColor="Red" IsVisible="{Binding LongitudeError, Converter={StaticResource StringToBoolConverter}}" />
-
-            <Label Text="Latitude (Optional)" />
-            <Entry Text="{Binding UserLatitude}" Placeholder="e.g., 49.1951" Keyboard="Numeric" />
-            <Label Text="{Binding LatitudeError}" TextColor="Red" IsVisible="{Binding LatitudeError, Converter={StaticResource StringToBoolConverter}}" />
+            <Label Text="Device Location (Optional):" FontAttributes="Bold" Margin="0,15,0,0" />
+            <Button Text="Get Current Location" 
+                    Command="{Binding GetLocationCommand}" 
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" 
+                    Margin="0,5,0,0"/>
+            <Label Text="{Binding LocationStatus}" 
+                   IsVisible="{Binding LocationStatus, Converter={StaticResource StringToBoolConverter}}" 
+                   Margin="0,5,0,0"
+                   LineBreakMode="WordWrap"/>
             
             <Button Text="Create Account" Command="{Binding CreateAccountCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" Margin="0,20,0,0" />
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />

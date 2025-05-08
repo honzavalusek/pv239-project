@@ -4,6 +4,9 @@ using Microsoft.Maui.Controls;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Globalization;
+using Microsoft.Maui.Devices.Sensors; // Required for Geolocation
+using Microsoft.Maui.ApplicationModel; // Required for Permissions
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -28,6 +31,10 @@ namespace MalyFarmar.ViewModels
         private string _latitudeError;
         private string _generalError;
         private bool _isBusy;
+        private double? _fetchedLatitude;
+        private double? _fetchedLongitude;
+        private string _locationStatus;
+        private bool _isCheckingLocation;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -38,6 +45,8 @@ namespace MalyFarmar.ViewModels
         public string PhoneNumber { get => _phoneNumber; set => SetProperty(ref _phoneNumber, value); }
         public string UserLongitude { get => _userLongitude; set => SetProperty(ref _userLongitude, value); }
         public string UserLatitude { get => _userLatitude; set => SetProperty(ref _userLatitude, value); }
+        public string LocationStatus { get => _locationStatus; set => SetProperty(ref _locationStatus, value); }
+
 
         // Bindable properties for error labels
         public string FirstNameError { get => _firstNameError; set => SetProperty(ref _firstNameError, value); }
@@ -51,11 +60,75 @@ namespace MalyFarmar.ViewModels
         public bool IsBusy { get => _isBusy; set => SetProperty(ref _isBusy, value); }
 
         public ICommand CreateAccountCommand { get; }
+        
+        public ICommand GetLocationCommand { get; }
 
         public CreateUserViewModel(ApiClient apiClient)
         {
             _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
             CreateAccountCommand = new Command(async () => await OnCreateAccountAsync(), () => !IsBusy);
+            GetLocationCommand = new Command(async () => await OnGetLocationAsync(), () => !IsBusy && !_isCheckingLocation);
+
+        }
+        
+        private CancellationTokenSource _cancelTokenSource;
+        private async Task OnGetLocationAsync()
+        {
+            if (_isCheckingLocation || IsBusy) return; // Already busy with location or general task
+
+            try
+            {
+                _isCheckingLocation = true;
+                IsBusy = true; // Use the general IsBusy or a dedicated one
+                ((Command)GetLocationCommand).ChangeCanExecute(); // Update CanExecute for both commands
+                ((Command)CreateAccountCommand).ChangeCanExecute();
+
+
+                LocationStatus = "Fetching location...";
+                _fetchedLatitude = null; // Reset previous values
+                _fetchedLongitude = null;
+                // Update UI-bound string properties if they are used for display
+                UserLatitude = string.Empty;
+                UserLongitude = string.Empty;
+
+
+                var status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+                if (status != PermissionStatus.Granted)
+                {
+                    status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+                }
+
+                if (status == PermissionStatus.Granted)
+                {
+                    GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
+                    _cancelTokenSource = new CancellationTokenSource();
+                    Location location = await Geolocation.Default.GetLocationAsync(request, _cancelTokenSource.Token);
+
+                    if (location != null)
+                    {
+                        _fetchedLatitude = location.Latitude;
+                        _fetchedLongitude = location.Longitude;
+                        // Update string properties for display (optional, if you have read-only entries for them)
+                        UserLatitude = location.Latitude.ToString("F6", CultureInfo.InvariantCulture); // "F6" for 6 decimal places
+                        UserLongitude = location.Longitude.ToString("F6", CultureInfo.InvariantCulture);
+                        LocationStatus = $"Location acquired: Lat {UserLatitude}, Lon {UserLongitude}";
+                        Console.WriteLine($"Location: Lat: {location.Latitude}, Lon: {location.Longitude}");
+                    }
+                    else { LocationStatus = "Unable to retrieve location."; }
+                }
+                else { LocationStatus = "Location permission denied."; }
+            }
+            catch (FeatureNotSupportedException) { LocationStatus = "Location not supported on this device."; }
+            catch (FeatureNotEnabledException) { LocationStatus = "Location services not enabled on device."; }
+            catch (PermissionException) { LocationStatus = "Location permission not granted."; }
+            catch (Exception ex) { LocationStatus = $"Error: {ex.Message}"; }
+            finally
+            {
+                _isCheckingLocation = false;
+                IsBusy = false;
+                ((Command)GetLocationCommand).ChangeCanExecute();
+                ((Command)CreateAccountCommand).ChangeCanExecute();
+            }
         }
 
         private async Task OnCreateAccountAsync()
@@ -67,18 +140,8 @@ namespace MalyFarmar.ViewModels
 
             IsBusy = true;
             ((Command)CreateAccountCommand).ChangeCanExecute(); // Disable button
-
-            double? longitude = null;
-            if (!string.IsNullOrWhiteSpace(UserLongitude) && double.TryParse(UserLongitude, out double lon))
-            {
-                longitude = lon;
-            }
-
-            double? latitude = null;
-            if (!string.IsNullOrWhiteSpace(UserLatitude) && double.TryParse(UserLatitude, out double lat))
-            {
-                latitude = lat;
-            }
+            ((Command)GetLocationCommand).ChangeCanExecute();
+            
 
             var userCreateDto = new UserCreateDto
             {
@@ -86,8 +149,8 @@ namespace MalyFarmar.ViewModels
                 LastName = LastName.Trim(),
                 Email = Email.Trim(),
                 PhoneNumber = PhoneNumber.Trim(),
-                UserLongitude = longitude,
-                UserLatitude = latitude
+                UserLongitude = _fetchedLongitude,
+                UserLatitude = _fetchedLatitude
             };
 
             try
@@ -100,7 +163,7 @@ namespace MalyFarmar.ViewModels
                 {
                     await Application.Current.MainPage.DisplayAlert("Success", "Account created successfully!", "OK");
                     Preferences.Default.Set("CurrentUserId", createdUser.Id.ToString());
-                    Application.Current.MainPage = new AppShell(); // Or use a navigation service
+                    Application.Current.MainPage = new AppShell(); 
                 }
                 else
                 {
@@ -119,6 +182,7 @@ namespace MalyFarmar.ViewModels
             {
                 IsBusy = false;
                 ((Command)CreateAccountCommand).ChangeCanExecute(); // Re-enable button
+                ((Command)GetLocationCommand).ChangeCanExecute();
             }
         }
 
@@ -139,7 +203,7 @@ namespace MalyFarmar.ViewModels
         private async Task<bool> ValidateInputAsync()
         {
             // Clear previous errors
-            FirstNameError = LastNameError = EmailError = PhoneNumberError = LongitudeError = LatitudeError = GeneralError = null;
+            FirstNameError = LastNameError = EmailError = PhoneNumberError = GeneralError = null;
             bool isValid = true;
 
             if (string.IsNullOrWhiteSpace(FirstName)) { FirstNameError = "First name is required."; isValid = false; }
@@ -148,9 +212,6 @@ namespace MalyFarmar.ViewModels
             else if (!IsValidEmail(Email)) { EmailError = "Please enter a valid email address."; isValid = false; }
             if (string.IsNullOrWhiteSpace(PhoneNumber)) { PhoneNumberError = "Phone number is required."; isValid = false; }
             
-            if (!string.IsNullOrWhiteSpace(UserLongitude) && !double.TryParse(UserLongitude, out _)) { LongitudeError = "Invalid longitude value."; isValid = false; }
-            if (!string.IsNullOrWhiteSpace(UserLatitude) && !double.TryParse(UserLatitude, out _)) { LatitudeError = "Invalid latitude value."; isValid = false; }
-
             if (!isValid && string.IsNullOrEmpty(GeneralError))
             {
                 GeneralError = "Please correct the highlighted fields.";

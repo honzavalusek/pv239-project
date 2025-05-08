@@ -35,5 +35,7 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location to optionally include it in your user profile.</string>
 </dict>
 </plist>
