@@ -142,6 +142,7 @@ public class ProductController : Controller
         product.Name = productDto.Name;
         product.Description = productDto.Description;
         product.TotalAmount = productDto.TotalAmount;
+        product.RemainingAmount = product.TotalAmount - soldAmount;
         product.PricePerUnit = productDto.PricePerUnit;
         product.UpdatedAt = DateTime.UtcNow;
 
