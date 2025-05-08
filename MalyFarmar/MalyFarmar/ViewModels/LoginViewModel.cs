@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using MalyFarmar.Pages;
 
 namespace MalyFarmar.ViewModels
 {
@@ -92,9 +93,9 @@ namespace MalyFarmar.ViewModels
             Application.Current.MainPage = new AppShell();
         }
 
-        private async void CreateUserAsync()
+        private void CreateUserAsync()
         {
-            await Application.Current.MainPage.DisplayAlert("Create User", "TODO Navigate to CreateUserPage.", "OK");
+            Application.Current.MainPage = new CreateUserPage(_client);
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
