@@ -7,6 +7,8 @@
              x:DataType="viewmodels:CreateUserViewModel" Title="Create New Account">
     <ScrollView>
         <VerticalStackLayout Spacing="10" Padding="20">
+            <Image Source="wheat.png" HeightRequest="100" WidthRequest="100" />
+            <Label Text="Malý Farmář" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
             <Label Text="First Name*" />
             <Entry Text="{Binding FirstName}" Placeholder="e.g., Jan" />
             <Label Text="{Binding FirstNameError}" TextColor="Red" IsVisible="{Binding FirstNameError, Converter={StaticResource StringToBoolConverter}}" />
