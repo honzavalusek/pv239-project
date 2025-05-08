@@ -117,7 +117,7 @@ public class ProductController : Controller
 
     [HttpPost]
     [Route("{productId:int}/update")]
-    public async Task<ActionResult> UpdateProduct([FromRoute] int productId, [FromBody] ProductEditDto productDto)
+    public async Task<ActionResult<ProductDetailViewDto>> UpdateProduct([FromRoute] int productId, [FromBody] ProductEditDto productDto)
     {
         if (!ModelState.IsValid)
         {
@@ -147,7 +147,7 @@ public class ProductController : Controller
 
         await _context.SaveChangesAsync();
 
-        return Ok();
+        return Ok(product.MapToDetailViewDto());
     }
 
     [HttpDelete]
