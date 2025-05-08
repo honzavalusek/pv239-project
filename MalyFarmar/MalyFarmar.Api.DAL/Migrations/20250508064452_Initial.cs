@@ -82,6 +82,7 @@ namespace MalyFarmar.Api.DAL.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true),
+                    ImageUrl = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true),
                     TotalAmount = table.Column<decimal>(type: "TEXT", nullable: false),
                     RemainingAmount = table.Column<decimal>(type: "TEXT", nullable: false),
                     Unit = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),

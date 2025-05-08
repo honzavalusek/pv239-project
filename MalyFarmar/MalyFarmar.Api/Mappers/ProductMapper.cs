@@ -18,7 +18,8 @@ public static class ProductMapper
             RemainingAmount = entity.RemainingAmount,
             Unit = entity.Unit,
             PricePerUnit = entity.PricePerUnit,
-            Seller = entity.Seller.MapToViewDto()
+            Seller = entity.Seller.MapToViewDto(),
+            ImageUrl = entity.ImageUrl
         };
     }
 
@@ -53,11 +54,12 @@ public static class ProductMapper
             RemainingAmount = entity.RemainingAmount,
             Unit = entity.Unit,
             PricePerUnit = entity.PricePerUnit,
-            DistanceInMeters = distance
+            DistanceInMeters = distance,
+            ImageUrl = entity.ImageUrl
         };
     }
 
-    public static Product MapToEntity(this ProductCreateDto dto, string? imageUrl)
+    public static Product MapToEntity(this ProductCreateDto dto, string? imageUrl = null)
     {
         return new Product
         {

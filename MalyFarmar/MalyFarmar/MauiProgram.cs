@@ -34,7 +34,7 @@ public static class MauiProgram
         services.AddSingleton<ApiClient>(provider =>
         {
             // TODO: Maybe in the future make this a configurable option
-            var url = "http://192.168.0.49:5138/";
+            var url = "http://localhost:5138/";
             var httpClient = new HttpClient();
 
             return new ApiClient(url, httpClient);
