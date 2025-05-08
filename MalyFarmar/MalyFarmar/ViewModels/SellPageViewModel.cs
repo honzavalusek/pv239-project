@@ -1,15 +1,19 @@
 // ViewModels/SellPageViewModel.cs
-using MalyFarmar.Clients; // Or wherever your ApiClient and DTOs (ProductListViewDto, ProductsListDto) are accessible
+using MalyFarmar.Clients;
+using MalyFarmar.Pages;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Maui.Controls; // For Application.Current.MainPage.DisplayAlert & Preferences
 
 namespace MalyFarmar.ViewModels
 {
-    public class SellPageViewModel : INotifyPropertyChanged
+    public partial class SellPageViewModel : INotifyPropertyChanged
     {
         private readonly ApiClient _apiClient;
         private bool _isBusy;
@@ -29,6 +33,23 @@ namespace MalyFarmar.ViewModels
 
         public ICommand LoadUserProductsCommand { get; }
         public ICommand RefreshCommand { get; }
+        
+        [RelayCommand]
+        private async Task NavigateToCreateProductAsync()
+        {
+            // Navigate to the CreateProductPage route (you'll register this route)
+            await Shell.Current.GoToAsync(nameof(CreateProductPage));
+        }
+        
+        [RelayCommand]
+        async Task GoToProductDetailsAsync(ProductListViewDto? product)
+        {
+            if (product == null)
+                return;
+
+            // Navigate using Shell navigation, passing ProductId as a query parameter
+            await Shell.Current.GoToAsync($"{nameof(ProductDetailPage)}?ProductId={product.Id}");
+        }
 
         public SellPageViewModel(ApiClient apiClient)
         {
