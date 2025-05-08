@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:MalyFarmar.ViewModels"
+             xmlns:clients="clr-namespace:MalyFarmar.Clients"
+             x:Class="MalyFarmar.Pages.LoginPage"
+             x:DataType="viewmodels:LoginViewModel">
+    <ContentPage.Content>
+        <StackLayout Padding="20" Spacing="20"
+                     VerticalOptions="Center"
+                     HorizontalOptions="Center">
+
+            <StackLayout HorizontalOptions="Center"> <Image Source="wheat.png" HeightRequest="100" WidthRequest="100" />
+                <Label Text="Malý Farmář" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+            </StackLayout>
+
+            <CollectionView
+                ItemsSource="{Binding Users}"
+                SelectedItem="{Binding SelectedUser}"
+                ItemsLayout="HorizontalList"
+                HeightRequest="120"
+                SelectionMode="Single">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="clients:UserListViewDto">
+                        <StackLayout Padding="10" Spacing="5" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Border WidthRequest="70"
+                                    HeightRequest="70"
+                                    StrokeShape="RoundRectangle 35,35,35,35"
+                                    BackgroundColor="PeachPuff"
+                                    HorizontalOptions="Center">
+                                <Image Source="user_placeholder.png"
+                                       HeightRequest="70" WidthRequest="70"
+                                       Aspect="AspectFill" />
+                            </Border>
+                            <Label Text="{Binding FullName}"
+                                   FontSize="14"
+                                   HorizontalOptions="Center" />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button Text="Sign in"
+                    Command="{Binding SignInCommand}"
+                    HorizontalOptions="FillAndExpand" />
+
+            <Button Text="Create New User"
+                    Command="{Binding CreateUserCommand}"
+                    HorizontalOptions="FillAndExpand" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
