@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:MalyFarmar.ViewModels"
              xmlns:clients="clr-namespace:MalyFarmar.Clients"
+             xmlns:strings="clr-namespace:MalyFarmar.Resources.Strings"
              x:Class="MalyFarmar.Pages.LoginPage"
              x:DataType="viewmodels:LoginViewModel">
     <ContentPage.Content>
@@ -11,7 +12,7 @@
                      HorizontalOptions="Center">
 
             <StackLayout HorizontalOptions="Center"> <Image Source="wheat.png" HeightRequest="100" WidthRequest="100" />
-                <Label Text="Malý Farmář" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+                <Label Text="{x:Static strings:CommonStrings.AppName}" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
             </StackLayout>
 
             <CollectionView
@@ -40,11 +41,11 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <Button Text="Sign in"
+            <Button Text="{x:Static strings:LoginPageStrings.SignInLabel}"
                     Command="{Binding SignInCommand}"
                     HorizontalOptions="FillAndExpand" />
 
-            <Button Text="Create New User"
+            <Button Text="{x:Static strings:LoginPageStrings.CreateNewUserLabel}"
                     Command="{Binding CreateUserCommand}"
                     HorizontalOptions="FillAndExpand" />
         </StackLayout>

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using MalyFarmar.Pages;
+using MalyFarmar.Resources.Strings;
 
 namespace MalyFarmar.ViewModels
 {
@@ -15,7 +16,7 @@ namespace MalyFarmar.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ObservableCollection<UserListViewDto> Users { get; private set; }
-        
+
         public UserListViewDto SelectedUser
         {
             get => _selectedUser;
@@ -25,7 +26,7 @@ namespace MalyFarmar.ViewModels
                 {
                     _selectedUser = value;
                     OnPropertyChanged();
-                    
+
                     if (_selectedUser != null)
                     {
                         Preferences.Default.Set("CurrentUserId", _selectedUser.Id.ToString() ?? string.Empty);
@@ -34,7 +35,7 @@ namespace MalyFarmar.ViewModels
                     {
                         Preferences.Default.Remove("CurrentUserId");
                     }
-                    
+
                     // Refresh SignIn command's can execute status
                     (SignInCommand as Command)?.ChangeCanExecute();
                 }
@@ -48,13 +49,13 @@ namespace MalyFarmar.ViewModels
         {
             _client = client;
             Users = new ObservableCollection<UserListViewDto>();
-            
+
             SignInCommand = new Command(
                 execute: SignInAsync,
                 canExecute: () => SelectedUser != null);
-                
+
             CreateUserCommand = new Command(CreateUserAsync);
-            
+
             _ = LoadUsersAsync();
         }
 
@@ -75,7 +76,11 @@ namespace MalyFarmar.ViewModels
             }
             catch (Exception ex)
             {
-                await Application.Current.MainPage.DisplayAlert("Error", "Error loading users: " + ex.Message, "OK");
+                await Application.Current.MainPage.DisplayAlert(
+                    LoginPageStrings.ErrorLoadingUsersAlertTitle,
+                    LoginPageStrings.ErrorLoadingUsersAlertDescription + ": " + ex.Message,
+                    CommonStrings.Ok
+                    );
             }
         }
 
@@ -83,7 +88,11 @@ namespace MalyFarmar.ViewModels
         {
             if (SelectedUser == null)
             {
-                await Application.Current.MainPage.DisplayAlert("Select user", "Please tap one of the profiles above first.", "OK");
+                await Application.Current.MainPage.DisplayAlert(
+                    LoginPageStrings.SelectUserAlertTitle,
+                    LoginPageStrings.SelectUserAlertDescription,
+                    CommonStrings.Error
+                    );
                 return;
             }
 

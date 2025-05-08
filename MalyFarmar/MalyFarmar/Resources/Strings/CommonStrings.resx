@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="AppName" xml:space="preserve">
+        <value>Local Harvest</value>
+    </data>
+    <data name="Error" xml:space="preserve">
+        <value>Error</value>
+    </data>
+    <data name="Ok" xml:space="preserve">
+        <value>Ok</value>
+    </data>
+    <data name="Location" xml:space="preserve">
+        <value>Location</value>
+    </data>
+    <data name="LocationAcquiredMessage" xml:space="preserve">
+        <value>Location Acquired</value>
+    </data>
+    <data name="UnableToRetrieveLocationMessage" xml:space="preserve">
+        <value>Unable to retrieve location.</value>
+    </data>
+    <data name="LocationPermissionDeniedMessage" xml:space="preserve">
+        <value>Location permission denied.</value>
+    </data>
+    <data name="Success" xml:space="preserve">
+        <value>Success</value>
+    </data>
+    <data name="LocationServicesNotEnabledMessage" xml:space="preserve">
+        <value>Location services not enabled on device.</value>
+    </data>
+    <data name="LocationPermissionNotGrantedMessage" xml:space="preserve">
+        <value>Location permission not granted.</value>
+    </data>
+    <data name="LocationNotSupportedMessage" xml:space="preserve">
+        <value>Location not supported on this device</value>
+    </data>
+    <data name="ServerErrorMessage" xml:space="preserve">
+        <value>Server error. Please try again later.</value>
+    </data>
+    <data name="InvalidDataMessage" xml:space="preserve">
+        <value>Invalid data submitted. Please check your entries.</value>
+    </data>
+    <data name="ValidationErrorsMessage" xml:space="preserve">
+        <value>Please check your input. The server reported validation errors.</value>
+    </data>
+    <data name="UnexpectedErrorMessage" xml:space="preserve">
+        <value>An unexpected error occurred. Please check your connection and try again.</value>
+    </data>
+</root>

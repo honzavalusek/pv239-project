@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="FirstNameLabel" xml:space="preserve">
+        <value>First Name*</value>
+    </data>
+    <data name="LastNameLabel" xml:space="preserve">
+        <value>Last Name*</value>
+    </data>
+    <data name="EmailLabel" xml:space="preserve">
+        <value>Email*</value>
+    </data>
+    <data name="PhoneNumberLabel" xml:space="preserve">
+        <value>Phone Number*</value>
+    </data>
+    <data name="DeviceLocationLabel" xml:space="preserve">
+        <value>Device Location (Optional):</value>
+    </data>
+    <data name="GetCurrentLocationButtonText" xml:space="preserve">
+        <value>Get Current Location</value>
+    </data>
+    <data name="CreateAccountButtonText" xml:space="preserve">
+        <value>Create Account</value>
+    </data>
+    <data name="PageTitle" xml:space="preserve">
+        <value>Create New Account</value>
+    </data>
+    <data name="FirstNamePlaceholder" xml:space="preserve">
+        <value>e.g., Doe</value>
+    </data>
+    <data name="LastNamePlaceholder" xml:space="preserve">
+        <value>e.g., John</value>
+    </data>
+    <data name="PhoneNumberPlaceholder" xml:space="preserve">
+        <value>e.g., +420123456789</value>
+    </data>
+    <data name="EmailPlaceholder" xml:space="preserve">
+        <value>e.g., john.doe@gmail.com</value>
+    </data>
+    <data name="FirstNameRequiredMessage" xml:space="preserve">
+        <value>First name is required.</value>
+    </data>
+    <data name="LastNameRequiredMessage" xml:space="preserve">
+        <value>Last name is required.</value>
+    </data>
+    <data name="EmailRequiredMessage" xml:space="preserve">
+        <value>Email is required.</value>
+    </data>
+    <data name="PhoneNumberRequiredMessage" xml:space="preserve">
+        <value>Phone number is required.</value>
+    </data>
+    <data name="InvalidEmailMessage" xml:space="preserve">
+        <value>Please enter a valid email address.</value>
+    </data>
+    <data name="CorrectTheHighlightedFieldsMessage" xml:space="preserve">
+        <value>Please correct the highlighted fields.</value>
+    </data>
+    <data name="AccountCreatedAlertDescription" xml:space="preserve">
+        <value>Account created successfully!</value>
+    </data>
+    <data name="FailedToCreateAccountMessage" xml:space="preserve">
+        <value>Failed to create account. Unexpected response from server.</value>
+    </data>
+</root>
