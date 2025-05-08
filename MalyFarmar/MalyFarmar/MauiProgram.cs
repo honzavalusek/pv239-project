@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
 using MalyFarmar.Clients;
+using MalyFarmar.ViewModels;
 
 namespace MalyFarmar;
 
@@ -25,6 +26,12 @@ public static class MauiProgram
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
+        builder.Services.AddTransient<CreateUserViewModel>();
+        builder.Services.AddTransient<LoginViewModel>();
+        builder.Services.AddTransient<ProductDetailViewModel>();
+        builder.Services.AddTransient<SellPageViewModel>();
+        builder.Services.AddTransient<EditProductViewModel>();
+        builder.Services.AddTransient<CreateProductViewModel>();
 
         return builder.Build();
     }
