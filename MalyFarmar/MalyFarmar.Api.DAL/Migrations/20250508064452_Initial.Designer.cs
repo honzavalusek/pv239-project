@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MalyFarmar.Api.DAL.Migrations
 {
     [DbContext(typeof(MalyFarmarDbContext))]
-    [Migration("20250502151700_Initial")]
+    [Migration("20250508064452_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -129,6 +129,10 @@ namespace MalyFarmar.Api.DAL.Migrations
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")

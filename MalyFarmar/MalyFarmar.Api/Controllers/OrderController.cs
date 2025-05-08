@@ -5,7 +5,6 @@ using MalyFarmar.Api.DTOs.Output;
 using MalyFarmar.Api.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace MalyFarmar.Api.Controllers;
 
@@ -37,7 +36,8 @@ public class OrderController : Controller
 
 
     [HttpPost]
-    public async Task<ActionResult> CreateOrder([FromBody] OrderCreateDto orderDto)
+    [Route("create")]
+    public async Task<ActionResult<OrderDetailViewDto>> CreateOrder([FromBody] OrderCreateDto orderDto)
     {
         if (!ModelState.IsValid)
         {
@@ -45,10 +45,21 @@ public class OrderController : Controller
         }
 
         var order = orderDto.MapToEntity();
-        _context.Orders.Add(order);
+
+        var addResult = await _context.Orders.AddAsync(order);
         await _context.SaveChangesAsync();
 
-        return Ok();
+        await addResult.Reference(o => o.Buyer).LoadAsync();
+        await addResult.Collection(o => o.Items).LoadAsync();
+
+        foreach (var item in addResult.Entity.Items)
+        {
+            await _context.Entry(item).Reference(i => i.Product).LoadAsync();
+
+            await _context.Entry(item.Product).Reference(p => p.Seller).LoadAsync();
+        }
+
+        return Ok(addResult.Entity.MapToDetailViewDto());
     }
 
     [HttpPost]

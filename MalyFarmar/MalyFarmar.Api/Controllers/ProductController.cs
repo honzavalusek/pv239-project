@@ -82,7 +82,7 @@ public class ProductController : Controller
 
     [HttpPost]
     [Route("create")]
-    public async Task<ActionResult> CreateProduct([FromForm] ProductCreateDto productDto)
+    public async Task<ActionResult<ProductDetailViewDto>> CreateProduct([FromForm] ProductCreateDto productDto)
     {
         if (!ModelState.IsValid)
         {
@@ -97,20 +97,22 @@ public class ProductController : Controller
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(productDto.Image.FileName)}";
             var filePath = Path.Combine("uploads", fileName);
             var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", filePath);
-            
+
             // Save the image
             using (var stream = new FileStream(fullPath, FileMode.Create))
             {
                 await productDto.Image.CopyToAsync(stream);
             }
-            
+
             imageUrl = $"/uploads/{fileName}";
         }
 
-        _context.Products.Add(productDto.MapToEntity(imageUrl));
+        var addResult = await _context.Products.AddAsync(productDto.MapToEntity(imageUrl));
         await _context.SaveChangesAsync();
 
-        return Ok();
+        await addResult.Reference(p => p.Seller).LoadAsync();
+
+        return Ok(addResult.Entity.MapToDetailViewDto());
     }
 
     [HttpPost]
