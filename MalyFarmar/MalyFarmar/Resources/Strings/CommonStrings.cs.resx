@@ -1,0 +1,59 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="AppName" xml:space="preserve">
+        <value>Malý Farmář</value>
+    </data>
+    <data name="Ok" xml:space="preserve">
+        <value>Ok</value>
+    </data>
+    <data name="Error" xml:space="preserve">
+        <value>Chyba</value>
+    </data>
+    <data name="Location" xml:space="preserve">
+        <value>Poloha</value>
+    </data>
+    <data name="LocationAcquiredMessage" xml:space="preserve">
+        <value>Poloha získána</value>
+    </data>
+    <data name="UnableToRetrieveLocationMessage" xml:space="preserve">
+        <value>Nepodařilo se získat polohu.</value>
+    </data>
+    <data name="LocationPermissionDeniedMessage" xml:space="preserve">
+        <value>Přístup k poloze zamítnut.</value>
+    </data>
+    <data name="Success" xml:space="preserve">
+        <value>Úspěch</value>
+    </data>
+    <data name="LocationServicesNotEnabledMessage" xml:space="preserve">
+        <value>Služby určování polohy nejsou na tomto zařízení povoleny.</value>
+    </data>
+    <data name="LocationPermissionNotGrantedMessage" xml:space="preserve">
+        <value>Přístup k poloze nebyl udělen.</value>
+    </data>
+    <data name="LocationNotSupportedMessage" xml:space="preserve">
+        <value>Určování polohy není na tomto zařízení dostupné.</value>
+    </data>
+    <data name="ServerErrorMessage" xml:space="preserve">
+        <value>Chyba na straně serveru. Zkuste to prosím později.</value>
+    </data>
+    <data name="InvalidDataMessage" xml:space="preserve">
+        <value>Byla poslána nevalidní data. Prosím  zkontrolujte své vstupy.</value>
+    </data>
+    <data name="ValidationErrorsMessage" xml:space="preserve">
+        <value>Prosím zkontrolujte své vstupy. Server hlásí chyby při validaci.</value>
+    </data>
+    <data name="UnexpectedErrorMessage" xml:space="preserve">
+        <value>Nastala neočekávaná chyba. Prosím zkontrolujte své připojení a zkuste to znovu.</value>
+    </data>
+</root>

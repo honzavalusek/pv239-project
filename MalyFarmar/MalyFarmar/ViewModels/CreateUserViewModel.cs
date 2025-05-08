@@ -10,6 +10,7 @@ using Microsoft.Maui.ApplicationModel; // Required for Permissions
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using MalyFarmar.Resources.Strings;
 
 namespace MalyFarmar.ViewModels
 {
@@ -56,11 +57,11 @@ namespace MalyFarmar.ViewModels
         public string LongitudeError { get => _longitudeError; set => SetProperty(ref _longitudeError, value); }
         public string LatitudeError { get => _latitudeError; set => SetProperty(ref _latitudeError, value); }
         public string GeneralError { get => _generalError; set => SetProperty(ref _generalError, value); }
-        
+
         public bool IsBusy { get => _isBusy; set => SetProperty(ref _isBusy, value); }
 
         public ICommand CreateAccountCommand { get; }
-        
+
         public ICommand GetLocationCommand { get; }
 
         public CreateUserViewModel(ApiClient apiClient)
@@ -70,7 +71,7 @@ namespace MalyFarmar.ViewModels
             GetLocationCommand = new Command(async () => await OnGetLocationAsync(), () => !IsBusy && !_isCheckingLocation);
 
         }
-        
+
         private CancellationTokenSource _cancelTokenSource;
         private async Task OnGetLocationAsync()
         {
@@ -111,17 +112,17 @@ namespace MalyFarmar.ViewModels
                         // Update string properties for display (optional, if you have read-only entries for them)
                         UserLatitude = location.Latitude.ToString("F6", CultureInfo.InvariantCulture); // "F6" for 6 decimal places
                         UserLongitude = location.Longitude.ToString("F6", CultureInfo.InvariantCulture);
-                        LocationStatus = $"Location acquired: Lat {UserLatitude}, Lon {UserLongitude}";
+                        LocationStatus = $"{CommonStrings.LocationAcquiredMessage}: Lat {UserLatitude}, Lon {UserLongitude}";
                         Console.WriteLine($"Location: Lat: {location.Latitude}, Lon: {location.Longitude}");
                     }
-                    else { LocationStatus = "Unable to retrieve location."; }
+                    else { LocationStatus = CommonStrings.UnableToRetrieveLocationMessage; }
                 }
-                else { LocationStatus = "Location permission denied."; }
+                else { LocationStatus = CommonStrings.LocationPermissionDeniedMessage; }
             }
-            catch (FeatureNotSupportedException) { LocationStatus = "Location not supported on this device."; }
-            catch (FeatureNotEnabledException) { LocationStatus = "Location services not enabled on device."; }
-            catch (PermissionException) { LocationStatus = "Location permission not granted."; }
-            catch (Exception ex) { LocationStatus = $"Error: {ex.Message}"; }
+            catch (FeatureNotSupportedException) { LocationStatus = CommonStrings.LocationNotSupportedMessage; }
+            catch (FeatureNotEnabledException) { LocationStatus = CommonStrings.LocationServicesNotEnabledMessage; }
+            catch (PermissionException) { LocationStatus = CommonStrings.LocationPermissionNotGrantedMessage; }
+            catch (Exception ex) { LocationStatus = $"{CommonStrings.Error}: {ex.Message}"; }
             finally
             {
                 _isCheckingLocation = false;
@@ -141,7 +142,7 @@ namespace MalyFarmar.ViewModels
             IsBusy = true;
             ((Command)CreateAccountCommand).ChangeCanExecute(); // Disable button
             ((Command)GetLocationCommand).ChangeCanExecute();
-            
+
 
             var userCreateDto = new UserCreateDto
             {
@@ -161,13 +162,13 @@ namespace MalyFarmar.ViewModels
 
                 if (createdUser != null && createdUser.Id > 0)
                 {
-                    await Application.Current.MainPage.DisplayAlert("Success", "Account created successfully!", "OK");
+                    await Application.Current.MainPage.DisplayAlert(CommonStrings.Success, CreateUserPageStrings.AccountCreatedAlertDescription, CommonStrings.Ok);
                     Preferences.Default.Set("CurrentUserId", createdUser.Id.ToString());
-                    Application.Current.MainPage = new AppShell(); 
+                    Application.Current.MainPage = new AppShell();
                 }
                 else
                 {
-                    GeneralError = "Failed to create account. Unexpected response from server.";
+                    GeneralError = CreateUserPageStrings.FailedToCreateAccountMessage;
                 }
             }
             catch (ApiException apiEx)
@@ -176,7 +177,7 @@ namespace MalyFarmar.ViewModels
             }
             catch (Exception ex)
             {
-                GeneralError = "An unexpected error occurred. Please check your connection and try again.";
+                GeneralError = CommonStrings.UnexpectedErrorMessage;
             }
             finally
             {
@@ -193,10 +194,10 @@ namespace MalyFarmar.ViewModels
             if (!string.IsNullOrWhiteSpace(content) && content.Contains("errors")) // Very basic check for ASP.NET Core validation problem details
             {
                 // In a real app, parse the JSON from 'content' to extract specific field errors.
-                return "Please check your input. The server reported validation errors.";
+                return CommonStrings.ValidationErrorsMessage;
             }
-            if (primaryMessage.Contains("400")) return "Invalid data submitted. Please check your entries.";
-            if (primaryMessage.Contains("500")) return "Server error. Please try again later.";
+            if (primaryMessage.Contains("400")) return CommonStrings.InvalidDataMessage;
+            if (primaryMessage.Contains("500")) return CommonStrings.ServerErrorMessage;
             return primaryMessage;
         }
 
@@ -206,15 +207,15 @@ namespace MalyFarmar.ViewModels
             FirstNameError = LastNameError = EmailError = PhoneNumberError = GeneralError = null;
             bool isValid = true;
 
-            if (string.IsNullOrWhiteSpace(FirstName)) { FirstNameError = "First name is required."; isValid = false; }
-            if (string.IsNullOrWhiteSpace(LastName)) { LastNameError = "Last name is required."; isValid = false; }
-            if (string.IsNullOrWhiteSpace(Email)) { EmailError = "Email is required."; isValid = false; }
-            else if (!IsValidEmail(Email)) { EmailError = "Please enter a valid email address."; isValid = false; }
-            if (string.IsNullOrWhiteSpace(PhoneNumber)) { PhoneNumberError = "Phone number is required."; isValid = false; }
-            
+            if (string.IsNullOrWhiteSpace(FirstName)) { FirstNameError = CreateUserPageStrings.FirstNameRequiredMessage; isValid = false; }
+            if (string.IsNullOrWhiteSpace(LastName)) { LastNameError = CreateUserPageStrings.LastNameRequiredMessage; isValid = false; }
+            if (string.IsNullOrWhiteSpace(Email)) { EmailError = CreateUserPageStrings.EmailRequiredMessage; isValid = false; }
+            else if (!IsValidEmail(Email)) { EmailError = CreateUserPageStrings.InvalidEmailMessage; isValid = false; }
+            if (string.IsNullOrWhiteSpace(PhoneNumber)) { PhoneNumberError = CreateUserPageStrings.PhoneNumberRequiredMessage; isValid = false; }
+
             if (!isValid && string.IsNullOrEmpty(GeneralError))
             {
-                GeneralError = "Please correct the highlighted fields.";
+                GeneralError = CreateUserPageStrings.CorrectTheHighlightedFieldsMessage;
             }
             return isValid;
         }

@@ -3,30 +3,31 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:MalyFarmar.ViewModels"
              xmlns:converters="clr-namespace:MalyFarmar.Converters"
+             xmlns:strings="clr-namespace:MalyFarmar.Resources.Strings"
              x:Class="MalyFarmar.Pages.CreateUserPage"
-             x:DataType="viewmodels:CreateUserViewModel" Title="Create New Account">
+             x:DataType="viewmodels:CreateUserViewModel" Title="{x:Static strings:CreateUserPageStrings.PageTitle}">
     <ScrollView>
         <VerticalStackLayout Spacing="10" Padding="20">
             <Image Source="wheat.png" HeightRequest="100" WidthRequest="100" />
-            <Label Text="Malý Farmář" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
-            <Label Text="First Name*" />
-            <Entry Text="{Binding FirstName}" Placeholder="e.g., Jan" />
+            <Label Text="{x:Static strings:CommonStrings.AppName}" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+            <Label Text="{x:Static strings:CreateUserPageStrings.FirstNameLabel}" />
+            <Entry Text="{Binding FirstName}" Placeholder="{x:Static strings:CreateUserPageStrings.FirstNamePlaceholder}" />
             <Label Text="{Binding FirstNameError}" TextColor="Red" IsVisible="{Binding FirstNameError, Converter={StaticResource StringToBoolConverter}}" />
 
-            <Label Text="Last Name*" />
-            <Entry Text="{Binding LastName}" Placeholder="e.g., Novák" />
+            <Label Text="{x:Static strings:CreateUserPageStrings.LastNameLabel}" />
+            <Entry Text="{Binding LastName}" Placeholder="{x:Static strings:CreateUserPageStrings.LastNamePlaceholder}" />
             <Label Text="{Binding LastNameError}" TextColor="Red" IsVisible="{Binding LastNameError, Converter={StaticResource StringToBoolConverter}}" />
 
-            <Label Text="Email*" />
-            <Entry Text="{Binding Email}" Placeholder="e.g., jan.novak@example.com" Keyboard="Email" />
+            <Label Text="{x:Static strings:CreateUserPageStrings.EmailLabel}" />
+            <Entry Text="{Binding Email}" Placeholder="{x:Static strings:CreateUserPageStrings.EmailPlaceholder}" Keyboard="Email" />
             <Label Text="{Binding EmailError}" TextColor="Red" IsVisible="{Binding EmailError, Converter={StaticResource StringToBoolConverter}}" />
 
-            <Label Text="Phone Number*" />
-            <Entry Text="{Binding PhoneNumber}" Placeholder="e.g., +420123456789" Keyboard="Telephone" />
+            <Label Text="{x:Static strings:CreateUserPageStrings.PhoneNumberLabel}" />
+            <Entry Text="{Binding PhoneNumber}" Placeholder="{x:Static strings:CreateUserPageStrings.PhoneNumberPlaceholder}" Keyboard="Telephone" />
             <Label Text="{Binding PhoneNumberError}" TextColor="Red" IsVisible="{Binding PhoneNumberError, Converter={StaticResource StringToBoolConverter}}" />
 
-            <Label Text="Device Location (Optional):" FontAttributes="Bold" Margin="0,15,0,0" />
-            <Button Text="Get Current Location" 
+            <Label Text="{x:Static strings:CreateUserPageStrings.DeviceLocationLabel}" FontAttributes="Bold" Margin="0,15,0,0" />
+            <Button Text="{x:Static strings:CreateUserPageStrings.GetCurrentLocationButtonText}" 
                     Command="{Binding GetLocationCommand}" 
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" 
                     Margin="0,5,0,0"/>
@@ -35,7 +36,7 @@
                    Margin="0,5,0,0"
                    LineBreakMode="WordWrap"/>
             
-            <Button Text="Create Account" Command="{Binding CreateAccountCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" Margin="0,20,0,0" />
+            <Button Text="{x:Static strings:CreateUserPageStrings.CreateAccountButtonText}" Command="{Binding CreateAccountCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" Margin="0,20,0,0" />
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
             <Label Text="{Binding GeneralError}" TextColor="Red" IsVisible="{Binding GeneralError, Converter={StaticResource StringToBoolConverter}}" HorizontalTextAlignment="Center" Margin="0,10,0,0"/>
         </VerticalStackLayout>

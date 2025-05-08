@@ -79,6 +79,54 @@
         <DependentUpon>MainPage.xaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Resources\Texts\AppShellTexts.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>AppShellTexts.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Strings\AppShellStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>AppShellStrings.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Strings\CommonStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>CommonStrings.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Strings\LoginPageStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>LoginPageStrings.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Strings\CreateUserPageStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>CreateUserPageStrings.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\Texts\AppShellTexts.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>AppShellTexts.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Strings\AppShellStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>AppShellStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Strings\CommonStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>CommonStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Strings\LoginPageStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>LoginPageStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Strings\CreateUserPageStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>CreateUserPageStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>
