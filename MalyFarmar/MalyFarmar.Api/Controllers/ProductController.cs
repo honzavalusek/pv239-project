@@ -82,7 +82,7 @@ public class ProductController : Controller
 
     [HttpPost]
     [Route("create")]
-    public async Task<ActionResult<ProductDetailViewDto>> CreateProduct([FromForm] ProductCreateDto productDto)
+    public async Task<ActionResult<ProductDetailViewDto>> CreateProduct([FromBody] ProductCreateDto productDto)
     {
         if (!ModelState.IsValid)
         {

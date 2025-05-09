@@ -405,66 +405,19 @@
         "operationId": "CreateProduct",
         "requestBody": {
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
-                "required": [
-                  "Name",
-                  "PricePerUnit",
-                  "SellerId",
-                  "TotalAmount",
-                  "Unit"
-                ],
-                "type": "object",
-                "properties": {
-                  "Name": {
-                    "type": "string"
-                  },
-                  "Description": {
-                    "type": "string"
-                  },
-                  "TotalAmount": {
-                    "type": "number",
-                    "format": "double"
-                  },
-                  "Unit": {
-                    "type": "string"
-                  },
-                  "PricePerUnit": {
-                    "type": "number",
-                    "format": "double"
-                  },
-                  "SellerId": {
-                    "type": "integer",
-                    "format": "int32"
-                  },
-                  "Image": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
-              },
-              "encoding": {
-                "Name": {
-                  "style": "form"
-                },
-                "Description": {
-                  "style": "form"
-                },
-                "TotalAmount": {
-                  "style": "form"
-                },
-                "Unit": {
-                  "style": "form"
-                },
-                "PricePerUnit": {
-                  "style": "form"
-                },
-                "SellerId": {
-                  "style": "form"
-                },
-                "Image": {
-                  "style": "form"
-                }
+                "$ref": "#/components/schemas/ProductCreateDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductCreateDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductCreateDto"
               }
             }
           }
@@ -891,6 +844,48 @@
             "items": {
               "$ref": "#/components/schemas/OrderListViewDto"
             },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductCreateDto": {
+        "required": [
+          "name",
+          "pricePerUnit",
+          "sellerId",
+          "totalAmount",
+          "unit"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "unit": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "pricePerUnit": {
+            "type": "number",
+            "format": "double"
+          },
+          "sellerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "image": {
+            "type": "string",
+            "format": "binary",
             "nullable": true
           }
         },

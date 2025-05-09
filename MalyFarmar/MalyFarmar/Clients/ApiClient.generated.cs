@@ -885,15 +885,15 @@ namespace MalyFarmar.Clients
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<ProductDetailViewDto> CreateProductAsync(string name, string description, double? totalAmount, string unit, double? pricePerUnit, int? sellerId, FileParameter image)
+        public virtual System.Threading.Tasks.Task<ProductDetailViewDto> CreateProductAsync(ProductCreateDto body)
         {
-            return CreateProductAsync(name, description, totalAmount, unit, pricePerUnit, sellerId, image, System.Threading.CancellationToken.None);
+            return CreateProductAsync(body, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<ProductDetailViewDto> CreateProductAsync(string name, string description, double? totalAmount, string unit, double? pricePerUnit, int? sellerId, FileParameter image, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<ProductDetailViewDto> CreateProductAsync(ProductCreateDto body, System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -901,62 +901,9 @@ namespace MalyFarmar.Clients
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    var boundary_ = System.Guid.NewGuid().ToString();
-                    var content_ = new System.Net.Http.MultipartFormDataContent(boundary_);
-                    content_.Headers.Remove("Content-Type");
-                    content_.Headers.TryAddWithoutValidation("Content-Type", "multipart/form-data; boundary=" + boundary_);
-
-                    if (name == null)
-                        throw new System.ArgumentNullException("name");
-                    else
-                    {
-                        content_.Add(new System.Net.Http.StringContent(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture)), "Name");
-                    }
-
-                    if (description == null)
-                        throw new System.ArgumentNullException("description");
-                    else
-                    {
-                        content_.Add(new System.Net.Http.StringContent(ConvertToString(description, System.Globalization.CultureInfo.InvariantCulture)), "Description");
-                    }
-
-                    if (totalAmount == null)
-                        throw new System.ArgumentNullException("totalAmount");
-                    else
-                    {
-                        content_.Add(new System.Net.Http.StringContent(ConvertToString(totalAmount, System.Globalization.CultureInfo.InvariantCulture)), "TotalAmount");
-                    }
-
-                    if (unit == null)
-                        throw new System.ArgumentNullException("unit");
-                    else
-                    {
-                        content_.Add(new System.Net.Http.StringContent(ConvertToString(unit, System.Globalization.CultureInfo.InvariantCulture)), "Unit");
-                    }
-
-                    if (pricePerUnit == null)
-                        throw new System.ArgumentNullException("pricePerUnit");
-                    else
-                    {
-                        content_.Add(new System.Net.Http.StringContent(ConvertToString(pricePerUnit, System.Globalization.CultureInfo.InvariantCulture)), "PricePerUnit");
-                    }
-
-                    if (sellerId == null)
-                        throw new System.ArgumentNullException("sellerId");
-                    else
-                    {
-                        content_.Add(new System.Net.Http.StringContent(ConvertToString(sellerId, System.Globalization.CultureInfo.InvariantCulture)), "SellerId");
-                    }
-
-                    if (image == null)
-                        throw new System.ArgumentNullException("image");
-                    else
-                    {
-                        var content_image_ = new System.Net.Http.StreamContent(image.Data);
-                        if (!string.IsNullOrEmpty(image.ContentType))
-                            content_image_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse(image.ContentType);
-                        content_.Add(content_image_, "Image", image.FileName ?? "Image");
-                    }
+                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(body, JsonSerializerSettings);
+                    var content_ = new System.Net.Http.StringContent(json_);
+                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
@@ -1667,6 +1614,34 @@ namespace MalyFarmar.Clients
     {
         [Newtonsoft.Json.JsonProperty("orders", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<OrderListViewDto> Orders { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class ProductCreateDto
+    {
+        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Name { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Description { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("totalAmount", Required = Newtonsoft.Json.Required.Always)]
+        public double TotalAmount { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("unit", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Unit { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("pricePerUnit", Required = Newtonsoft.Json.Required.Always)]
+        public double PricePerUnit { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("sellerId", Required = Newtonsoft.Json.Required.Always)]
+        public int SellerId { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("image", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public byte[] Image { get; set; }
 
     }
 
