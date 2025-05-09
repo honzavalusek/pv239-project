@@ -17,34 +17,24 @@ namespace MalyFarmar.ViewModels
     {
         private readonly ApiClient _apiClient;
 
-        // These attributes GENERATE public properties (Name, Description, IsBusy etc.)
-        [ObservableProperty]
-        private string _name;
+        [ObservableProperty] private string _name;
 
-        [ObservableProperty]
-        private string _description;
+        [ObservableProperty] private string _description;
 
-        [ObservableProperty]
-        private string _totalAmountStr;
+        [ObservableProperty] private string _totalAmountStr;
 
-        [ObservableProperty]
-        private string _unit;
+        [ObservableProperty] private string _unit;
 
-        [ObservableProperty]
-        private string _pricePerUnitStr;
+        [ObservableProperty] private string _pricePerUnitStr;
 
-        [ObservableProperty]
-        private FileResult _selectedImageFile;
+        [ObservableProperty] private FileResult? _selectedImageFile;
 
-        [ObservableProperty]
-        private ImageSource _productImageSource;
+        [ObservableProperty] private ImageSource _productImageSource;
 
-        [ObservableProperty]
-        private bool _isBusy;
+        [ObservableProperty] private bool _isBusy;
 
-        [ObservableProperty]
-        private string _errorMessage;
-        
+        [ObservableProperty] private string _errorMessage;
+
         public CreateProductViewModel(ApiClient apiClient)
         {
             _apiClient = apiClient;
@@ -99,34 +89,41 @@ namespace MalyFarmar.ViewModels
                     return;
                 }
 
-                // --- CORRECTION 2: Create FileParameter from FileResult ---
-                FileParameter imageFileParameter = null;
+                byte[] imageBytes = null;
                 if (SelectedImageFile != null)
                 {
                     try
                     {
                         imageStream = await SelectedImageFile.OpenReadAsync();
-                        imageFileParameter = new FileParameter(imageStream, SelectedImageFile.FileName, SelectedImageFile.ContentType);
+                        var memoryStream = new MemoryStream();
+                        await imageStream.CopyToAsync(memoryStream);
+                        imageBytes = memoryStream.ToArray();
                     }
                     catch (Exception ex)
                     {
                         ErrorMessage = $"Error processing image file: {ex.Message}";
                         IsBusy = false;
-                        imageStream?.Dispose();
                         return;
                     }
                 }
 
-                // Call ApiClient with the FileParameter object (it can be null if no image)
-                ProductDetailViewDto createdProduct = await _apiClient.CreateProductAsync(
-                    Name, Description, totalAmount, Unit, pricePerUnit, sellerId,
-                    imageFileParameter // Pass FileParameter
-                );
+                var productCreateDto = new ProductCreateDto
+                {
+                    Name = Name,
+                    Description = Description,
+                    TotalAmount = totalAmount,
+                    Unit = Unit,
+                    PricePerUnit = pricePerUnit,
+                    SellerId = sellerId,
+                    Image = imageBytes
+                };
+                
+                var result = await _apiClient.CreateProductAsync(productCreateDto);
 
-                if (createdProduct != null)
+                if (result != null)
                 {
                     await Application.Current.MainPage.DisplayAlert("Success",
-                        $"Product '{createdProduct.Name}' created!", "OK");
+                        $"Product '{productCreateDto.Name}' created!", "OK");
                     await Shell.Current.GoToAsync("..");
                 }
                 else
