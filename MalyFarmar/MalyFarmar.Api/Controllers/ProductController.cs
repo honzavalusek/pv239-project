@@ -1,3 +1,4 @@
+using System.Drawing;
 using Geolocation;
 using MalyFarmar.Api.DAL.Data;
 using MalyFarmar.Api.DTOs.Input;
@@ -5,6 +6,8 @@ using MalyFarmar.Api.DTOs.Output;
 using MalyFarmar.Api.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
 
 namespace MalyFarmar.Api.Controllers;
 
@@ -93,15 +96,13 @@ public class ProductController : Controller
 
         if (productDto.Image != null && productDto.Image.Length > 0)
         {
-            // Generate a unique file name
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(productDto.Image.FileName)}";
+            var fileName = $"{Guid.NewGuid()}.jpg";
             var filePath = Path.Combine("uploads", fileName);
             var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", filePath);
 
-            // Save the image
-            using (var stream = new FileStream(fullPath, FileMode.Create))
+            using (var image = Image.Load(productDto.Image))
             {
-                await productDto.Image.CopyToAsync(stream);
+                image.Save(fullPath, new JpegEncoder());
             }
 
             imageUrl = $"/uploads/{fileName}";
