@@ -94,7 +94,7 @@ public class ProductController : Controller
 
         string? imageUrl = null;
 
-        if (productDto.Image != null)
+        if (productDto.Image != null && productDto.Image.Length > 0)
         {
             var fileName = $"{Guid.NewGuid()}.jpg";
             var filePath = Path.Combine("uploads", fileName);
