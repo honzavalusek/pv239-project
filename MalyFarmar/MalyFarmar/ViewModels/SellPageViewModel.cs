@@ -18,6 +18,7 @@ namespace MalyFarmar.ViewModels
         private readonly ApiClient _apiClient;
         private bool _isBusy;
         private string _statusMessage; // To display errors or "no products" messages
+        private readonly SemaphoreSlim _loadProductsSemaphore = new SemaphoreSlim(1, 1);
 
         public ObservableCollection<ProductListViewDto> UserProducts { get; }
         public bool IsBusy
@@ -64,8 +65,11 @@ namespace MalyFarmar.ViewModels
 
         public async Task ExecuteLoadProductsAsync(bool isRefresh = false)
         {
-            if (IsBusy && !isRefresh) // Prevent multiple full loads, but allow refresh to override
+            if (!await _loadProductsSemaphore.WaitAsync(0))
+            {
+                System.Diagnostics.Debug.WriteLine("[SellPageVM] Load ignored, another operation in progress.");
                 return;
+            }
 
             IsBusy = true;
             if (!isRefresh) StatusMessage = null; // Clear message on full load
@@ -117,6 +121,8 @@ namespace MalyFarmar.ViewModels
             finally
             {
                 IsBusy = false;
+                _loadProductsSemaphore.Release(); // Release the semaphore
+
             }
         }
 
