@@ -103,6 +103,7 @@ namespace MalyFarmar.ViewModels
                     {
                         ErrorMessage = $"Error processing image file: {ex.Message}";
                         IsBusy = false;
+                        imageStream?.Dispose();
                         return;
                     }
                 }
