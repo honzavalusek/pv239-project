@@ -25,7 +25,7 @@
                    IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}" />
             <Grid IsVisible="{Binding Product, Converter={StaticResource IsNotNullConverter}}">
                 <VerticalStackLayout Spacing="10">
-                    <Image Source="{Binding Product.ImageUrl, TargetNullValue='placeholder_product.png'}"
+                    <Image Source="{Binding Product.ImageUrl, Converter={StaticResource ImageUrlConverter}}"
                            HeightRequest="250" Aspect="AspectFit" BackgroundColor="LightGray" />
 
                     <Label Text="{Binding Product.Name}" FontSize="Title" FontAttributes="Bold" />
