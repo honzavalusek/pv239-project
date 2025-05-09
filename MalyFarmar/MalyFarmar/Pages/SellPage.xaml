@@ -5,7 +5,7 @@
              xmlns:apidtos="clr-namespace:MalyFarmar.Clients"
              x:Class="MalyFarmar.Pages.SellPage"
              x:DataType="viewmodels:SellPageViewModel"
-             Title="My Products for Sale">
+             Title="My Products">
 
     <ContentPage.Resources>
         </ContentPage.Resources>
