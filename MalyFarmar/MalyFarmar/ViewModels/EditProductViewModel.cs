@@ -38,12 +38,14 @@ namespace MalyFarmar.ViewModels
 
         public ICommand LoadProductCommand { get; }
         public ICommand SaveProductCommand { get; }
+        public ICommand DeleteProductCommand { get; }
 
         public EditProductViewModel(ApiClient apiClient)
         {
             _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
             LoadProductCommand = new Command<int>(async (id) => await ExecuteLoadProductAsync(id));
             SaveProductCommand = new Command(async () => await ExecuteSaveProductAsync(), () => !IsBusy);
+            DeleteProductCommand = new Command(async () => await ExecuteDeleteProductAsync(), () => !IsBusy);
         }
 
         public int ProductId
@@ -97,6 +99,33 @@ namespace MalyFarmar.ViewModels
             }
         }
 
+        private async Task ExecuteDeleteProductAsync()
+        {
+            if (IsBusy) return;
+            IsBusy = true;
+            ErrorMessage = null;
+            
+            try
+            {
+                await _apiClient.DeleteProductAsync(ProductId);
+                await Application.Current.MainPage.DisplayAlert("Success", "Product Deleted!", "OK");
+                // Navigate back to the previous page (my products page)
+                await Shell.Current.GoToAsync("../..");
+            }
+            catch (ApiException apiEx)
+            {
+                ErrorMessage = $"Delete failed: {apiEx.Message}";
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"An unexpected error occurred: {ex.Message}";
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+        
         private async Task ExecuteSaveProductAsync()
         {
             if (!ValidateInput(out ProductEditDto productEditDto))

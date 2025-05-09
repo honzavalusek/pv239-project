@@ -47,6 +47,12 @@
                     Command="{Binding SaveProductCommand}" 
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" 
                     HorizontalOptions="FillAndExpand" Margin="0,20,0,0" />
+            
+            <Button Text="Delete Product" 
+                    Command="{Binding DeleteProductCommand}" 
+                    BackgroundColor="IndianRed"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" 
+                    HorizontalOptions="FillAndExpand" Margin="0,20,0,0" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
