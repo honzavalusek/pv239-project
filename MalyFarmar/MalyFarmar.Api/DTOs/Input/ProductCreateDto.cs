@@ -20,5 +20,5 @@ public class ProductCreateDto
     [Required]
     public int SellerId { get; set; }
 
-    public IFormFile? Image { get; set; }
+    public byte[]? Image { get; set; }
 }
