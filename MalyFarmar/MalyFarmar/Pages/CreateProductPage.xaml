@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:MalyFarmar.ViewModels"
+             xmlns:converters="clr-namespace:MalyFarmar.Converters" 
+             x:Class="MalyFarmar.Pages.CreateProductPage"
+             x:DataType="viewmodels:CreateProductViewModel"
+             Title="Add New Product">
+
+    <ContentPage.Resources>
+        </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="10" Padding="20">
+            <Label Text="Product Name*" />
+            <Entry Text="{Binding Name}" Placeholder="e.g., Fresh Apples" />
+
+            <Label Text="Description" />
+            <Editor Text="{Binding Description}" Placeholder="Detailed description of your product" AutoSize="TextChanges" HeightRequest="100"/>
+
+            <Label Text="Total Amount*" />
+            <Entry Text="{Binding TotalAmountStr}" Keyboard="Numeric" Placeholder="e.g., 50.5" />
+
+            <Label Text="Unit*" />
+            <Entry Text="{Binding Unit}" Placeholder="e.g., kg, piece, liter, bunch" />
+            <Label Text="Price Per Unit*" />
+            <Entry Text="{Binding PricePerUnitStr}" Keyboard="Numeric" Placeholder="e.g., 2.99" />
+
+            <Label Text="Product Image (Optional)" Margin="0,10,0,0"/>
+            <Button Text="Select Image" Command="{Binding PickImageCommand}" Margin="0,0,0,5"/>
+            <Image Source="{Binding ProductImageSource, TargetNullValue='placeholder_generic.png'}" HeightRequest="150" Aspect="AspectFit" BackgroundColor="LightGray"/>
+            <Label Text="{Binding SelectedImageFile.FileName}" FontSize="Small" TextColor="Gray"/>
+
+
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="Red"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+                   Margin="0,10,0,0"/>
+
+            <Button Text="Add Product"
+                    Command="{Binding CreateProductCommand}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                    HorizontalOptions="FillAndExpand" Margin="0,20,0,0" />
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
