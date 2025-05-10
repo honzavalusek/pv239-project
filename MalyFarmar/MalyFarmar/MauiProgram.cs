@@ -1,8 +1,12 @@
-﻿using MauiIcons.Material.Outlined;
+﻿using System.Reflection;
+using MauiIcons.Material.Outlined;
 using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
 using MalyFarmar.Clients;
+using MalyFarmar.Options;
 using MalyFarmar.ViewModels;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace MalyFarmar;
 
@@ -20,31 +24,86 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
-
+        
+        ConfigureConfiguration(builder);
+        ConfigureOptions(builder);
         ConfigureClients(builder.Services);
+        ConfigureViewModels(builder.Services);
 
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
-        builder.Services.AddTransient<CreateUserViewModel>();
-        builder.Services.AddTransient<LoginViewModel>();
-        builder.Services.AddTransient<ProductDetailViewModel>();
-        builder.Services.AddTransient<SellPageViewModel>();
-        builder.Services.AddTransient<EditProductViewModel>();
-        builder.Services.AddTransient<CreateProductViewModel>();
 
         return builder.Build();
+    }
+
+    private static void ConfigureOptions(MauiAppBuilder builder)
+    {
+        builder.Services.Configure<ApiOptions>(builder.Configuration.GetSection(ApiOptions.ConfigurationKey));
     }
 
     private static void ConfigureClients(IServiceCollection services)
     {
         services.AddSingleton<ApiClient>(provider =>
         {
-            // TODO: Maybe in the future make this a configurable option
-            var url = "http://localhost:5138/";
+            var apiOptions = provider.GetRequiredService<IOptions<ApiOptions>>().Value;
+            
+            var url = apiOptions.BaseUrl;
+            
             var httpClient = new HttpClient();
 
             return new ApiClient(url, httpClient);
         });
+    }
+    
+    private static void ConfigureViewModels(IServiceCollection services)
+    {
+        services.AddTransient<CreateUserViewModel>();
+        services.AddTransient<LoginViewModel>();
+        services.AddTransient<ProductDetailViewModel>();
+        services.AddTransient<SellPageViewModel>();
+        services.AddTransient<EditProductViewModel>();
+        services.AddTransient<CreateProductViewModel>();
+    }
+    
+    private static void ConfigureConfiguration(MauiAppBuilder builder)
+    {
+        string environment = GetEnvironment();
+        
+        LoadAppSettings(builder, "appsettings.json");
+        
+        string environmentSettings = $"appsettings.{environment}.json";
+        LoadAppSettings(builder, environmentSettings);
+    }
+
+    private static void LoadAppSettings(MauiAppBuilder builder, string fileName)
+    {
+        try
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = $"MalyFarmar.{fileName}";
+            
+            using var stream = assembly.GetManifestResourceStream(resourceName);
+            
+            var config = new ConfigurationBuilder()
+                .AddJsonStream(stream)
+                .Build();
+
+            builder.Configuration.AddConfiguration(config);
+        }
+        catch (Exception ex)
+        {
+            // Log that the specific settings file wasn't found (this is OK for environment-specific files)
+            System.Diagnostics.Debug.WriteLine($"Settings file '{fileName}' error: {ex.Message}");
+        }
+    }
+
+    private static string GetEnvironment()
+    {
+#if RELEASE
+        return "Production";
+#else
+        return "Development";
+#endif
     }
 }
