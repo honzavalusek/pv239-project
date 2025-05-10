@@ -1,4 +1,4 @@
-namespace MalyFarmar.Api.DTOs.Output;
+namespace MalyFarmar.Api.BusinessLayer.DTOs.Output;
 
 public class ProductsListDto
 {

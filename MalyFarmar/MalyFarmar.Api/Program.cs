@@ -1,3 +1,5 @@
+using MalyFarmar.Api.BusinessLayer.Services;
+using MalyFarmar.Api.BusinessLayer.Services.Interfaces;
 using MalyFarmar.Api.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,6 +37,11 @@ builder.Services.AddSwaggerGen(c =>
 
         c.CustomOperationIds(e => $"{e.ActionDescriptor.RouteValues["action"]}");
     });
+
+// Register services
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 var app = builder.Build();
 

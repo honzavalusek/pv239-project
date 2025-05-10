@@ -1,4 +1,4 @@
-namespace MalyFarmar.Api.DTOs.Input;
+namespace MalyFarmar.Api.BusinessLayer.DTOs.Input;
 
 public class ProductEditDto
 {

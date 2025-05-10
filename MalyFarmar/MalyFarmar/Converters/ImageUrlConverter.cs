@@ -10,7 +10,7 @@ public class ImageUrlConverter : IValueConverter
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         Console.WriteLine("jsem v image url converteru");
-        
+
         if (value is string relativeOrAbsoluteUrl && !string.IsNullOrWhiteSpace(relativeOrAbsoluteUrl))
         {
             if (relativeOrAbsoluteUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))

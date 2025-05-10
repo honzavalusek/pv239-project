@@ -118,7 +118,7 @@ namespace MalyFarmar.ViewModels
                     SellerId = sellerId,
                     Image = imageBytes
                 };
-                
+
                 var result = await _apiClient.CreateProductAsync(productCreateDto);
 
                 if (result != null)

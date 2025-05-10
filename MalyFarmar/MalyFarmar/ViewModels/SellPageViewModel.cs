@@ -34,14 +34,14 @@ namespace MalyFarmar.ViewModels
 
         public ICommand LoadUserProductsCommand { get; }
         public ICommand RefreshCommand { get; }
-        
+
         [RelayCommand]
         private async Task NavigateToCreateProductAsync()
         {
             // Navigate to the CreateProductPage route (you'll register this route)
             await Shell.Current.GoToAsync(nameof(CreateProductPage));
         }
-        
+
         [RelayCommand]
         async Task GoToProductDetailsAsync(ProductListViewDto? product)
         {

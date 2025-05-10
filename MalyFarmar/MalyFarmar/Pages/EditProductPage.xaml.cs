@@ -30,7 +30,7 @@ namespace MalyFarmar.Pages
 
             if (_productIdValue > 0) // If ProductId was set by QueryProperty very early
             {
-                 viewModel.ProductId = _productIdValue;
+                viewModel.ProductId = _productIdValue;
             }
         }
 

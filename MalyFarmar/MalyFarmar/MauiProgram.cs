@@ -24,7 +24,7 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
-        
+
         ConfigureConfiguration(builder);
         ConfigureOptions(builder);
         ConfigureClients(builder.Services);
@@ -47,15 +47,15 @@ public static class MauiProgram
         services.AddSingleton<ApiClient>(provider =>
         {
             var apiOptions = provider.GetRequiredService<IOptions<ApiOptions>>().Value;
-            
+
             var url = apiOptions.BaseUrl;
-            
+
             var httpClient = new HttpClient();
 
             return new ApiClient(url, httpClient);
         });
     }
-    
+
     private static void ConfigureViewModels(IServiceCollection services)
     {
         services.AddTransient<CreateUserViewModel>();
@@ -65,13 +65,13 @@ public static class MauiProgram
         services.AddTransient<EditProductViewModel>();
         services.AddTransient<CreateProductViewModel>();
     }
-    
+
     private static void ConfigureConfiguration(MauiAppBuilder builder)
     {
         string environment = GetEnvironment();
-        
+
         LoadAppSettings(builder, "appsettings.json");
-        
+
         string environmentSettings = $"appsettings.{environment}.json";
         LoadAppSettings(builder, environmentSettings);
     }
@@ -82,9 +82,9 @@ public static class MauiProgram
         {
             var assembly = Assembly.GetExecutingAssembly();
             var resourceName = $"MalyFarmar.{fileName}";
-            
+
             using var stream = assembly.GetManifestResourceStream(resourceName);
-            
+
             var config = new ConfigurationBuilder()
                 .AddJsonStream(stream)
                 .Build();

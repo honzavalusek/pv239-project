@@ -1,9 +1,7 @@
-using MalyFarmar.Api.DAL.Data;
-using MalyFarmar.Api.DTOs.Input;
-using MalyFarmar.Api.DTOs.Output;
-using MalyFarmar.Api.Mappers;
+using MalyFarmar.Api.BusinessLayer.DTOs.Input;
+using MalyFarmar.Api.BusinessLayer.DTOs.Output;
+using MalyFarmar.Api.BusinessLayer.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace MalyFarmar.Api.Controllers;
 
@@ -11,37 +9,32 @@ namespace MalyFarmar.Api.Controllers;
 [Route("api/[controller]")]
 public class UserController : Controller
 {
-    private readonly MalyFarmarDbContext _context;
+    private readonly IUserService _userService;
 
-    public UserController(MalyFarmarDbContext context)
+    public UserController(IUserService userService)
     {
-        _context = context;
+        _userService = userService;
     }
 
     [HttpGet]
     [Route("{userId:int}")]
     public async Task<ActionResult<UserViewDto>> GetUser([FromRoute] int userId)
     {
-        var user = await _context.Users.FindAsync(userId);
+        var userDto = await _userService.GetUser(userId);
 
-        if (user == null)
+        if (userDto == null)
         {
             return NotFound();
         }
 
-        return Ok(user.MapToViewDto());
+        return Ok(userDto);
     }
 
     [HttpGet]
     [Route("get-all")]
     public async Task<ActionResult<UsersListDto>> GetAllUsers()
     {
-        var users = await _context.Users.ToListAsync();
-
-        return Ok(new UsersListDto
-        {
-            Users = users.Select(u => u.MapToListViewDto()).ToList()
-        });
+        return await _userService.GetAllUsers();
     }
 
     [HttpPost]
@@ -53,10 +46,7 @@ public class UserController : Controller
             return BadRequest(ModelState);
         }
 
-        var addResult = await _context.Users.AddAsync(userDto.MapToEntity());
-        await _context.SaveChangesAsync();
-
-        return Ok(addResult.Entity.MapToViewDto());
+        return await _userService.CreateUser(userDto);
     }
 
     [HttpPost]
@@ -68,18 +58,12 @@ public class UserController : Controller
             return BadRequest(ModelState);
         }
 
-        var user = await _context.Users.FindAsync(userId);
+        var result = await _userService.SetUserLocation(userId, userSetLocationDto);
 
-        if (user == null)
+        if (result == false)
         {
             return NotFound();
         }
-
-        user.LocationLongitude = userSetLocationDto.UserLongitude;
-        user.LocationLatitude = userSetLocationDto.UserLatitude;
-        user.UpdatedAt = DateTime.UtcNow;
-
-        await _context.SaveChangesAsync();
 
         return Ok();
     }
