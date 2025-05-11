@@ -7,8 +7,6 @@
              x:DataType="viewmodels:SellPageViewModel"
              Title="My Products">
 
-    <ContentPage.Resources>
-        </ContentPage.Resources>
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Add Product"
                      Command="{Binding NavigateToCreateProductCommand}"
@@ -24,7 +22,7 @@
                 <CollectionView.EmptyView>
                     <StackLayout Padding="20" VerticalOptions="Center" HorizontalOptions="Center">
                         <Label Text="{Binding StatusMessage}"
-                               IsVisible="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" HorizontalTextAlignment="Center"
+                               IsVisible="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" HorizontalTextAlignment="Center"
                                TextColor="Gray"/>
                     </StackLayout>
                 </CollectionView.EmptyView>
@@ -72,7 +70,7 @@
         </RefreshView>
         
         <Label Grid.Row="1" Text="{Binding StatusMessage}"
-               IsVisible="{Binding StatusMessage, Converter={StaticResource StringToBoolConverter}}" TextColor="Red"
+               IsVisible="{Binding StatusMessage, Converter={StaticResource IsStringNotNullOrEmptyConverter}}" TextColor="Red"
                VerticalOptions="Center" HorizontalOptions="Center"
                HorizontalTextAlignment="Center"/>
     </Grid>

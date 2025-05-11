@@ -23,26 +23,8 @@
     <data name="Location" xml:space="preserve">
         <value>Poloha</value>
     </data>
-    <data name="LocationAcquiredMessage" xml:space="preserve">
-        <value>Poloha získána</value>
-    </data>
-    <data name="UnableToRetrieveLocationMessage" xml:space="preserve">
-        <value>Nepodařilo se získat polohu.</value>
-    </data>
-    <data name="LocationPermissionDeniedMessage" xml:space="preserve">
-        <value>Přístup k poloze zamítnut.</value>
-    </data>
     <data name="Success" xml:space="preserve">
         <value>Úspěch</value>
-    </data>
-    <data name="LocationServicesNotEnabledMessage" xml:space="preserve">
-        <value>Služby určování polohy nejsou na tomto zařízení povoleny.</value>
-    </data>
-    <data name="LocationPermissionNotGrantedMessage" xml:space="preserve">
-        <value>Přístup k poloze nebyl udělen.</value>
-    </data>
-    <data name="LocationNotSupportedMessage" xml:space="preserve">
-        <value>Určování polohy není na tomto zařízení dostupné.</value>
     </data>
     <data name="ServerErrorMessage" xml:space="preserve">
         <value>Chyba na straně serveru. Zkuste to prosím později.</value>

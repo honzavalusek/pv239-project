@@ -5,7 +5,10 @@ using CommunityToolkit.Maui;
 using MalyFarmar.Clients;
 using MalyFarmar.Options;
 using MalyFarmar.Pages;
+using MalyFarmar.Services;
+using MalyFarmar.Services.Interfaces;
 using MalyFarmar.ViewModels;
+using MalyFarmar.ViewModels.Profile;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
@@ -31,12 +34,20 @@ public static class MauiProgram
         ConfigureClients(builder.Services);
         ConfigureViewModels(builder.Services);
         ConfigurePages(builder.Services);
+        ConfigureServices(builder.Services);
 
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
 
         return builder.Build();
+    }
+
+    private static void ConfigureServices(IServiceCollection services)
+    {
+        services.AddSingleton<Microsoft.Maui.Storage.IPreferences>(Microsoft.Maui.Storage.Preferences.Default);
+        services.AddSingleton<IPreferencesService, PreferencesService>();
+        services.AddSingleton<ILocationService, LocationService>();
     }
 
     private static void ConfigureOptions(MauiAppBuilder builder)
@@ -66,6 +77,7 @@ public static class MauiProgram
         services.AddTransient<SellPageViewModel>();
         services.AddTransient<EditProductViewModel>();
         services.AddTransient<CreateProductViewModel>();
+        services.AddTransient<ProfileViewModel>();
     }
 
     private static void ConfigurePages(IServiceCollection services)

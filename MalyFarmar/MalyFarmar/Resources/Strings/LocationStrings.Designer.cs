@@ -14,21 +14,21 @@ namespace MalyFarmar.Resources.Strings {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class CommonStrings {
+    internal class LocationStrings {
         
         private static System.Resources.ResourceManager resourceMan;
         
         private static System.Globalization.CultureInfo resourceCulture;
         
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal CommonStrings() {
+        internal LocationStrings() {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         internal static System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.Equals(null, resourceMan)) {
-                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("MalyFarmar.Resources.Strings.CommonStrings", typeof(CommonStrings).Assembly);
+                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("MalyFarmar.Resources.Strings.LocationStrings", typeof(LocationStrings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -45,57 +45,39 @@ namespace MalyFarmar.Resources.Strings {
             }
         }
         
-        internal static string AppName {
+        internal static string LocationPermissionDeniedMessage {
             get {
-                return ResourceManager.GetString("AppName", resourceCulture);
+                return ResourceManager.GetString("LocationPermissionDeniedMessage", resourceCulture);
             }
         }
         
-        internal static string Error {
+        internal static string UnableToRetrieveLocationMessage {
             get {
-                return ResourceManager.GetString("Error", resourceCulture);
+                return ResourceManager.GetString("UnableToRetrieveLocationMessage", resourceCulture);
             }
         }
         
-        internal static string Ok {
+        internal static string LocationAcquiredMessage {
             get {
-                return ResourceManager.GetString("Ok", resourceCulture);
+                return ResourceManager.GetString("LocationAcquiredMessage", resourceCulture);
             }
         }
         
-        internal static string Location {
+        internal static string LocationNotSupportedMessage {
             get {
-                return ResourceManager.GetString("Location", resourceCulture);
+                return ResourceManager.GetString("LocationNotSupportedMessage", resourceCulture);
             }
         }
         
-        internal static string Success {
+        internal static string LocationServicesNotEnabledMessage {
             get {
-                return ResourceManager.GetString("Success", resourceCulture);
+                return ResourceManager.GetString("LocationServicesNotEnabledMessage", resourceCulture);
             }
         }
         
-        internal static string ServerErrorMessage {
+        internal static string LocationPermissionNotGrantedMessage {
             get {
-                return ResourceManager.GetString("ServerErrorMessage", resourceCulture);
-            }
-        }
-        
-        internal static string InvalidDataMessage {
-            get {
-                return ResourceManager.GetString("InvalidDataMessage", resourceCulture);
-            }
-        }
-        
-        internal static string ValidationErrorsMessage {
-            get {
-                return ResourceManager.GetString("ValidationErrorsMessage", resourceCulture);
-            }
-        }
-        
-        internal static string UnexpectedErrorMessage {
-            get {
-                return ResourceManager.GetString("UnexpectedErrorMessage", resourceCulture);
+                return ResourceManager.GetString("LocationPermissionNotGrantedMessage", resourceCulture);
             }
         }
     }

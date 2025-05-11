@@ -2,7 +2,6 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:MalyFarmar.ViewModels"
-             xmlns:converters="clr-namespace:MalyFarmar.Converters"
              xmlns:strings="clr-namespace:MalyFarmar.Resources.Strings"
              x:Class="MalyFarmar.Pages.CreateUserPage"
              x:DataType="viewmodels:CreateUserViewModel" Title="{x:Static strings:CreateUserPageStrings.PageTitle}">
@@ -12,33 +11,33 @@
             <Label Text="{x:Static strings:CommonStrings.AppName}" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
             <Label Text="{x:Static strings:CreateUserPageStrings.FirstNameLabel}" />
             <Entry Text="{Binding FirstName}" Placeholder="{x:Static strings:CreateUserPageStrings.FirstNamePlaceholder}" />
-            <Label Text="{Binding FirstNameError}" TextColor="Red" IsVisible="{Binding FirstNameError, Converter={StaticResource StringToBoolConverter}}" />
+            <Label Text="{Binding FirstNameError}" TextColor="Red" IsVisible="{Binding FirstNameError, Converter={StaticResource IsStringNotNullOrEmptyConverter}}" />
 
             <Label Text="{x:Static strings:CreateUserPageStrings.LastNameLabel}" />
             <Entry Text="{Binding LastName}" Placeholder="{x:Static strings:CreateUserPageStrings.LastNamePlaceholder}" />
-            <Label Text="{Binding LastNameError}" TextColor="Red" IsVisible="{Binding LastNameError, Converter={StaticResource StringToBoolConverter}}" />
+            <Label Text="{Binding LastNameError}" TextColor="Red" IsVisible="{Binding LastNameError, Converter={StaticResource IsStringNotNullOrEmptyConverter}}" />
 
             <Label Text="{x:Static strings:CreateUserPageStrings.EmailLabel}" />
             <Entry Text="{Binding Email}" Placeholder="{x:Static strings:CreateUserPageStrings.EmailPlaceholder}" Keyboard="Email" />
-            <Label Text="{Binding EmailError}" TextColor="Red" IsVisible="{Binding EmailError, Converter={StaticResource StringToBoolConverter}}" />
+            <Label Text="{Binding EmailError}" TextColor="Red" IsVisible="{Binding EmailError, Converter={StaticResource IsStringNotNullOrEmptyConverter}}" />
 
             <Label Text="{x:Static strings:CreateUserPageStrings.PhoneNumberLabel}" />
             <Entry Text="{Binding PhoneNumber}" Placeholder="{x:Static strings:CreateUserPageStrings.PhoneNumberPlaceholder}" Keyboard="Telephone" />
-            <Label Text="{Binding PhoneNumberError}" TextColor="Red" IsVisible="{Binding PhoneNumberError, Converter={StaticResource StringToBoolConverter}}" />
+            <Label Text="{Binding PhoneNumberError}" TextColor="Red" IsVisible="{Binding PhoneNumberError, Converter={StaticResource IsStringNotNullOrEmptyConverter}}" />
 
             <Label Text="{x:Static strings:CreateUserPageStrings.DeviceLocationLabel}" FontAttributes="Bold" Margin="0,15,0,0" />
             <Button Text="{x:Static strings:CreateUserPageStrings.GetCurrentLocationButtonText}" 
                     Command="{Binding GetLocationCommand}" 
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" 
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" 
                     Margin="0,5,0,0"/>
             <Label Text="{Binding LocationStatus}" 
-                   IsVisible="{Binding LocationStatus, Converter={StaticResource StringToBoolConverter}}" 
+                   IsVisible="{Binding LocationStatus, Converter={StaticResource IsStringNotNullOrEmptyConverter}}" 
                    Margin="0,5,0,0"
                    LineBreakMode="WordWrap"/>
             
-            <Button Text="{x:Static strings:CreateUserPageStrings.CreateAccountButtonText}" Command="{Binding CreateAccountCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" Margin="0,20,0,0" />
+            <Button Text="{x:Static strings:CreateUserPageStrings.CreateAccountButtonText}" Command="{Binding CreateAccountCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" Margin="0,20,0,0" />
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
-            <Label Text="{Binding GeneralError}" TextColor="Red" IsVisible="{Binding GeneralError, Converter={StaticResource StringToBoolConverter}}" HorizontalTextAlignment="Center" Margin="0,10,0,0"/>
+            <Label Text="{Binding GeneralError}" TextColor="Red" IsVisible="{Binding GeneralError, Converter={StaticResource IsStringNotNullOrEmptyConverter}}" HorizontalTextAlignment="Center" Margin="0,10,0,0"/>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

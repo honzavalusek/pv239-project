@@ -2,13 +2,9 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:MalyFarmar.ViewModels"
-             xmlns:converters="clr-namespace:MalyFarmar.Converters" 
              x:Class="MalyFarmar.Pages.CreateProductPage"
              x:DataType="viewmodels:CreateProductViewModel"
              Title="Add New Product">
-
-    <ContentPage.Resources>
-        </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout Spacing="10" Padding="20">
@@ -34,12 +30,12 @@
 
             <Label Text="{Binding ErrorMessage}"
                    TextColor="Red"
-                   IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource IsStringNotNullOrEmptyConverter}}"
                    Margin="0,10,0,0"/>
 
             <Button Text="Add Product"
                     Command="{Binding CreateProductCommand}"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
                     HorizontalOptions="FillAndExpand" Margin="0,20,0,0" />
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
 

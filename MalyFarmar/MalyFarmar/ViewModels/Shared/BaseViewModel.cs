@@ -2,7 +2,20 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace MalyFarmar.ViewModels.Shared;
 
-public class BaseViewModel : ObservableObject
+public abstract class BaseViewModel : ObservableObject
 {
+    protected bool ForceDataRefresh = true;
 
+    public async Task OnAppearingAsync()
+    {
+        if (ForceDataRefresh)
+        {
+            await LoadDataAsync();
+
+            ForceDataRefresh = false;
+        }
+    }
+
+    protected virtual Task LoadDataAsync()
+        => Task.CompletedTask;
 }

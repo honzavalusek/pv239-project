@@ -30,26 +30,8 @@
     <data name="Location" xml:space="preserve">
         <value>Location</value>
     </data>
-    <data name="LocationAcquiredMessage" xml:space="preserve">
-        <value>Location Acquired</value>
-    </data>
-    <data name="UnableToRetrieveLocationMessage" xml:space="preserve">
-        <value>Unable to retrieve location.</value>
-    </data>
-    <data name="LocationPermissionDeniedMessage" xml:space="preserve">
-        <value>Location permission denied.</value>
-    </data>
     <data name="Success" xml:space="preserve">
         <value>Success</value>
-    </data>
-    <data name="LocationServicesNotEnabledMessage" xml:space="preserve">
-        <value>Location services not enabled on device.</value>
-    </data>
-    <data name="LocationPermissionNotGrantedMessage" xml:space="preserve">
-        <value>Location permission not granted.</value>
-    </data>
-    <data name="LocationNotSupportedMessage" xml:space="preserve">
-        <value>Location not supported on this device</value>
     </data>
     <data name="ServerErrorMessage" xml:space="preserve">
         <value>Server error. Please try again later.</value>

@@ -1,13 +1,11 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MalyFarmar.ViewModels.Profile;
 
 namespace MalyFarmar.Pages;
 
-public partial class ProfilePage : ContentPage
+public partial class ProfilePage
 {
-    public ProfilePage()
+    public ProfilePage(ProfileViewModel viewModel)
+    : base(viewModel)
     {
         InitializeComponent();
     }

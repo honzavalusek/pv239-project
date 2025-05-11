@@ -4,6 +4,7 @@ using MalyFarmar.Clients; // For ApiClient and DTOs
 using System.Threading.Tasks;
 using System.Windows.Input;
 using MalyFarmar.Pages;
+using MalyFarmar.Services.Interfaces;
 
 namespace MalyFarmar.ViewModels // Your ViewModel's namespace
 {
@@ -11,6 +12,7 @@ namespace MalyFarmar.ViewModels // Your ViewModel's namespace
     public partial class ProductDetailViewModel : ObservableObject
     {
         private readonly ApiClient _apiClient;
+        private readonly IPreferencesService _preferencesService;
 
         [ObservableProperty]
         ProductDetailViewDto? _product;
@@ -39,9 +41,10 @@ namespace MalyFarmar.ViewModels // Your ViewModel's namespace
         [ObservableProperty]
         bool _hasError;
 
-        public ProductDetailViewModel(ApiClient apiClient)
+        public ProductDetailViewModel(ApiClient apiClient, IPreferencesService preferencesService)
         {
             _apiClient = apiClient;
+            _preferencesService = preferencesService;
 
             EditProductCommand = new Command(
                 execute: async () => await ExecuteEditProductCommand(),
@@ -68,13 +71,10 @@ namespace MalyFarmar.ViewModels // Your ViewModel's namespace
         {
             if (Product == null || Product.Seller == null) return false;
 
-            string currentUserIdStr = Preferences.Default.Get("CurrentUserId", string.Empty);
+            var currentUserId = _preferencesService.GetCurrentUserId();
 
-            if (int.TryParse(currentUserIdStr, out var currentUserId))
-            {
-                return Product.Seller.Id == currentUserId;
-            }
-            return false;
+            return Product.Seller.Id == currentUserId;
+
         }
 
         private async Task ExecuteEditProductCommand()

@@ -9,6 +9,7 @@ using System;
 using System.Globalization; // For CultureInfo
 using System.IO;
 using System.Threading.Tasks;
+using MalyFarmar.Services.Interfaces;
 using Microsoft.Maui.Controls; // For Shell, Application.Current.MainPage.DisplayAlert, Preferences
 
 namespace MalyFarmar.ViewModels
@@ -16,6 +17,7 @@ namespace MalyFarmar.ViewModels
     public partial class CreateProductViewModel : ObservableObject
     {
         private readonly ApiClient _apiClient;
+        private readonly IPreferencesService _preferencesService;
 
         [ObservableProperty] private string _name;
 
@@ -35,9 +37,10 @@ namespace MalyFarmar.ViewModels
 
         [ObservableProperty] private string _errorMessage;
 
-        public CreateProductViewModel(ApiClient apiClient)
+        public CreateProductViewModel(ApiClient apiClient, IPreferencesService preferencesService)
         {
             _apiClient = apiClient;
+            _preferencesService = preferencesService;
         }
 
         [RelayCommand]
@@ -81,8 +84,8 @@ namespace MalyFarmar.ViewModels
 
             try
             {
-                string currentUserIdStr = Preferences.Default.Get("CurrentUserId", string.Empty);
-                if (!int.TryParse(currentUserIdStr, out int sellerId))
+                var sellerId = _preferencesService.GetCurrentUserId();
+                if (sellerId == null)
                 {
                     ErrorMessage = "Could not determine current user. Please log in.";
                     IsBusy = false;
@@ -115,7 +118,7 @@ namespace MalyFarmar.ViewModels
                     TotalAmount = totalAmount,
                     Unit = Unit,
                     PricePerUnit = pricePerUnit,
-                    SellerId = sellerId,
+                    SellerId = sellerId.Value,
                     Image = imageBytes
                 };
 

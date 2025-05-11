@@ -11,12 +11,16 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using MalyFarmar.Resources.Strings;
+using MalyFarmar.Services.Interfaces;
 
 namespace MalyFarmar.ViewModels
 {
     public class CreateUserViewModel : INotifyPropertyChanged
     {
         private readonly ApiClient _apiClient;
+        private readonly IPreferencesService _preferencesService;
+        private readonly ILocationService _locationService;
+
         private string _firstName;
         private string _lastName;
         private string _email;
@@ -64,9 +68,12 @@ namespace MalyFarmar.ViewModels
 
         public ICommand GetLocationCommand { get; }
 
-        public CreateUserViewModel(ApiClient apiClient)
+        public CreateUserViewModel(ApiClient apiClient, IPreferencesService preferencesService, ILocationService locationService)
         {
-            _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
+            _apiClient = apiClient;
+            _preferencesService = preferencesService;
+            _locationService = locationService;
+
             CreateAccountCommand = new Command(async () => await OnCreateAccountAsync(), () => !IsBusy);
             GetLocationCommand = new Command(async () => await OnGetLocationAsync(), () => !IsBusy && !_isCheckingLocation);
 
@@ -77,59 +84,41 @@ namespace MalyFarmar.ViewModels
         {
             if (_isCheckingLocation || IsBusy) return; // Already busy with location or general task
 
-            try
+            _isCheckingLocation = true;
+            IsBusy = true; // Use the general IsBusy or a dedicated one
+            ((Command)GetLocationCommand).ChangeCanExecute(); // Update CanExecute for both commands
+            ((Command)CreateAccountCommand).ChangeCanExecute();
+
+
+            LocationStatus = "Fetching location...";
+            _fetchedLatitude = null; // Reset previous values
+            _fetchedLongitude = null;
+            // Update UI-bound string properties if they are used for display
+            UserLatitude = string.Empty;
+            UserLongitude = string.Empty;
+
+            var locationResult = await _locationService.GetCurrentLocationAsync();
+
+            if (locationResult.Location != null)
             {
-                _isCheckingLocation = true;
-                IsBusy = true; // Use the general IsBusy or a dedicated one
-                ((Command)GetLocationCommand).ChangeCanExecute(); // Update CanExecute for both commands
-                ((Command)CreateAccountCommand).ChangeCanExecute();
-
-
-                LocationStatus = "Fetching location...";
-                _fetchedLatitude = null; // Reset previous values
-                _fetchedLongitude = null;
-                // Update UI-bound string properties if they are used for display
-                UserLatitude = string.Empty;
-                UserLongitude = string.Empty;
-
-
-                var status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-                if (status != PermissionStatus.Granted)
-                {
-                    status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
-                }
-
-                if (status == PermissionStatus.Granted)
-                {
-                    GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
-                    _cancelTokenSource = new CancellationTokenSource();
-                    Location location = await Geolocation.Default.GetLocationAsync(request, _cancelTokenSource.Token);
-
-                    if (location != null)
-                    {
-                        _fetchedLatitude = location.Latitude;
-                        _fetchedLongitude = location.Longitude;
-                        // Update string properties for display (optional, if you have read-only entries for them)
-                        UserLatitude = location.Latitude.ToString("F6", CultureInfo.InvariantCulture); // "F6" for 6 decimal places
-                        UserLongitude = location.Longitude.ToString("F6", CultureInfo.InvariantCulture);
-                        LocationStatus = $"{CommonStrings.LocationAcquiredMessage}: Lat {UserLatitude}, Lon {UserLongitude}";
-                        Console.WriteLine($"Location: Lat: {location.Latitude}, Lon: {location.Longitude}");
-                    }
-                    else { LocationStatus = CommonStrings.UnableToRetrieveLocationMessage; }
-                }
-                else { LocationStatus = CommonStrings.LocationPermissionDeniedMessage; }
+                _fetchedLatitude = locationResult.Location.Latitude;
+                _fetchedLongitude = locationResult.Location.Longitude;
+                // Update string properties for display (optional, if you have read-only entries for them)
+                UserLatitude = locationResult.Location.Latitude.ToString("F6", CultureInfo.InvariantCulture); // "F6" for 6 decimal places
+                UserLongitude = locationResult.Location.Longitude.ToString("F6", CultureInfo.InvariantCulture);
+                LocationStatus = $"{LocationStrings.LocationAcquiredMessage}: Lat {UserLatitude}, Lon {UserLongitude}";
+                Console.WriteLine($"Location: Lat: {locationResult.Location.Latitude}, Lon: {locationResult.Location.Longitude}");
             }
-            catch (FeatureNotSupportedException) { LocationStatus = CommonStrings.LocationNotSupportedMessage; }
-            catch (FeatureNotEnabledException) { LocationStatus = CommonStrings.LocationServicesNotEnabledMessage; }
-            catch (PermissionException) { LocationStatus = CommonStrings.LocationPermissionNotGrantedMessage; }
-            catch (Exception ex) { LocationStatus = $"{CommonStrings.Error}: {ex.Message}"; }
-            finally
+
+            if (locationResult.ErrorMessage != null)
             {
-                _isCheckingLocation = false;
-                IsBusy = false;
-                ((Command)GetLocationCommand).ChangeCanExecute();
-                ((Command)CreateAccountCommand).ChangeCanExecute();
+                LocationStatus = locationResult.ErrorMessage;
             }
+
+            _isCheckingLocation = false;
+            IsBusy = false;
+            ((Command)GetLocationCommand).ChangeCanExecute();
+            ((Command)CreateAccountCommand).ChangeCanExecute();
         }
 
         private async Task OnCreateAccountAsync()
@@ -163,7 +152,7 @@ namespace MalyFarmar.ViewModels
                 if (createdUser != null && createdUser.Id > 0)
                 {
                     await Application.Current.MainPage.DisplayAlert(CommonStrings.Success, CreateUserPageStrings.AccountCreatedAlertDescription, CommonStrings.Ok);
-                    Preferences.Default.Set("CurrentUserId", createdUser.Id.ToString());
+                    _preferencesService.SetCurrentUserId(createdUser.Id);
                     Application.Current.MainPage = new AppShell();
                 }
                 else
