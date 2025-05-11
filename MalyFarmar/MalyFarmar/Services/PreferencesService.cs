@@ -4,15 +4,29 @@ using MalyFarmar.Services.Interfaces;
 
 namespace MalyFarmar.Services;
 
-public class PreferencesService(IPreferences preferences)
-    : IPreferencesService
+public class PreferencesService(IPreferences preferences) : IPreferencesService
 {
-    public const string CurrentUserKey = "CurrentUserId";
+    private const string currentUserKey = "CurrentUserId";
 
-    public string CurrentUserId
+    public void SetCurrentUserId(int userId)
     {
-        get => preferences.Get(CurrentUserKey, string.Empty);
+        preferences.Set(currentUserKey, userId);
+    }
 
-        set => preferences.Set(CurrentUserKey, value);
+    public int? GetCurrentUserId()
+    {
+        var result = preferences.Get(currentUserKey, -1);
+
+        if (result == -1)
+        {
+            return null;
+        }
+
+        return result;
+    }
+
+    public void UnsetCurrentUserId()
+    {
+        preferences.Remove(currentUserKey);
     }
 }

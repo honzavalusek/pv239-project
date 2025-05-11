@@ -9,6 +9,7 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using MalyFarmar.Services.Interfaces;
 using Microsoft.Maui.Controls; // For Application.Current.MainPage.DisplayAlert & Preferences
 
 namespace MalyFarmar.ViewModels
@@ -16,6 +17,8 @@ namespace MalyFarmar.ViewModels
     public partial class SellPageViewModel : INotifyPropertyChanged
     {
         private readonly ApiClient _apiClient;
+        private readonly IPreferencesService _preferencesService;
+
         private bool _isBusy;
         private string _statusMessage; // To display errors or "no products" messages
         private readonly SemaphoreSlim _loadProductsSemaphore = new SemaphoreSlim(1, 1);
@@ -52,9 +55,11 @@ namespace MalyFarmar.ViewModels
             await Shell.Current.GoToAsync($"{nameof(ProductDetailPage)}?ProductId={product.Id}");
         }
 
-        public SellPageViewModel(ApiClient apiClient)
+        public SellPageViewModel(ApiClient apiClient, IPreferencesService preferencesService)
         {
-            _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
+            _apiClient = apiClient;
+            _preferencesService = preferencesService;
+
             UserProducts = new ObservableCollection<ProductListViewDto>();
 
             // Command to explicitly load products (e.g., on appearing or button click)
@@ -78,14 +83,14 @@ namespace MalyFarmar.ViewModels
             {
                 UserProducts.Clear(); // Clear existing items before loading/reloading
 
-                string currentUserIdStr = Preferences.Default.Get("CurrentUserId", string.Empty);
-                if (string.IsNullOrEmpty(currentUserIdStr) || !int.TryParse(currentUserIdStr, out int sellerId))
+                var sellerId = _preferencesService.GetCurrentUserId();
+                if (sellerId == null)
                 {
                     StatusMessage = "Could not identify current user. Please log in again.";
                     return;
                 }
 
-                var productsListDto = await _apiClient.GetProductsBySellerAsync(sellerId);
+                var productsListDto = await _apiClient.GetProductsBySellerAsync(sellerId.Value);
 
                 if (productsListDto?.Products != null)
                 {

@@ -14,21 +14,21 @@ namespace MalyFarmar.Resources.Strings {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class CommonStrings {
+    internal class ProfilePageStrings {
         
         private static System.Resources.ResourceManager resourceMan;
         
         private static System.Globalization.CultureInfo resourceCulture;
         
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal CommonStrings() {
+        internal ProfilePageStrings() {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         internal static System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.Equals(null, resourceMan)) {
-                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("MalyFarmar.Resources.Strings.CommonStrings", typeof(CommonStrings).Assembly);
+                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("MalyFarmar.Resources.Strings.ProfilePageStrings", typeof(ProfilePageStrings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -45,57 +45,69 @@ namespace MalyFarmar.Resources.Strings {
             }
         }
         
-        internal static string AppName {
+        internal static string LocationUpdatedSuccessfullyMessage {
             get {
-                return ResourceManager.GetString("AppName", resourceCulture);
+                return ResourceManager.GetString("LocationUpdatedSuccessfullyMessage", resourceCulture);
             }
         }
         
-        internal static string Error {
+        internal static string PersonalInformationLabel {
             get {
-                return ResourceManager.GetString("Error", resourceCulture);
+                return ResourceManager.GetString("PersonalInformationLabel", resourceCulture);
             }
         }
         
-        internal static string Ok {
+        internal static string LocationInformationLabel {
             get {
-                return ResourceManager.GetString("Ok", resourceCulture);
+                return ResourceManager.GetString("LocationInformationLabel", resourceCulture);
             }
         }
         
-        internal static string Location {
+        internal static string LocationNotSetLabel {
             get {
-                return ResourceManager.GetString("Location", resourceCulture);
+                return ResourceManager.GetString("LocationNotSetLabel", resourceCulture);
             }
         }
         
-        internal static string Success {
+        internal static string SetLocationButtonText {
             get {
-                return ResourceManager.GetString("Success", resourceCulture);
+                return ResourceManager.GetString("SetLocationButtonText", resourceCulture);
             }
         }
         
-        internal static string ServerErrorMessage {
+        internal static string EmailLabel {
             get {
-                return ResourceManager.GetString("ServerErrorMessage", resourceCulture);
+                return ResourceManager.GetString("EmailLabel", resourceCulture);
             }
         }
         
-        internal static string InvalidDataMessage {
+        internal static string FirstNameLabel {
             get {
-                return ResourceManager.GetString("InvalidDataMessage", resourceCulture);
+                return ResourceManager.GetString("FirstNameLabel", resourceCulture);
             }
         }
         
-        internal static string ValidationErrorsMessage {
+        internal static string PhoneNumberLabel {
             get {
-                return ResourceManager.GetString("ValidationErrorsMessage", resourceCulture);
+                return ResourceManager.GetString("PhoneNumberLabel", resourceCulture);
             }
         }
         
-        internal static string UnexpectedErrorMessage {
+        internal static string LastNameLabel {
             get {
-                return ResourceManager.GetString("UnexpectedErrorMessage", resourceCulture);
+                return ResourceManager.GetString("LastNameLabel", resourceCulture);
+            }
+        }
+        
+        internal static string LatitudeLabel {
+            get {
+                return ResourceManager.GetString("LatitudeLabel", resourceCulture);
+            }
+        }
+        
+        internal static string LongitudeLabel {
+            get {
+                return ResourceManager.GetString("LongitudeLabel", resourceCulture);
             }
         }
     }

@@ -1,5 +1,6 @@
 // Pages/SellPage.xaml.cs
-using MalyFarmar.Clients; // For ApiClient
+using MalyFarmar.Clients;
+using MalyFarmar.Services.Interfaces; // For ApiClient
 using MalyFarmar.ViewModels;
 using Microsoft.Maui.Controls;
 
@@ -9,10 +10,10 @@ namespace MalyFarmar.Pages
     {
         private readonly SellPageViewModel _viewModel;
 
-        public SellPage(ApiClient apiClient)
+        public SellPage(ApiClient apiClient, IPreferencesService preferencesService)
         {
             InitializeComponent();
-            _viewModel = new SellPageViewModel(apiClient);
+            _viewModel = new SellPageViewModel(apiClient, preferencesService); // TODO: Dont bind like this, use DI (get inspired by ProfilePage)
             BindingContext = _viewModel;
         }
 

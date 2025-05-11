@@ -11,8 +11,6 @@
                      Command="{Binding EditProductCommand}"
                      Order="Primary" Priority="0" />
     </ContentPage.ToolbarItems>
-    <ContentPage.Resources>
-    </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="10">
@@ -20,7 +18,7 @@
                                HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
 
             <Label Text="{Binding ErrorMessage}" TextColor="Red"
-                   IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}" />
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource IsStringNotNullOrEmptyConverter}}" />
             <Grid IsVisible="{Binding Product, Converter={StaticResource IsNotNullConverter}}">
                 <VerticalStackLayout Spacing="10">
                     <Image Source="{Binding Product.ImageUrl, Converter={StaticResource ImageUrlConverter}}"

@@ -2,5 +2,7 @@ namespace MalyFarmar.Services.Interfaces;
 
 public interface IPreferencesService
 {
-    string CurrentUserId { get; set; }
+    public void SetCurrentUserId(int userId);
+    public int? GetCurrentUserId();
+    public void UnsetCurrentUserId();
 }

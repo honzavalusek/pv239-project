@@ -6,12 +6,15 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using MalyFarmar.Pages;
 using MalyFarmar.Resources.Strings;
+using MalyFarmar.Services.Interfaces;
 
 namespace MalyFarmar.ViewModels
 {
     public partial class LoginViewModel : ObservableObject
     {
-        private readonly ApiClient _client;
+        private readonly ApiClient _apiClient;
+        private readonly IPreferencesService _preferencesService;
+        private readonly ILocationService _locationService;
         private UserListViewDto? _selectedUser;
 
         public ObservableCollection<UserListViewDto> Users { get; private set; }
@@ -27,11 +30,11 @@ namespace MalyFarmar.ViewModels
 
                 if (_selectedUser != null)
                 {
-                    Preferences.Default.Set("CurrentUserId", _selectedUser.Id.ToString() ?? string.Empty); // todo konstanta místo "CurrentUserId"
+                    _preferencesService.SetCurrentUserId(_selectedUser.Id);
                 }
                 else
                 {
-                    Preferences.Default.Remove("CurrentUserId");
+                    _preferencesService.UnsetCurrentUserId();
                 }
 
                 // Refresh SignIn command's can execute status
@@ -42,9 +45,12 @@ namespace MalyFarmar.ViewModels
         public ICommand SignInCommand { get; } // todo smazat -> relay command
         public ICommand CreateUserCommand { get; }
 
-        public LoginViewModel(ApiClient client)
+        public LoginViewModel(ApiClient apiClient, IPreferencesService preferencesService, ILocationService locationService)
         {
-            _client = client;
+            _apiClient = apiClient;
+            _preferencesService = preferencesService;
+            _locationService = locationService;
+
             Users = new ObservableCollection<UserListViewDto>();
 
             SignInCommand = new Command(
@@ -60,7 +66,7 @@ namespace MalyFarmar.ViewModels
         {
             try
             {
-                var usersList = await _client.GetAllUsersAsync();
+                var usersList = await _apiClient.GetAllUsersAsync();
 
                 if (usersList?.Users != null)
                 {
@@ -93,7 +99,7 @@ namespace MalyFarmar.ViewModels
                 return;
             }
 
-            Preferences.Default.Set("CurrentUserId", SelectedUser.Id.ToString());
+            _preferencesService.SetCurrentUserId(SelectedUser.Id);
             Console.WriteLine("Signing in as user: " + SelectedUser.Id);
 
             Application.Current.MainPage = new AppShell();
@@ -101,7 +107,7 @@ namespace MalyFarmar.ViewModels
 
         private void CreateUserAsync()
         {
-            Application.Current.MainPage = new CreateUserPage(_client);
+            Application.Current.MainPage = new CreateUserPage(_apiClient, _preferencesService, _locationService); // TODO: I think this can be done better, using DI somehow
         }
     }
 }

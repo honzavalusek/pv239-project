@@ -19,6 +19,7 @@
         <SingleProject>true</SingleProject>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
 
         <!-- Display name -->
         <ApplicationTitle>MalyFarmar</ApplicationTitle>
@@ -106,6 +107,16 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>CreateUserPageStrings.resx</DependentUpon>
       </Compile>
+      <Compile Update="Resources\Strings\LocationStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>LocationStrings.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Strings\ProfilePageStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>ProfilePageStrings.resx</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -131,6 +142,20 @@
       </EmbeddedResource>
       <EmbeddedResource Include="appsettings.json" />
       <EmbeddedResource Include="appsettings.Development.json" />
+      <EmbeddedResource Update="Resources\Strings\LocationStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>LocationStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Strings\ProfilePageStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>ProfilePageStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="CommunityToolkit.Maui">
+        <HintPath>..\..\..\..\.nuget\packages\communitytoolkit.maui\11.2.0\lib\net9.0-maccatalyst18.0\CommunityToolkit.Maui.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

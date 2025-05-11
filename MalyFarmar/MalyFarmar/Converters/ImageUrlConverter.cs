@@ -14,18 +14,18 @@ public class ImageUrlConverter : BaseConverterOneWay<string?, ImageSource>
     {
         _apiBaseUrl = apiOptions.Value.BaseUrl;
     }
-    
+
     public override ImageSource ConvertFrom(string? value, CultureInfo? culture)
     {
         if (value == null || string.IsNullOrWhiteSpace(value))
         {
             return DefaultConvertReturnValue;
         }
-        
+
         string baseUrl = _apiBaseUrl.TrimEnd('/');
         string relativeUrl = value.TrimStart('/');
         string fullUrl = baseUrl + "/" + relativeUrl;
-        
+
         return ImageSource.FromUri(new Uri(fullUrl));
     }
 }
