@@ -59,4 +59,11 @@ public class UserService : IUserService
 
         return true;
     }
+
+    public async Task<UserSummaryDto?> GetUserSummary(int userId)
+    {
+        var user = await _context.Users.FindAsync(userId);
+
+        return user?.MapToSummaryDto();
+    }
 }

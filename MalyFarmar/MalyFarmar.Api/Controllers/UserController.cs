@@ -31,6 +31,20 @@ public class UserController : Controller
     }
 
     [HttpGet]
+    [Route("summary/{userId:int}")]
+    public async Task<ActionResult<UserSummaryDto>> GetUserSummary([FromRoute] int userId)
+    {
+        var summaryDto = await _userService.GetUserSummary(userId);
+
+        if (summaryDto == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(summaryDto);
+    }
+
+    [HttpGet]
     [Route("get-all")]
     public async Task<ActionResult<UsersListDto>> GetAllUsers()
     {

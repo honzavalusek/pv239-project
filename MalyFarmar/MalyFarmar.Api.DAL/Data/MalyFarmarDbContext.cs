@@ -34,7 +34,7 @@ public class MalyFarmarDbContext : DbContext
         // Order 1..* -- 1 OrderStatus
         modelBuilder.Entity<Order>()
             .HasOne(o => o.Status)
-            .WithMany(u => u.Orders)
+            .WithMany(s => s.Orders)
             .HasForeignKey(o => o.StatusId);
 
         // OrderItem 1..* -- 1 Order

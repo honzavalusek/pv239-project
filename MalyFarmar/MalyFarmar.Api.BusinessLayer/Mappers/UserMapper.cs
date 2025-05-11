@@ -1,3 +1,4 @@
+using Common.Enums;
 using MalyFarmar.Api.DAL.Models;
 using MalyFarmar.Api.BusinessLayer.DTOs.Input;
 using MalyFarmar.Api.BusinessLayer.DTOs.Output;
@@ -18,6 +19,20 @@ public static class UserMapper
             UserLongitude = entity.LocationLongitude,
             UserLatitude = entity.LocationLatitude,
             FullName = entity.FullName
+        };
+    }
+
+    public static UserSummaryDto MapToSummaryDto(this User entity)
+    {
+        return new UserSummaryDto()
+        {
+            Id = entity.Id,
+            FirstName = entity.FirstName,
+            NumberOfOrders = entity.Orders.Count,
+            NumberOfActiveReservations = entity.Products
+                .SelectMany(product => product.OrderItems)
+                .Select(orderItem => orderItem.Order)
+                .Count(o => o.StatusId is OrderStatusEnum.Created or OrderStatusEnum.PickUpSet)
         };
     }
 
