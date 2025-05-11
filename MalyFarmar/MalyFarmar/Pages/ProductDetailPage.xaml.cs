@@ -9,7 +9,7 @@ namespace MalyFarmar.Pages
             InitializeComponent();
             BindingContext = viewModel;
         }
-        
+
         protected override async void OnAppearing()
         {
             base.OnAppearing();

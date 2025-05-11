@@ -1,9 +1,9 @@
 using Geolocation;
 using MalyFarmar.Api.DAL.Models;
-using MalyFarmar.Api.DTOs.Input;
-using MalyFarmar.Api.DTOs.Output;
+using MalyFarmar.Api.BusinessLayer.DTOs.Input;
+using MalyFarmar.Api.BusinessLayer.DTOs.Output;
 
-namespace MalyFarmar.Api.Mappers;
+namespace MalyFarmar.Api.BusinessLayer.Mappers;
 
 public static class ProductMapper
 {

@@ -1,10 +1,7 @@
-using Common.Enums;
-using MalyFarmar.Api.DAL.Data;
-using MalyFarmar.Api.DTOs.Input;
-using MalyFarmar.Api.DTOs.Output;
-using MalyFarmar.Api.Mappers;
+using MalyFarmar.Api.BusinessLayer.DTOs.Input;
+using MalyFarmar.Api.BusinessLayer.DTOs.Output;
+using MalyFarmar.Api.BusinessLayer.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace MalyFarmar.Api.Controllers;
 
@@ -12,28 +9,26 @@ namespace MalyFarmar.Api.Controllers;
 [Route("api/[controller]")]
 public class OrderController : Controller
 {
-    private readonly MalyFarmarDbContext _context;
+    private readonly IOrderService _orderService;
 
-    public OrderController(MalyFarmarDbContext context)
+    public OrderController(IOrderService orderService)
     {
-        _context = context;
+        _orderService = orderService;
     }
 
     [HttpGet]
     [Route("{orderId:int}")]
     public async Task<ActionResult<OrderDetailViewDto>> GetOrder([FromRoute] int orderId)
     {
-        var order = await _context.Orders
-            .FirstOrDefaultAsync(o => o.Id == orderId);
+        var orderDto = await _orderService.GetOrder(orderId);
 
-        if (order == null)
+        if (orderDto == null)
         {
             return NotFound();
         }
 
-        return Ok(order.MapToDetailViewDto());
+        return Ok(orderDto);
     }
-
 
     [HttpPost]
     [Route("create")]
@@ -44,22 +39,8 @@ public class OrderController : Controller
             return BadRequest(ModelState);
         }
 
-        var order = orderDto.MapToEntity();
-
-        var addResult = await _context.Orders.AddAsync(order);
-        await _context.SaveChangesAsync();
-
-        await addResult.Reference(o => o.Buyer).LoadAsync();
-        await addResult.Collection(o => o.Items).LoadAsync();
-
-        foreach (var item in addResult.Entity.Items)
-        {
-            await _context.Entry(item).Reference(i => i.Product).LoadAsync();
-
-            await _context.Entry(item.Product).Reference(p => p.Seller).LoadAsync();
-        }
-
-        return Ok(addResult.Entity.MapToDetailViewDto());
+        var createdOrder = await _orderService.CreateOrder(orderDto);
+        return Ok(createdOrder);
     }
 
     [HttpPost]
@@ -71,18 +52,12 @@ public class OrderController : Controller
             return BadRequest(ModelState);
         }
 
-        var order = await _context.Orders.FindAsync(orderId);
+        var result = await _orderService.SetPickUpDateTime(orderId, pickUpDateDto);
 
-        if (order == null)
+        if (!result)
         {
             return NotFound();
         }
-
-        order.PickUpAt = pickUpDateDto.PickUpAt;
-        order.StatusId = OrderStatusEnum.PickUpSet;
-        order.UpdatedAt = DateTime.UtcNow;
-
-        await _context.SaveChangesAsync();
 
         return Ok();
     }
@@ -96,17 +71,12 @@ public class OrderController : Controller
             return BadRequest(ModelState);
         }
 
-        var order = await _context.Orders.FindAsync(orderId);
+        var result = await _orderService.SetOrderCompleted(orderId);
 
-        if (order == null)
+        if (!result)
         {
             return NotFound();
         }
-
-        order.StatusId = OrderStatusEnum.Completed;
-        order.UpdatedAt = DateTime.UtcNow;
-
-        await _context.SaveChangesAsync();
 
         return Ok();
     }
@@ -115,27 +85,15 @@ public class OrderController : Controller
     [Route("get-orders/{buyerId:int}")]
     public async Task<ActionResult<OrdersListDto>> GetOrders([FromRoute] int buyerId)
     {
-        var orders = await _context.Orders
-            .Where(o => o.BuyerId == buyerId)
-            .ToListAsync();
-
-        return Ok(new OrdersListDto
-        {
-            Orders = orders.Select(o => o.MapToListViewDto()).ToList()
-        });
+        var ordersDto = await _orderService.GetOrdersByBuyer(buyerId);
+        return Ok(ordersDto);
     }
 
     [HttpPost]
     [Route("ger-reservations/{sellerId:int}")]
     public async Task<ActionResult<OrdersListDto>> GetReservations([FromRoute] int sellerId)
     {
-        var orders = await _context.Orders
-            .Where(o => o.Items.Any(i => i.Product.SellerId == sellerId))
-            .ToListAsync();
-
-        return Ok(new OrdersListDto
-        {
-            Orders = orders.Select(o => o.MapToListViewDto()).ToList()
-        });
+        var ordersDto = await _orderService.GetReservationsBySeller(sellerId);
+        return Ok(ordersDto);
     }
 }

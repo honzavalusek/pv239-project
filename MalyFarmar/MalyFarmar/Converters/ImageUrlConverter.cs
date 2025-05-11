@@ -1,37 +1,31 @@
-// Converters/ImageUrlConverter.cs
-using Microsoft.Maui.Controls;
-using System;
 using System.Globalization;
+using CommunityToolkit.Maui.Converters;
+using MalyFarmar.Options;
+using Microsoft.Extensions.Options;
 
-public class ImageUrlConverter : IValueConverter
+namespace MalyFarmar.Converters;
+
+public class ImageUrlConverter : BaseConverterOneWay<string?, ImageSource>
 {
-    private const string ApiBaseUrl = "http://0.0.0.0:5138";
+    private readonly string _apiBaseUrl;
+    public override ImageSource DefaultConvertReturnValue { get; set; } = "placeholder_product.png";
 
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public ImageUrlConverter(IOptions<ApiOptions> apiOptions)
     {
-        Console.WriteLine("jsem v image url converteru");
-        
-        if (value is string relativeOrAbsoluteUrl && !string.IsNullOrWhiteSpace(relativeOrAbsoluteUrl))
-        {
-            if (relativeOrAbsoluteUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
-            {
-                Console.WriteLine("vracím url :>" + ImageSource.FromUri(new Uri(relativeOrAbsoluteUrl)) + "<");
-                return ImageSource.FromUri(new Uri(relativeOrAbsoluteUrl));
-            }
-            else
-            {
-                string baseUrl = ApiBaseUrl.TrimEnd('/');
-                string relativeUrl = relativeOrAbsoluteUrl.TrimStart('/');
-                string fullUrl = baseUrl + "/" + relativeUrl;
-                Console.WriteLine("vracím url :>" + ImageSource.FromUri(new Uri(fullUrl)) + "<");
-                return ImageSource.FromUri(new Uri(fullUrl));
-            }
-        }
-        return "placeholder_product.png";
+        _apiBaseUrl = apiOptions.Value.BaseUrl;
     }
-
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    
+    public override ImageSource ConvertFrom(string? value, CultureInfo? culture)
     {
-        return new object();
+        if (value == null || string.IsNullOrWhiteSpace(value))
+        {
+            return DefaultConvertReturnValue;
+        }
+        
+        string baseUrl = _apiBaseUrl.TrimEnd('/');
+        string relativeUrl = value.TrimStart('/');
+        string fullUrl = baseUrl + "/" + relativeUrl;
+        
+        return ImageSource.FromUri(new Uri(fullUrl));
     }
 }

@@ -1,13 +1,6 @@
-using System.Drawing;
-using Geolocation;
-using MalyFarmar.Api.DAL.Data;
-using MalyFarmar.Api.DTOs.Input;
-using MalyFarmar.Api.DTOs.Output;
-using MalyFarmar.Api.Mappers;
+using MalyFarmar.Api.BusinessLayer.DTOs.Input;
+using MalyFarmar.Api.BusinessLayer.DTOs.Output;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Jpeg;
 
 namespace MalyFarmar.Api.Controllers;
 
@@ -15,26 +8,25 @@ namespace MalyFarmar.Api.Controllers;
 [Route("api/[controller]")]
 public class ProductController : Controller
 {
-    private readonly MalyFarmarDbContext _context;
+    private readonly IProductService _productService;
 
-    public ProductController(MalyFarmarDbContext context)
+    public ProductController(IProductService productService)
     {
-        _context = context;
+        _productService = productService;
     }
 
     [HttpGet]
     [Route("{productId:int}")]
     public async Task<ActionResult<ProductDetailViewDto>> GetProduct([FromRoute] int productId)
     {
-        var product = await _context.Products
-            .FirstOrDefaultAsync(p => p.Id == productId);
+        var productDto = await _productService.GetProduct(productId);
 
-        if (product == null)
+        if (productDto == null)
         {
             return NotFound();
         }
 
-        return Ok(product.MapToDetailViewDto());
+        return Ok(productDto);
     }
 
     [HttpPost]
@@ -46,41 +38,16 @@ public class ProductController : Controller
             return BadRequest(ModelState);
         }
 
-        Coordinate userLocation = new Coordinate(searchDto.Latitude, searchDto.Longitude);
-        double radiusInMeters = searchDto.RadiusInMeters ?? 10_000;
-
-        var boundaries = new CoordinateBoundaries(userLocation.Latitude, userLocation.Longitude, radiusInMeters, DistanceUnit.Meters);
-        var productsWithinBoundaries = await _context.Products
-            .Include(p => p.Seller)
-            .Where(p => p.Seller.LocationLatitude != null && p.Seller.LocationLongitude != null)
-            .Where(p => p.Seller.LocationLatitude >= boundaries.MinLatitude && p.Seller.LocationLatitude <= boundaries.MaxLatitude)
-            .Where(p => p.Seller.LocationLongitude >= boundaries.MinLongitude && p.Seller.LocationLongitude <= boundaries.MaxLongitude)
-            .ToListAsync();
-
-        var productsListViewDtos = productsWithinBoundaries
-            .Select(p => p.MapToListViewDto(userLocation))
-            .Where(p => p.DistanceInMeters <= radiusInMeters)
-            .OrderBy(p => p.DistanceInMeters)
-            .ToList();
-
-        return Ok(new ProductsListDto
-        {
-            Products = productsListViewDtos
-        });
+        var productsDto = await _productService.GetProducts(searchDto);
+        return Ok(productsDto);
     }
 
     [HttpGet]
     [Route("get-products-by-seller/{sellerId:int}")]
     public async Task<ActionResult<ProductsListDto>> GetProductsBySeller([FromRoute] int sellerId)
     {
-        var products = await _context.Products
-            .Where(p => p.SellerId == sellerId)
-            .ToListAsync();
-
-        return Ok(new ProductsListDto
-        {
-            Products = products.Select(p => p.MapToListViewDto()).ToList()
-        });
+        var productsDto = await _productService.GetProductsBySeller(sellerId);
+        return Ok(productsDto);
     }
 
     [HttpPost]
@@ -92,28 +59,8 @@ public class ProductController : Controller
             return BadRequest(ModelState);
         }
 
-        string? imageUrl = null;
-
-        if (productDto.Image != null && productDto.Image.Length > 0)
-        {
-            var fileName = $"{Guid.NewGuid()}.jpg";
-            var filePath = Path.Combine("uploads", fileName);
-            var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", filePath);
-
-            using (var image = Image.Load(productDto.Image))
-            {
-                image.Save(fullPath, new JpegEncoder());
-            }
-
-            imageUrl = $"/uploads/{fileName}";
-        }
-
-        var addResult = await _context.Products.AddAsync(productDto.MapToEntity(imageUrl));
-        await _context.SaveChangesAsync();
-
-        await addResult.Reference(p => p.Seller).LoadAsync();
-
-        return Ok(addResult.Entity.MapToDetailViewDto());
+        var createdProduct = await _productService.CreateProduct(productDto);
+        return Ok(createdProduct);
     }
 
     [HttpPost]
@@ -125,47 +72,33 @@ public class ProductController : Controller
             return BadRequest(ModelState);
         }
 
-        var product = await _context.Products
-            .FirstOrDefaultAsync(p => p.Id == productId);
-
-        if (product == null)
+        try
         {
-            return NotFound();
+            var updatedProduct = await _productService.UpdateProduct(productId, productDto);
+
+            if (updatedProduct == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(updatedProduct);
         }
-
-        var soldAmount = product.TotalAmount - product.RemainingAmount;
-
-        if (productDto.TotalAmount < soldAmount)
+        catch (InvalidOperationException ex)
         {
-            return BadRequest("Total amount cannot be less than sold amount.");
+            return BadRequest(ex.Message);
         }
-
-        product.Name = productDto.Name;
-        product.Description = productDto.Description;
-        product.TotalAmount = productDto.TotalAmount;
-        product.RemainingAmount = product.TotalAmount - soldAmount;
-        product.PricePerUnit = productDto.PricePerUnit;
-        product.UpdatedAt = DateTime.UtcNow;
-
-        await _context.SaveChangesAsync();
-
-        return Ok(product.MapToDetailViewDto());
     }
 
     [HttpDelete]
     [Route("{productId:int}")]
     public async Task<ActionResult> DeleteProduct([FromRoute] int productId)
     {
-        var product = await _context.Products
-            .FirstOrDefaultAsync(p => p.Id == productId);
+        var result = await _productService.DeleteProduct(productId);
 
-        if (product == null)
+        if (!result)
         {
             return NotFound();
         }
-
-        _context.Products.Remove(product);
-        await _context.SaveChangesAsync();
 
         return Ok();
     }

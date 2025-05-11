@@ -29,25 +29,7 @@
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.companyname.malyfarmar</string>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsLocalNetworking</key>
-		<true/>
-	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need your location to optionally include it in your user profile.</string>
-    <key>CFBundleLocalizations</key>
-    <array>
-        <string>en</string>
-        <string>cs</string>
-    </array>
-    <key>CFBundleDevelopmentRegion</key>
-    <string>en</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>This app needs access to your photo library to select product images.</string>
-    <key>NSCameraUsageDescription</key>
-    <string>This app needs access to your camera to take product images.</string>
+	<string>com.malyfarmarorg.malyfarmar</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
@@ -61,6 +43,19 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location to optionally include it in your user profile.</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>cs</string>
+	</array>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to your photo library to select product images.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs access to your camera to take product images.</string>
 	<key>NSAllowsArbitraryLoads</key>
 	<string>We need your location to optionally include it in your user profile.</string>
 	<key>NSAllowsArbitraryLoadsForMedia</key>

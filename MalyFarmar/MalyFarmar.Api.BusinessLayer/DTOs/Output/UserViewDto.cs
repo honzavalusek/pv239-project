@@ -1,20 +1,13 @@
-using System.ComponentModel.DataAnnotations;
+namespace MalyFarmar.Api.BusinessLayer.DTOs.Output;
 
-namespace MalyFarmar.Api.DTOs.Input;
-
-public class UserCreateDto
+public class UserViewDto
 {
-    [Required]
+    public int Id { get; set; }
     public string FirstName { get; set; }
-
-    [Required]
     public string LastName { get; set; }
-
-    [Required]
     public string Email { get; set; }
-
-    [Required]
     public string PhoneNumber { get; set; }
     public double? UserLongitude { get; set; }
     public double? UserLatitude { get; set; }
+    public string FullName { get; set; }
 }

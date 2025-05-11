@@ -1,14 +1,12 @@
-namespace MalyFarmar.Api.DTOs.Output;
+namespace MalyFarmar.Api.BusinessLayer.DTOs.Output;
 
-public class ProductDetailViewDto
+public class ProductListViewDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public string? Description { get; set; }
-    public decimal TotalAmount { get; set; }
     public decimal RemainingAmount { get; set; }
     public string Unit { get; set; }
     public decimal PricePerUnit { get; set; }
-    public UserViewDto Seller { get; set; }
+    public double? DistanceInMeters { get; set; }
     public string? ImageUrl { get; set; }
 }

@@ -14,7 +14,6 @@
             <converters:StringToBoolConverter x:Key="StringToBoolConverter" />
             <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
             <converters:IsNotNullConverter x:Key="IsNotNullConverter" />
-            <global:ImageUrlConverter x:Key="ImageUrlConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

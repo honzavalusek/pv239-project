@@ -25,7 +25,7 @@ namespace MalyFarmar.ViewModels
 
         private bool _isBusy;
         private string _errorMessage;
-        
+
         public string Name { get => _name; set => SetProperty(ref _name, value); }
         public string Description { get => _description; set => SetProperty(ref _description, value); }
         public string TotalAmountStr { get => _totalAmountStr; set => SetProperty(ref _totalAmountStr, value); }
@@ -104,7 +104,7 @@ namespace MalyFarmar.ViewModels
             if (IsBusy) return;
             IsBusy = true;
             ErrorMessage = null;
-            
+
             try
             {
                 await _apiClient.DeleteProductAsync(ProductId);
@@ -125,7 +125,7 @@ namespace MalyFarmar.ViewModels
                 IsBusy = false;
             }
         }
-        
+
         private async Task ExecuteSaveProductAsync()
         {
             if (!ValidateInput(out ProductEditDto productEditDto))

@@ -15,7 +15,7 @@ namespace MalyFarmar.ViewModels
         private UserListViewDto? _selectedUser;
 
         public ObservableCollection<UserListViewDto> Users { get; private set; }
-        
+
         public UserListViewDto? SelectedUser
         {
             get => _selectedUser;
@@ -24,7 +24,7 @@ namespace MalyFarmar.ViewModels
                 if (_selectedUser == value) return;
                 _selectedUser = value;
                 OnPropertyChanged();
-                    
+
                 if (_selectedUser != null)
                 {
                     Preferences.Default.Set("CurrentUserId", _selectedUser.Id.ToString() ?? string.Empty); // todo konstanta místo "CurrentUserId"
@@ -33,7 +33,7 @@ namespace MalyFarmar.ViewModels
                 {
                     Preferences.Default.Remove("CurrentUserId");
                 }
-                    
+
                 // Refresh SignIn command's can execute status
                 (SignInCommand as Command)?.ChangeCanExecute();
             }
@@ -46,13 +46,13 @@ namespace MalyFarmar.ViewModels
         {
             _client = client;
             Users = new ObservableCollection<UserListViewDto>();
-            
+
             SignInCommand = new Command(
                 execute: SignInAsync,
                 canExecute: () => SelectedUser != null);
-                
+
             CreateUserCommand = new Command(CreateUserAsync);
-            
+
             _ = LoadUsersAsync();
         }
 

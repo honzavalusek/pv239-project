@@ -16,7 +16,7 @@ namespace MalyFarmar.ViewModels // Your ViewModel's namespace
         ProductDetailViewDto? _product;
 
         public ICommand EditProductCommand { get; }
-        
+
         private int _productId;
         public int ProductId
         {
@@ -48,26 +48,26 @@ namespace MalyFarmar.ViewModels // Your ViewModel's namespace
                 canExecute: () => IsCurrentUserTheSeller() && Product != null && !IsLoading
             );
         }
-        
+
         public void RefreshEditCommandCanExecute()
         {
             ((Command)EditProductCommand).ChangeCanExecute();
         }
-        
+
         partial void OnProductChanged(ProductDetailViewDto? value)
         {
             RefreshEditCommandCanExecute();
         }
-        
+
         partial void OnIsLoadingChanged(bool value)
         {
             RefreshEditCommandCanExecute();
         }
-        
+
         private bool IsCurrentUserTheSeller()
         {
             if (Product == null || Product.Seller == null) return false;
-            
+
             string currentUserIdStr = Preferences.Default.Get("CurrentUserId", string.Empty);
 
             if (int.TryParse(currentUserIdStr, out var currentUserId))
@@ -76,7 +76,7 @@ namespace MalyFarmar.ViewModels // Your ViewModel's namespace
             }
             return false;
         }
-        
+
         private async Task ExecuteEditProductCommand()
         {
             if (Product == null)
