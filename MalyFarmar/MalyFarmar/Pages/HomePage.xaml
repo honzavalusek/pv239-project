@@ -57,7 +57,7 @@
                     />
                     
                     <Button Text="Go to My Active Reservations"
-                            Command="{Binding   NavigateToMyActiveReservationsCommand}"
+                            Command="{Binding NavigateToMyActiveReservationsCommand}"
                             HorizontalOptions="Fill" />
                 </VerticalStackLayout>
             </Border>
