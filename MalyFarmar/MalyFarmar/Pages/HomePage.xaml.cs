@@ -1,32 +1,11 @@
-﻿using MalyFarmar.Clients;
-using MalyFarmar.Services.Interfaces;
+﻿using MalyFarmar.ViewModels.Home;
 
 namespace MalyFarmar.Pages;
 
-public partial class HomePage : ContentPage
+public partial class HomePage
 {
-    private readonly ApiClient _client;
-    private readonly IPreferencesService _preferencesService;
-
-    public HomePage(ApiClient client, IPreferencesService preferencesService)
+    public HomePage(HomeViewModel viewModel) : base(viewModel)
     {
         InitializeComponent();
-        _client = client;
-        _preferencesService = preferencesService;
-    }
-
-    private async void OnCounterClicked(object sender, EventArgs e)
-    {
-        var currentUserId = _preferencesService.GetCurrentUserId() ?? throw new Exception("User ID not found");
-
-        var user = (await _client.GetUserAsync(currentUserId)).FullName;
-
-        var response = await _client.GetOrdersAsync(currentUserId);
-
-        var orders = response.Orders.Count;
-
-        CounterBtn.Text = $"hello {user}, you have {orders} orders";
-
-        SemanticScreenReader.Announce(CounterBtn.Text);
     }
 }

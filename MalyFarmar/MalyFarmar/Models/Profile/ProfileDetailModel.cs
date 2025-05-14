@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using MalyFarmar.Models.Shared;
 
-namespace MalyFarmar.Models;
+namespace MalyFarmar.Models.Profile;
 
 public partial class ProfileDetailModel : BaseModel
 {

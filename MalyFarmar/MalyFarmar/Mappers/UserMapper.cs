@@ -1,5 +1,6 @@
 using MalyFarmar.Clients;
-using MalyFarmar.Models;
+using MalyFarmar.Models.Home;
+using MalyFarmar.Models.Profile;
 
 namespace MalyFarmar.Mappers;
 
@@ -16,6 +17,17 @@ public static class UserMapper
             PhoneNumber = dto.PhoneNumber,
             UserLongitude = dto.UserLongitude,
             UserLatitude = dto.UserLatitude
+        };
+    }
+
+    public static HomeDetailModel ToHomeDetailModel(this UserSummaryDto dto)
+    {
+        return new HomeDetailModel()
+        {
+            Id = dto.Id,
+            FirstName = dto.FirstName,
+            NumberOfOrders = dto.NumberOfOrders,
+            NumberOfActiveReservations = dto.NumberOfActiveReservations,
         };
     }
 }

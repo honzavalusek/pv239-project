@@ -547,6 +547,47 @@
         }
       }
     },
+    "/api/User/summary/{userId}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "GetUserSummary",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSummaryDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSummaryDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSummaryDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/User/get-all": {
       "get": {
         "tags": [
@@ -1103,6 +1144,28 @@
           "userLatitude": {
             "type": "number",
             "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "numberOfOrders": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfActiveReservations": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

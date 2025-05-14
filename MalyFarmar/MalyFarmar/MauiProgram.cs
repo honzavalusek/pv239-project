@@ -8,6 +8,7 @@ using MalyFarmar.Pages;
 using MalyFarmar.Services;
 using MalyFarmar.Services.Interfaces;
 using MalyFarmar.ViewModels;
+using MalyFarmar.ViewModels.Home;
 using MalyFarmar.ViewModels.Profile;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -78,6 +79,7 @@ public static class MauiProgram
         services.AddTransient<EditProductViewModel>();
         services.AddTransient<CreateProductViewModel>();
         services.AddTransient<ProfileViewModel>();
+        services.AddTransient<HomeViewModel>();
     }
 
     private static void ConfigurePages(IServiceCollection services)

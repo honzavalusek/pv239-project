@@ -13,15 +13,12 @@
            <VerticalStackLayout Padding="20" Spacing="15">
 
                <!-- Personal Information Card -->
-               <Border StrokeShape="RoundRectangle 10"
-                       Stroke="{DynamicResource Gray200Brush}"
-                       Padding="15"
-                       BackgroundColor="{DynamicResource Gray100}">
+               <Border Style="{StaticResource BorderedContainer}">
                    <VerticalStackLayout Spacing="20">
                        <Label Text="{x:Static strings:ProfilePageStrings.PersonalInformationLabel}"
                               FontSize="18"
                               FontAttributes="Bold"
-                              TextColor="{DynamicResource PrimaryDarkText}" />
+                              Style="{StaticResource BorderedContainerText}" />
                        
                        <Grid ColumnDefinitions="Auto,*"
                              RowDefinitions="Auto,Auto,Auto,Auto"
@@ -30,57 +27,53 @@
 
                            <Label Text="{x:Static strings:ProfilePageStrings.FirstNameLabel}"
                                   FontAttributes="Bold"
-                                  TextColor="{DynamicResource PrimaryDarkText}"
+                                  Style="{StaticResource BorderedContainerText}"
                                   Grid.Row="0" Grid.Column="0"
                                   VerticalOptions="Center" />
                            <Label Text="{Binding Model.FirstName}"
-                                  TextColor="{DynamicResource PrimaryDarkText}"
+                                  Style="{StaticResource BorderedContainerText}"
                                   Grid.Row="0" Grid.Column="1"
                                   VerticalOptions="Center" />
 
                            <Label Text="{x:Static strings:ProfilePageStrings.LastNameLabel}"
                                   FontAttributes="Bold"
-                                  TextColor="{DynamicResource PrimaryDarkText}"
+                                  Style="{StaticResource BorderedContainerText}"
                                   Grid.Row="1" Grid.Column="0"
                                   VerticalOptions="Center" />
                            <Label Text="{Binding Model.LastName}"
-                                  TextColor="{DynamicResource PrimaryDarkText}"
+                                  Style="{StaticResource BorderedContainerText}"
                                   Grid.Row="1" Grid.Column="1"
                                   VerticalOptions="Center" />
 
                            <Label Text="{x:Static strings:ProfilePageStrings.EmailLabel}"
                                   FontAttributes="Bold"
-                                  TextColor="{DynamicResource PrimaryDarkText}"
+                                  Style="{StaticResource BorderedContainerText}"
                                   Grid.Row="2" Grid.Column="0"
                                   VerticalOptions="Center" />
                            <Label Text="{Binding Model.Email}"
-                                  TextColor="{DynamicResource PrimaryDarkText}"
+                                  Style="{StaticResource BorderedContainerText}"
                                   Grid.Row="2" Grid.Column="1"
                                   VerticalOptions="Center" />
 
                            <Label Text="{x:Static strings:ProfilePageStrings.PhoneNumberLabel}"
                                   FontAttributes="Bold"
-                                  TextColor="{DynamicResource PrimaryDarkText}"
+                                  Style="{StaticResource BorderedContainerText}"
                                   Grid.Row="3" Grid.Column="0"
                                   VerticalOptions="Center" />
                            <Label Text="{Binding Model.PhoneNumber}"
-                                  TextColor="{DynamicResource PrimaryDarkText}"
+                                  Style="{StaticResource BorderedContainerText}"
                                   Grid.Row="3" Grid.Column="1"
                                   VerticalOptions="Center" />
                        </Grid>
                    </VerticalStackLayout>
                </Border>
 
-               <!-- Location Information Card -->
-               <Border StrokeShape="RoundRectangle 10"
-                       Stroke="{DynamicResource Gray200Brush}"
-                       Padding="15"
-                       BackgroundColor="{DynamicResource Gray100}">
+               <Border Style="{StaticResource BorderedContainer}">
                    <VerticalStackLayout Spacing="20">
                        <Label Text="{x:Static strings:ProfilePageStrings.LocationInformationLabel}"
                               FontSize="18"
                               FontAttributes="Bold"
-                              TextColor="{DynamicResource PrimaryDarkText}" />
+                              Style="{StaticResource BorderedContainerText}" />
 
                        <Grid ColumnDefinitions="Auto,*"
                              RowDefinitions="Auto,Auto"
@@ -89,21 +82,21 @@
 
                            <Label Text="{x:Static strings:ProfilePageStrings.LatitudeLabel}"
                                   FontAttributes="Bold"
-                                  TextColor="{DynamicResource PrimaryDarkText}"
+                                  Style="{StaticResource BorderedContainerText}"
                                   Grid.Row="0" Grid.Column="0"
                                   VerticalOptions="Center" />
                            <Label Text="{Binding Model.UserLatitude, Converter={StaticResource CoordinateFormatter}}"
-                                  TextColor="{DynamicResource PrimaryDarkText}"
+                                  Style="{StaticResource BorderedContainerText}"
                                   Grid.Row="0" Grid.Column="1"
                                   VerticalOptions="Center" />
 
                            <Label Text="{x:Static strings:ProfilePageStrings.LongitudeLabel}"
                                   FontAttributes="Bold"
-                                  TextColor="{DynamicResource PrimaryDarkText}"
+                                  Style="{StaticResource BorderedContainerText}"
                                   Grid.Row="1" Grid.Column="0"
                                   VerticalOptions="Center" />
                            <Label Text="{Binding Model.UserLongitude, Converter={StaticResource CoordinateFormatter}}"
-                                  TextColor="{DynamicResource PrimaryDarkText}"
+                                  Style="{StaticResource BorderedContainerText}"
                                   Grid.Row="1" Grid.Column="1"
                                   VerticalOptions="Center" />
                        </Grid>
@@ -122,6 +115,4 @@
                </Border>
            </VerticalStackLayout>
        </ScrollView>
-
-             
 </sharedPages:BaseContentPage>

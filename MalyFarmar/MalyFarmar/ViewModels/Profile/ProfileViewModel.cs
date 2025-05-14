@@ -1,10 +1,9 @@
 using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MalyFarmar.Clients;
 using MalyFarmar.Mappers;
-using MalyFarmar.Models;
+using MalyFarmar.Models.Profile;
 using MalyFarmar.Resources.Strings;
 using MalyFarmar.Services.Interfaces;
 using MalyFarmar.ViewModels.Shared;

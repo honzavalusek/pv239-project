@@ -117,6 +117,11 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>ProfilePageStrings.resx</DependentUpon>
       </Compile>
+      <Compile Update="Resources\Strings\HomePageStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>HomePageStrings.resx</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -149,6 +154,10 @@
       <EmbeddedResource Update="Resources\Strings\ProfilePageStrings.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>ProfilePageStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Strings\HomePageStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>HomePageStrings.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
 
