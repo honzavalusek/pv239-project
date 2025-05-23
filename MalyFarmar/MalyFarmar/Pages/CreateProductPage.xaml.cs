@@ -1,17 +1,13 @@
-// Pages/CreateProductPage.xaml.cs
-using MalyFarmar.Clients;
-using MalyFarmar.Services.Interfaces; // For ApiClient
 using MalyFarmar.ViewModels;
-using Microsoft.Maui.Controls;
+using MalyFarmar.Pages.Shared;
 
 namespace MalyFarmar.Pages
 {
-    public partial class CreateProductPage : ContentPage
+    public partial class CreateProductPage : BaseContentPage 
     {
-        public CreateProductPage(ApiClient apiClient, IPreferencesService preferencesService)
+        public CreateProductPage(CreateProductViewModel viewModel) : base(viewModel) 
         {
             InitializeComponent();
-            BindingContext = new CreateProductViewModel(apiClient, preferencesService); // TODO: Dont bind like this, use DI (get inspired by ProfilePage)
         }
     }
 }

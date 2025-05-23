@@ -1,39 +1,29 @@
-// ViewModels/CreateProductViewModel.cs
-
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MalyFarmar.Clients; // For ApiClient, DTOs, and likely FileParameter
-using Microsoft.Maui.Storage; // For FileResult
-using Microsoft.Maui.Media; // For MediaPicker
-using System;
-using System.Globalization; // For CultureInfo
-using System.IO;
-using System.Threading.Tasks;
+using MalyFarmar.Clients;
 using MalyFarmar.Services.Interfaces;
-using Microsoft.Maui.Controls; // For Shell, Application.Current.MainPage.DisplayAlert, Preferences
+using MalyFarmar.ViewModels.Shared; // For BaseViewModel
+using System.Globalization;
 
 namespace MalyFarmar.ViewModels
 {
-    public partial class CreateProductViewModel : ObservableObject
+    public partial class CreateProductViewModel : BaseViewModel // Inherit from BaseViewModel
     {
         private readonly ApiClient _apiClient;
         private readonly IPreferencesService _preferencesService;
 
         [ObservableProperty] private string _name;
-
         [ObservableProperty] private string _description;
-
         [ObservableProperty] private string _totalAmountStr;
-
         [ObservableProperty] private string _unit;
-
         [ObservableProperty] private string _pricePerUnitStr;
-
-        [ObservableProperty] private FileResult? _selectedImageFile;
-
+        [ObservableProperty] private FileResult _selectedImageFile;
         [ObservableProperty] private ImageSource _productImageSource;
 
-        [ObservableProperty] private bool _isBusy;
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(PickImageCommand))]
+        [NotifyCanExecuteChangedFor(nameof(CreateProductCommand))]
+        private bool _isSubmitting;
 
         [ObservableProperty] private string _errorMessage;
 
@@ -43,44 +33,38 @@ namespace MalyFarmar.ViewModels
             _preferencesService = preferencesService;
         }
 
-        [RelayCommand]
+        private bool CanExecuteActions() => !IsSubmitting;
+
+        [RelayCommand(CanExecute = nameof(CanExecuteActions))]
         private async Task PickImageAsync()
         {
             try
             {
-                var result = await MediaPicker.Default.PickPhotoAsync(new MediaPickerOptions
-                {
-                    Title = "Select Product Image"
-                });
-
+                ErrorMessage = null;
+                var result = await MediaPicker.Default.PickPhotoAsync(new MediaPickerOptions { Title = "Select Product Image" });
                 if (result != null)
                 {
-                    // Accessing GENERATED property 'SelectedImageFile'
                     SelectedImageFile = result;
-                    // Accessing GENERATED property 'ProductImageSource'
                     ProductImageSource = ImageSource.FromFile(result.FullPath);
-                    // Accessing GENERATED property 'ErrorMessage'
-                    ErrorMessage = null;
                 }
             }
             catch (Exception ex)
             {
                 ErrorMessage = $"Error picking image: {ex.Message}";
-                await Application.Current.MainPage.DisplayAlert("Error", ErrorMessage, "OK");
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(CanExecuteActions))]
         private async Task CreateProductAsync()
         {
             if (!ValidateInput(out double totalAmount, out double pricePerUnit))
             {
-                return; // ValidateInput will set ErrorMessage
+                return; 
             }
 
-            IsBusy = true;
+            IsSubmitting = true;
             ErrorMessage = null;
-            Stream imageStream = null; // Keep stream reference for disposal
+            Stream imageStream = null;
 
             try
             {
@@ -88,24 +72,29 @@ namespace MalyFarmar.ViewModels
                 if (sellerId == null)
                 {
                     ErrorMessage = "Could not determine current user. Please log in.";
-                    IsBusy = false;
+                    IsSubmitting = false;
                     return;
                 }
 
                 byte[] imageBytes = null;
+                string imageFileName = null;
+                string imageMimeType = null;
+
                 if (SelectedImageFile != null)
                 {
                     try
                     {
                         imageStream = await SelectedImageFile.OpenReadAsync();
-                        var memoryStream = new MemoryStream();
+                        using var memoryStream = new MemoryStream();
                         await imageStream.CopyToAsync(memoryStream);
                         imageBytes = memoryStream.ToArray();
+                        imageFileName = SelectedImageFile.FileName;
+                        imageMimeType = SelectedImageFile.ContentType;
                     }
                     catch (Exception ex)
                     {
                         ErrorMessage = $"Error processing image file: {ex.Message}";
-                        IsBusy = false;
+                        IsSubmitting = false;
                         imageStream?.Dispose();
                         return;
                     }
@@ -122,12 +111,11 @@ namespace MalyFarmar.ViewModels
                     Image = imageBytes
                 };
 
-                var result = await _apiClient.CreateProductAsync(productCreateDto);
+                var createdProduct = await _apiClient.CreateProductAsync(productCreateDto);
 
-                if (result != null)
+                if (createdProduct != null)
                 {
-                    await Application.Current.MainPage.DisplayAlert("Success",
-                        $"Product '{productCreateDto.Name}' created!", "OK");
+                    await Application.Current.MainPage.DisplayAlert("Success", $"Product '{createdProduct.Name}' created!", "OK");
                     await Shell.Current.GoToAsync("..");
                 }
                 else
@@ -135,20 +123,12 @@ namespace MalyFarmar.ViewModels
                     ErrorMessage = "Failed to create product. Server returned an unexpected response.";
                 }
             }
-            catch (ApiException apiEx)
-            {
-                ErrorMessage = $"Creation failed: (Status {apiEx.StatusCode}) {apiEx.Message}";
-                System.Diagnostics.Debug.WriteLine($"API Error {apiEx.StatusCode}: {apiEx.Message}"); // Log raw content
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage = $"An unexpected error occurred: {ex.Message}";
-                System.Diagnostics.Debug.WriteLine($"Generic Error: {ex}");
-            }
+            catch (ApiException apiEx) { ErrorMessage = $"Creation failed: (Status {apiEx.StatusCode}) {apiEx.Message}"; }
+            catch (Exception ex) { ErrorMessage = $"An unexpected error occurred: {ex.Message}"; }
             finally
             {
                 imageStream?.Dispose();
-                IsBusy = false;
+                IsSubmitting = false;
             }
         }
 
@@ -158,19 +138,9 @@ namespace MalyFarmar.ViewModels
             pricePerUnit = 0;
             ErrorMessage = null;
 
-            if (string.IsNullOrWhiteSpace(Name))
-            {
-                ErrorMessage = "Product name is required.";
-                return false;
-            }
+            if (string.IsNullOrWhiteSpace(Name)) { ErrorMessage = "Product name is required."; return false; }
+            if (string.IsNullOrWhiteSpace(Unit)) { ErrorMessage = "Unit is required (e.g., kg, piece, liter)."; return false; }
 
-            if (string.IsNullOrWhiteSpace(Unit))
-            {
-                ErrorMessage = "Unit is required (e.g., kg, piece, liter).";
-                return false;
-            }
-
-            // Use double.TryParse
             if (string.IsNullOrWhiteSpace(TotalAmountStr) ||
                 !double.TryParse(TotalAmountStr, NumberStyles.Any, CultureInfo.InvariantCulture, out totalAmount) ||
                 totalAmount <= 0)
@@ -179,7 +149,6 @@ namespace MalyFarmar.ViewModels
                 return false;
             }
 
-            // Use double.TryParse
             if (string.IsNullOrWhiteSpace(PricePerUnitStr) || !double.TryParse(PricePerUnitStr, NumberStyles.Any,
                     CultureInfo.InvariantCulture, out pricePerUnit) || pricePerUnit <= 0)
             {

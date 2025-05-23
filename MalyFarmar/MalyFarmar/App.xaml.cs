@@ -3,6 +3,7 @@ using MalyFarmar.Converters;
 using MalyFarmar.Options;
 using MalyFarmar.Pages;
 using MalyFarmar.Services.Interfaces;
+using MalyFarmar.ViewModels;
 using Microsoft.Extensions.Options;
 
 namespace MalyFarmar;
@@ -15,20 +16,18 @@ public partial class App : Application
 
         var imageToUrlConverter = new ImageUrlConverter(apiOptions);
         Resources.Add("ImageUrlConverter", imageToUrlConverter);
+        
+        var inverseBoolConverter = new InverseBoolConverter();
+        Resources.Add("InverseBoolConverter", inverseBoolConverter);
+        
     }
 
-    protected override Window CreateWindow(IActivationState? activationState)
+    protected override Window CreateWindow(IActivationState activationState)
     {
-        var mauiContext = activationState!.Context;
 
-        var services = mauiContext.Services;
+        var services = activationState.Context.Services;
+        var loginPage = services.GetRequiredService<LoginPage>();
 
-        var apiClient = services.GetRequiredService<ApiClient>();
-        var preferencesService = services.GetRequiredService<IPreferencesService>();
-        var locationService = services.GetRequiredService<ILocationService>();
-
-        var loginPage = new LoginPage(apiClient, preferencesService, locationService);
-
-        return new Window(loginPage);
+        return new Window(new NavigationPage(loginPage));
     }
 }

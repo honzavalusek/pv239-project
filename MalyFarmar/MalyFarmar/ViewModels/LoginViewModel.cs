@@ -1,76 +1,62 @@
-using MalyFarmar.Clients;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using MalyFarmar.Clients;
 using MalyFarmar.Pages;
-using MalyFarmar.Resources.Strings;
 using MalyFarmar.Services.Interfaces;
+using MalyFarmar.ViewModels.Shared;
+using System.Collections.ObjectModel;
+using MalyFarmar.Resources.Strings;
 
 namespace MalyFarmar.ViewModels
 {
-    public partial class LoginViewModel : ObservableObject
+    public partial class LoginViewModel : BaseViewModel
     {
         private readonly ApiClient _apiClient;
         private readonly IPreferencesService _preferencesService;
-        private readonly ILocationService _locationService;
+
+        public ObservableCollection<UserListViewDto> Users { get; } // Already an ObservableCollection
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SignInCommand))]
+        // Notify SignInCommand when SelectedUser changes
         private UserListViewDto? _selectedUser;
 
-        public ObservableCollection<UserListViewDto> Users { get; private set; }
-
-        public UserListViewDto? SelectedUser
+        // This method is auto-called by CommunityToolkit.Mvvm when SelectedUser changes
+        partial void OnSelectedUserChanged(UserListViewDto? value)
         {
-            get => _selectedUser;
-            set
+            if (value != null)
             {
-                if (_selectedUser == value) return;
-                _selectedUser = value;
-                OnPropertyChanged();
-
-                if (_selectedUser != null)
-                {
-                    _preferencesService.SetCurrentUserId(_selectedUser.Id);
-                }
-                else
-                {
-                    _preferencesService.UnsetCurrentUserId();
-                }
-
-                // Refresh SignIn command's can execute status
-                (SignInCommand as Command)?.ChangeCanExecute();
+                _preferencesService.SetCurrentUserId(value.Id);
             }
+            else
+            {
+                _preferencesService.UnsetCurrentUserId();
+            }
+            // SignInCommand.NotifyCanExecuteChanged(); // Handled by [NotifyCanExecuteChangedFor]
         }
 
-        public ICommand SignInCommand { get; } // todo smazat -> relay command
-        public ICommand CreateUserCommand { get; }
-
-        public LoginViewModel(ApiClient apiClient, IPreferencesService preferencesService, ILocationService locationService)
+        public LoginViewModel(ApiClient apiClient, IPreferencesService preferencesService)
         {
             _apiClient = apiClient;
             _preferencesService = preferencesService;
-            _locationService = locationService;
-
             Users = new ObservableCollection<UserListViewDto>();
+            IsBusy = false;
+        }
 
-            SignInCommand = new Command(
-                execute: SignInAsync,
-                canExecute: () => SelectedUser != null);
-
-            CreateUserCommand = new Command(CreateUserAsync);
-
-            _ = LoadUsersAsync();
+        protected override async Task LoadDataAsync()
+        {
+            await LoadUsersAsync();
         }
 
         private async Task LoadUsersAsync()
         {
+            IsBusy = true;
             try
             {
                 var usersList = await _apiClient.GetAllUsersAsync();
-
+                Users.Clear();
                 if (usersList?.Users != null)
                 {
-                    Users.Clear();
                     foreach (var user in usersList.Users)
                     {
                         Users.Add(user);
@@ -80,34 +66,85 @@ namespace MalyFarmar.ViewModels
             catch (Exception ex)
             {
                 await Application.Current.MainPage.DisplayAlert(
-                    LoginPageStrings.ErrorLoadingUsersAlertTitle,
-                    LoginPageStrings.ErrorLoadingUsersAlertDescription + ": " + ex.Message,
-                    CommonStrings.Ok
-                    );
+                    "Error",
+                    "Error loading users: " + ex.Message,
+                    "OK"
+                );
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 
-        private async void SignInAsync()
+        private bool CanSignIn() => SelectedUser != null && !IsBusy;
+
+        [RelayCommand(CanExecute = nameof(CanSignIn))]
+        private async Task SignIn()
         {
             if (SelectedUser == null)
             {
                 await Application.Current.MainPage.DisplayAlert(
-                    LoginPageStrings.SelectUserAlertTitle,
-                    LoginPageStrings.SelectUserAlertDescription,
-                    CommonStrings.Error
-                    );
+                    "Select User",
+                    "Please tap one of the profiles above first.",
+                    "Error"
+                );
                 return;
             }
 
-            _preferencesService.SetCurrentUserId(SelectedUser.Id);
-            Console.WriteLine("Signing in as user: " + SelectedUser.Id);
+            System.Diagnostics.Debug.WriteLine("Signing in as user: " + SelectedUser.Id);
 
             Application.Current.MainPage = new AppShell();
         }
 
-        private void CreateUserAsync()
+        [RelayCommand(CanExecute = nameof(CanNavigate))]
+        private async Task CreateUser()
         {
-            Application.Current.MainPage = new CreateUserPage(_apiClient, _preferencesService, _locationService); // TODO: I think this can be done better, using DI somehow
+            if (Application.Current?.MainPage?.Navigation != null)
+            {
+                var serviceProvider = Application.Current.Handler?.MauiContext?.Services ??
+                                      (Application.Current as IPlatformApplication)?.Services;
+
+                if (serviceProvider != null)
+                {
+                    var createUserPage = serviceProvider.GetService<CreateUserPage>();
+                    if (createUserPage != null)
+                    {
+                        await Application.Current.MainPage.Navigation.PushAsync(createUserPage);
+                    }
+                    else
+                    {
+                        await Application.Current.MainPage.DisplayAlert(
+                            "Error",
+                            "Unable to open the create user page. Please try again later.",
+                            CommonStrings.Ok);
+                    }
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert(
+                        "Error",
+                        "Application services not available to open create user page.",
+                        CommonStrings.Ok);
+                }
+            }
+            else
+            {
+                // This would happen if MainPage is not a NavigationPage or not set.
+                await Application.Current.MainPage.DisplayAlert(
+                    "Navigation Error",
+                    "Cannot navigate at this time. Please restart the application.",
+                    CommonStrings.Ok);
+            }
         }
+
+
+        private bool CanNavigate() => !IsBusy;
+
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SignInCommand))]
+        [NotifyCanExecuteChangedFor(nameof(CreateUserCommand))]
+        private bool _isBusy;
     }
 }

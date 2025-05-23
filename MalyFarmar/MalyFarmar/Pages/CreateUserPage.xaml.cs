@@ -1,17 +1,13 @@
-// Pages/CreateUserPage.xaml.cs
-using MalyFarmar.Clients;
-using MalyFarmar.Services.Interfaces;
 using MalyFarmar.ViewModels;
-using Microsoft.Maui.Controls;
+using MalyFarmar.Pages.Shared;
 
 namespace MalyFarmar.Pages
 {
-    public partial class CreateUserPage : ContentPage
+    public partial class CreateUserPage : BaseContentPage
     {
-        public CreateUserPage(ApiClient apiClient, IPreferencesService preferencesService, ILocationService locationService)
+        public CreateUserPage(CreateUserViewModel viewModel) : base(viewModel)
         {
             InitializeComponent();
-            BindingContext = new CreateUserViewModel(apiClient, preferencesService, locationService); // TODO: Dont bind like this, use DI (get inspired by ProfilePage)
         }
     }
 }

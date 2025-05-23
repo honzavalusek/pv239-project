@@ -1,26 +1,13 @@
 using MalyFarmar.ViewModels;
+using MalyFarmar.Pages.Shared; 
 
 namespace MalyFarmar.Pages
 {
-    public partial class ProductDetailPage : ContentPage
+    public partial class ProductDetailPage : BaseContentPage 
     {
-        public ProductDetailPage(ProductDetailViewModel viewModel)
+        public ProductDetailPage(ProductDetailViewModel viewModel) : base(viewModel)
         {
             InitializeComponent();
-            BindingContext = viewModel;
-        }
-
-        protected override async void OnAppearing()
-        {
-            base.OnAppearing();
-
-            if (BindingContext is ProductDetailViewModel viewModel)
-            {
-                if (viewModel.ProductId > 0)
-                {
-                    await viewModel.LoadProductDetailsAsync();
-                }
-            }
         }
     }
 }
