@@ -1,13 +1,11 @@
-// Pages/EditProductPage.xaml.cs
 using MalyFarmar.ViewModels;
-using Microsoft.Maui.Controls;
+using MalyFarmar.Pages.Shared;
 
 namespace MalyFarmar.Pages
 {
     [QueryProperty(nameof(ProductId), "productId")]
-    public partial class EditProductPage : ContentPage
+    public partial class EditProductPage : BaseContentPage
     {
-        // This property will be set by the Shell navigation system
         private int _productIdValue;
         public int ProductId
         {
@@ -15,7 +13,6 @@ namespace MalyFarmar.Pages
             set
             {
                 _productIdValue = value;
-                // When ProductId is set on the page, pass it to the (already injected) ViewModel
                 if (BindingContext is EditProductViewModel viewModel)
                 {
                     viewModel.ProductId = value;
@@ -23,12 +20,10 @@ namespace MalyFarmar.Pages
             }
         }
 
-        public EditProductPage(EditProductViewModel viewModel) // ViewModel is injected by DI
+        public EditProductPage(EditProductViewModel viewModel) : base(viewModel) // ViewModel injected
         {
             InitializeComponent();
-            BindingContext = viewModel;
-
-            if (_productIdValue > 0) // If ProductId was set by QueryProperty very early
+            if (_productIdValue > 0)
             {
                 viewModel.ProductId = _productIdValue;
             }

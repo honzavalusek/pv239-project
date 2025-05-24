@@ -1,97 +1,102 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MalyFarmar.Clients; // For ApiClient and DTOs
-using System.Threading.Tasks;
-using System.Windows.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using MalyFarmar.Clients;
+using MalyFarmar.Messages;
 using MalyFarmar.Pages;
 using MalyFarmar.Services.Interfaces;
+using MalyFarmar.ViewModels.Shared; 
 
-namespace MalyFarmar.ViewModels // Your ViewModel's namespace
+namespace MalyFarmar.ViewModels
 {
-    [QueryProperty(nameof(ProductId), "ProductId")] // "ProductId" must match the query param name
-    public partial class ProductDetailViewModel : ObservableObject
+    [QueryProperty(nameof(ProductId), "ProductId")]
+    public partial class ProductDetailViewModel : BaseViewModel 
     {
         private readonly ApiClient _apiClient;
         private readonly IPreferencesService _preferencesService;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(EditProductCommand))] 
         ProductDetailViewDto? _product;
 
-        public ICommand EditProductCommand { get; }
-
-        private int _productId;
         public int ProductId
         {
-            get => _productId;
+            get;
             set
             {
-                if (SetProperty(ref _productId, value) && value > 0) // Only load if ID is valid and changed
+                if (SetProperty(ref field, value) && field > 0)
                 {
-                    _ = LoadProductDetailsAsync(); // Fire and forget, error handling is inside
+                    LoadProductDetailsAsync();
                 }
             }
         }
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(EditProductCommand))] 
         bool _isLoading;
 
         [ObservableProperty]
         string? _errorMessage;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(EditProductCommand))] 
         bool _hasError;
+
 
         public ProductDetailViewModel(ApiClient apiClient, IPreferencesService preferencesService)
         {
             _apiClient = apiClient;
             _preferencesService = preferencesService;
-
-            EditProductCommand = new Command(
-                execute: async () => await ExecuteEditProductCommand(),
-                canExecute: () => IsCurrentUserTheSeller() && Product != null && !IsLoading
-            );
+            
+            WeakReferenceMessenger.Default.Register<ProductUpdatedMessage>(this, async (recipient, message) =>
+            {
+                if (message.ProductId == ProductId && ProductId > 0)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[ProductDetailVM] ProductUpdatedMessage received for ProductId {ProductId}. Reloading details.");
+                    await MainThread.InvokeOnMainThreadAsync(async () =>
+                    {
+                        if (!IsLoading)
+                        {
+                            await LoadProductDetailsAsync();
+                        }
+                    });
+                }
+            });
         }
 
-        public void RefreshEditCommandCanExecute()
+        public async Task OnAppearingAsync()
         {
-            ((Command)EditProductCommand).ChangeCanExecute();
+            await base.OnAppearingAsync(); 
+            if (ProductId > 0) 
+            {
+                await LoadProductDetailsAsync();
+            }
         }
 
-        partial void OnProductChanged(ProductDetailViewDto? value)
+        private bool CanEditProduct()
         {
-            RefreshEditCommandCanExecute();
+            return Product != null && !IsLoading && !_hasError && IsCurrentUserTheSeller();
         }
 
-        partial void OnIsLoadingChanged(bool value)
+        [RelayCommand(CanExecute = nameof(CanEditProduct))]
+        private async Task EditProduct() 
         {
-            RefreshEditCommandCanExecute();
+            if (Product == null) return;
+            await Shell.Current.GoToAsync($"{nameof(EditProductPage)}?productId={Product.Id}");
         }
 
         private bool IsCurrentUserTheSeller()
         {
             if (Product == null || Product.Seller == null) return false;
-
-            var currentUserId = _preferencesService.GetCurrentUserId();
-
-            return Product.Seller.Id == currentUserId;
-
-        }
-
-        private async Task ExecuteEditProductCommand()
-        {
-            if (Product == null)
-            {
-                return;
-            }
-
-            await Shell.Current.GoToAsync($"{nameof(EditProductPage)}?productId={Product.Id}");
+            var currentUserId = _preferencesService.GetCurrentUserId(); // Returns int?
+            return currentUserId.HasValue && Product.Seller.Id == currentUserId.Value;
         }
 
         public async Task LoadProductDetailsAsync()
         {
             if (ProductId == 0)
             {
-                ErrorMessage = "Product ID is invalid.";
+                ErrorMessage = "Product ID is invalid for loading.";
                 HasError = true;
                 return;
             }
@@ -99,22 +104,27 @@ namespace MalyFarmar.ViewModels // Your ViewModel's namespace
             IsLoading = true;
             HasError = false;
             ErrorMessage = null;
-            Product = null; // Clear previous product details
 
             try
             {
-                Product = await _apiClient.GetProductAsync(ProductId);
-                if (Product == null)
+                var tempProduct = await _apiClient.GetProductAsync(ProductId);
+                if (tempProduct == null)
                 {
                     ErrorMessage = "Product not found or error fetching details.";
                     HasError = true;
+                    Product = null; 
+                }
+                else
+                {
+                    Product = tempProduct; 
                 }
             }
             catch (Exception ex)
             {
                 ErrorMessage = $"Failed to load product details: {ex.Message}";
                 HasError = true;
-                Console.WriteLine($"Error in ProductDetailViewModel.LoadProductDetailsAsync: {ex}");
+                Product = null; // Ensure product is null on error
+                System.Diagnostics.Debug.WriteLine($"Error in ProductDetailViewModel.LoadProductDetailsAsync: {ex}");
             }
             finally
             {

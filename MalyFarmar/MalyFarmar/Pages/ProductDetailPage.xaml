@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+<sharedPages:BaseContentPage x:Class="MalyFarmar.Pages.ProductDetailPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:MalyFarmar.ViewModels"
+    xmlns:sharedPages="clr-namespace:MalyFarmar.Pages.Shared" xmlns:converters="clr-namespace:MalyFarmar.Converters"
+    xmlns:icons="http://www.aathifmahir.com/dotnet/2022/maui/icons" x:DataType="vm:ProductDetailViewModel"
+    Title="{Binding Product.Name, FallbackValue='Product Details'}">
 
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:vm="clr-namespace:MalyFarmar.ViewModels"
-             x:Class="MalyFarmar.Pages.ProductDetailPage"
-             x:DataType="vm:ProductDetailViewModel"
-             Title="{Binding Product.Name, FallbackValue='Product Details'}">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Edit"
-                     Command="{Binding EditProductCommand}"
+    <sharedPages:BaseContentPage.ToolbarItems> <ToolbarItem Text="Edit"
+                     IconImageSource="{icons:MaterialOutlined Edit}" Command="{Binding EditProductCommand}"
                      Order="Primary" Priority="0" />
-    </ContentPage.ToolbarItems>
+    </sharedPages:BaseContentPage.ToolbarItems>
+
+    <sharedPages:BaseContentPage.Resources>
+        <ResourceDictionary>
+            </ResourceDictionary>
+    </sharedPages:BaseContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="10">
@@ -19,9 +24,10 @@
 
             <Label Text="{Binding ErrorMessage}" TextColor="Red"
                    IsVisible="{Binding ErrorMessage, Converter={StaticResource IsStringNotNullOrEmptyConverter}}" />
+            
             <Grid IsVisible="{Binding Product, Converter={StaticResource IsNotNullConverter}}">
                 <VerticalStackLayout Spacing="10">
-                    <Image Source="{Binding Product.ImageUrl, Converter={StaticResource ImageUrlConverter}}"
+                    <Image Source="{Binding Product.ImageUrl, Converter={StaticResource ImageUrlConverter}, TargetNullValue='placeholder_product.png'}"
                            HeightRequest="250" Aspect="AspectFit" BackgroundColor="LightGray" />
 
                     <Label Text="{Binding Product.Name}" FontSize="Title" FontAttributes="Bold" />
@@ -68,4 +74,4 @@
             </Grid>
         </VerticalStackLayout>
     </ScrollView>
-</ContentPage>
+</sharedPages:BaseContentPage>

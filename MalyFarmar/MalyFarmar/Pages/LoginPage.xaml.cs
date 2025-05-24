@@ -1,15 +1,13 @@
-using MalyFarmar.Clients;
-using MalyFarmar.Services.Interfaces;
 using MalyFarmar.ViewModels;
+using MalyFarmar.Pages.Shared;
 
 namespace MalyFarmar.Pages
 {
-    public partial class LoginPage : ContentPage
+    public partial class LoginPage : BaseContentPage
     {
-        public LoginPage(ApiClient apiClient, IPreferencesService preferencesService, ILocationService locationService)
+        public LoginPage(LoginViewModel viewModel) : base(viewModel)
         {
             InitializeComponent();
-            BindingContext = new LoginViewModel(apiClient, preferencesService, locationService); // TODO: Dont bind like this, use DI (get inspired by ProfilePage)
         }
     }
 }
