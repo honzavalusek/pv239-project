@@ -30,16 +30,16 @@ namespace MalyFarmar.ViewModels
         private string _userLatitude;
 
         [ObservableProperty]
-        private string _firstNameError;
+        private string? _firstNameError;
         [ObservableProperty]
-        private string _lastNameError;
+        private string? _lastNameError;
         [ObservableProperty]
-        private string _emailError;
+        private string? _emailError;
         [ObservableProperty]
-        private string _phoneNumberError;
+        private string? _phoneNumberError;
 
         [ObservableProperty]
-        private string _generalError;
+        private string? _generalError;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(GetLocationCommand))]
@@ -178,7 +178,7 @@ namespace MalyFarmar.ViewModels
         private async Task<bool> ValidateInputAsync()
         {
             FirstNameError = LastNameError = EmailError = PhoneNumberError = GeneralError = null;
-            bool isValid = true;
+            var isValid = true;
 
             if (string.IsNullOrWhiteSpace(FirstName)) { FirstNameError = CreateUserPageStrings.FirstNameRequiredMessage; isValid = false; }
             if (string.IsNullOrWhiteSpace(LastName)) { LastNameError = CreateUserPageStrings.LastNameRequiredMessage; isValid = false; }

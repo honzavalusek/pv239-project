@@ -22,7 +22,7 @@ namespace MalyFarmar.ViewModels
         private bool _isBusyInternal;
 
         [ObservableProperty]
-        private string _statusMessage;
+        private string? _statusMessage;
 
         public ObservableCollection<ProductListViewDto> UserProducts { get; }
 

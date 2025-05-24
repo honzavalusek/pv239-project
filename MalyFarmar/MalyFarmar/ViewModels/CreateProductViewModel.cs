@@ -27,7 +27,8 @@ namespace MalyFarmar.ViewModels
         [NotifyCanExecuteChangedFor(nameof(CreateProductCommand))]
         private bool _isSubmitting;
 
-        [ObservableProperty] private string _errorMessage;
+        [ObservableProperty] 
+        private string? _errorMessage;
 
         public CreateProductViewModel(ApiClient apiClient, IPreferencesService preferencesService)
         {
@@ -66,7 +67,7 @@ namespace MalyFarmar.ViewModels
 
             IsSubmitting = true;
             ErrorMessage = null;
-            Stream imageStream = null;
+            Stream? imageStream = null;
 
             try
             {
@@ -78,9 +79,9 @@ namespace MalyFarmar.ViewModels
                     return;
                 }
 
-                byte[] imageBytes = null;
-                string imageFileName = null;
-                string imageMimeType = null;
+                byte[]? imageBytes = null;
+                string? imageFileName = null;
+                string? imageMimeType = null;
 
                 if (SelectedImageFile != null)
                 {

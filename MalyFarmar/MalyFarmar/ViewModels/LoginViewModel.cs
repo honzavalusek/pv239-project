@@ -14,14 +14,12 @@ namespace MalyFarmar.ViewModels
         private readonly ApiClient _apiClient;
         private readonly IPreferencesService _preferencesService;
 
-        public ObservableCollection<UserListViewDto> Users { get; } // Already an ObservableCollection
+        public ObservableCollection<UserListViewDto> Users { get; }
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SignInCommand))]
-        // Notify SignInCommand when SelectedUser changes
         private UserListViewDto? _selectedUser;
 
-        // This method is auto-called by CommunityToolkit.Mvvm when SelectedUser changes
         partial void OnSelectedUserChanged(UserListViewDto? value)
         {
             if (value != null)
@@ -32,7 +30,6 @@ namespace MalyFarmar.ViewModels
             {
                 _preferencesService.UnsetCurrentUserId();
             }
-            // SignInCommand.NotifyCanExecuteChanged(); // Handled by [NotifyCanExecuteChangedFor]
         }
 
         public LoginViewModel(ApiClient apiClient, IPreferencesService preferencesService)

@@ -18,7 +18,7 @@ namespace MalyFarmar.ViewModels
         private int _productId;
 
         [ObservableProperty]
-        private ProductDetailViewDto _loadedProduct;
+        private ProductDetailViewDto? _loadedProduct;
 
         [ObservableProperty] private string _name;
         [ObservableProperty] private string _description;
@@ -38,7 +38,7 @@ namespace MalyFarmar.ViewModels
         private bool _isBusyLoading;
 
         [ObservableProperty]
-        private string _errorMessage;
+        private string? _errorMessage;
 
 
         public EditProductViewModel(ApiClient apiClient)
