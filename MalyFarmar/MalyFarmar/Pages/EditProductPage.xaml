@@ -3,12 +3,11 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:viewmodels="clr-namespace:MalyFarmar.ViewModels"
-    xmlns:sharedPages="clr-namespace:MalyFarmar.Pages.Shared" xmlns:converters="clr-namespace:MalyFarmar.Converters"
+    xmlns:sharedPages="clr-namespace:MalyFarmar.Pages.Shared" 
+    xmlns:converters="clr-namespace:MalyFarmar.Converters"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    x:DataType="viewmodels:EditProductViewModel"
-    Title="Edit Product">
-
-    <sharedPages:BaseContentPage.Resources>
+    xmlns:strings="clr-namespace:MalyFarmar.Resources.Strings" x:DataType="viewmodels:EditProductViewModel"
+    Title="{x:Static strings:EditProductPageStrings.PageTitle}"> <sharedPages:BaseContentPage.Resources>
         <ResourceDictionary>
             <toolkit:IsStringNotNullOrEmptyConverter x:Key="IsStringNotNullOrEmptyConverter" />
             <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
@@ -17,29 +16,26 @@
 
     <ScrollView>
         <VerticalStackLayout Spacing="10" Padding="20">
-            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+            <ActivityIndicator IsRunning="{Binding IsBusyLoading}" IsVisible="{Binding IsBusyLoading}" HorizontalOptions="Center" />
 
-            <!-- <Image Source="{Binding ImageUrl, TargetNullValue='placeholder_product.png'}" -->
-                   <!-- HeightRequest="200" Aspect="AspectFit" BackgroundColor="LightGray" Margin="0,0,0,10"/> -->
+            <Label Text="{x:Static strings:EditProductPageStrings.LabelProductName}" />
+            <Entry Text="{Binding Name}" Placeholder="{x:Static strings:EditProductPageStrings.PlaceholderProductName}" />
 
-            <Label Text="Product Name*" />
-            <Entry Text="{Binding Name}" Placeholder="Enter product name" />
-
-            <Label Text="Description" />
-            <Editor Text="{Binding Description}" Placeholder="Enter product description" AutoSize="TextChanges" HeightRequest="100"/>
+            <Label Text="{x:Static strings:EditProductPageStrings.LabelDescription}" />
+            <Editor Text="{Binding Description}" Placeholder="{x:Static strings:EditProductPageStrings.PlaceholderDescription}" AutoSize="TextChanges" HeightRequest="100"/>
 
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="5">
                 <VerticalStackLayout Grid.Column="0">
-                    <Label Text="Total Amount*" />
-                    <Entry Text="{Binding TotalAmountStr}" Keyboard="Numeric" Placeholder="e.g., 100.50" />
+                    <Label Text="{x:Static strings:EditProductPageStrings.LabelTotalAmount}" />
+                    <Entry Text="{Binding TotalAmountStr}" Keyboard="Numeric" Placeholder="{x:Static strings:EditProductPageStrings.PlaceholderTotalAmount}" />
                 </VerticalStackLayout>
                 <Label Grid.Column="1" Text="{Binding UnitDisplay}" VerticalOptions="End" Padding="0,0,0,10" FontAttributes="Bold"/>
             </Grid>
             
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="5">
                  <VerticalStackLayout Grid.Column="0">
-                    <Label Text="Price Per Unit*" />
-                    <Entry Text="{Binding PricePerUnitStr}" Keyboard="Numeric" Placeholder="e.g., 10.99" />
+                    <Label Text="{x:Static strings:EditProductPageStrings.LabelPricePerUnit}" />
+                    <Entry Text="{Binding PricePerUnitStr}" Keyboard="Numeric" Placeholder="{x:Static strings:EditProductPageStrings.PlaceholderPricePerUnit}" />
                 </VerticalStackLayout>
                 <Label Grid.Column="1" Text="{Binding UnitDisplay, StringFormat='/ {0}'}" VerticalOptions="End" Padding="0,0,0,10" FontAttributes="Bold"/>
             </Grid>
@@ -49,12 +45,12 @@
                    IsVisible="{Binding ErrorMessage, Converter={StaticResource IsStringNotNullOrEmptyConverter}}" 
                    Margin="0,10,0,0"/>
 
-            <Button Text="Save Changes" 
+            <Button Text="{x:Static strings:EditProductPageStrings.ButtonSaveChanges}" 
                     Command="{Binding SaveProductCommand}" 
                     IsEnabled="{Binding IsSubmitting, Converter={StaticResource InverseBoolConverter}}" 
                     HorizontalOptions="FillAndExpand" Margin="0,20,0,0" />
             
-            <Button Text="Delete Product" 
+            <Button Text="{x:Static strings:EditProductPageStrings.ButtonDeleteProduct}" 
                     Command="{Binding DeleteProductCommand}" 
                     BackgroundColor="IndianRed"
                     IsEnabled="{Binding IsSubmitting, Converter={StaticResource InverseBoolConverter}}" 
