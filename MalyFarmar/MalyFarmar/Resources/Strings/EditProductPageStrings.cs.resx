@@ -1,0 +1,87 @@
+<root>
+<data name="PageTitle" xml:space="preserve">
+        <value>Editace produktu</value>
+    </data>
+    <data name="LabelProductName" xml:space="preserve">
+        <value>Název produktu*</value>
+    </data>
+    <data name="PlaceholderProductName" xml:space="preserve">
+        <value>Zadejte název produktu</value>
+    </data>
+    <data name="LabelDescription" xml:space="preserve">
+        <value>Popis</value>
+    </data>
+    <data name="PlaceholderDescription" xml:space="preserve">
+        <value>Zadejte popis produktu</value>
+    </data>
+    <data name="LabelTotalAmount" xml:space="preserve">
+        <value>Celkové množství*</value>
+    </data>
+    <data name="PlaceholderTotalAmount" xml:space="preserve">
+        <value>např., 100.50</value>
+    </data>
+    <data name="LabelPricePerUnit" xml:space="preserve">
+        <value>Cena za jednotku*</value>
+    </data>
+    <data name="PlaceholderPricePerUnit" xml:space="preserve">
+        <value>např., 10.99</value>
+    </data>
+    <data name="ButtonSaveChanges" xml:space="preserve">
+        <value>Uložit změny</value>
+    </data>
+    <data name="ButtonDeleteProduct" xml:space="preserve">
+        <value>Smazat produkt</value>
+    </data>
+
+    <data name="ErrorProductNotFound" xml:space="preserve">
+        <value>Produkt nebyl nalezen.</value>
+    </data>
+    <data name="ErrorFailedToLoadProductPrefix" xml:space="preserve">
+        <value>Produkt se nepodařilo načíst.</value>
+        </data>
+    <data name="ValidationNameRequired" xml:space="preserve">
+        <value>Název produktu je povinný.</value>
+    </data>
+    <data name="ValidationTotalAmountInvalid" xml:space="preserve">
+        <value>Celkové množství musí být nezáporné číslo.</value>
+    </data>
+    <data name="ValidationPricePerUnitInvalid" xml:space="preserve">
+        <value>Cena za jednotku musí být nezáporné číslo.</value>
+    </data>
+    <data name="ValidationTotalAmountTooLowFormat" xml:space="preserve">
+        <value>Celkové množství ({0}) nesmí být menší než již prodané množství ({1}).</value>
+        </data>
+    <data name="AlertUpdateSuccessTitle" xml:space="preserve">
+        <value>Úspěch</value>
+    </data>
+    <data name="AlertUpdateSuccessMessage" xml:space="preserve">
+        <value>Produkt byl úspěšně upraven!</value>
+    </data>
+    <data name="AlertUpdateFailedPrefix" xml:space="preserve">
+        <value>Editace selhala</value>
+        </data>
+    <data name="AlertDeleteConfirmTitle" xml:space="preserve">
+        <value>Potvrdit smazání</value>
+    </data>
+    <data name="AlertDeleteConfirmMessage" xml:space="preserve">
+        <value>Doopravdy chcete smazat tento produkt? Tato akce je nevratná.</value>
+    </data>
+    <data name="AlertDeleteConfirmYes" xml:space="preserve">
+        <value>Ano, smazat</value>
+    </data>
+    <data name="AlertDeleteConfirmCancel" xml:space="preserve">
+        <value>Storno</value>
+    </data>
+    <data name="AlertDeleteSuccessTitle" xml:space="preserve">
+        <value>Úspěch</value>
+    </data>
+    <data name="AlertDeleteSuccessMessage" xml:space="preserve">
+        <value>Produkt úspěšně smazán!</value>
+    </data>
+    <data name="AlertDeleteFailedPrefix" xml:space="preserve">
+        <value>Smazání selhalo</value>
+        </data>
+    <data name="ErrorUnexpectedPrefix" xml:space="preserve">
+        <value>Vyskytla se neočekávaná chyba.</value>
+        </data>
+</root>

@@ -5,6 +5,7 @@ using MalyFarmar.ViewModels.Shared;
 using System.Globalization;
 using CommunityToolkit.Mvvm.Messaging;
 using MalyFarmar.Messages;
+using MalyFarmar.Resources.Strings;
 
 namespace MalyFarmar.ViewModels
 {
@@ -18,7 +19,7 @@ namespace MalyFarmar.ViewModels
         private int _productId;
 
         [ObservableProperty]
-        private ProductDetailViewDto _loadedProduct;
+        private ProductDetailViewDto? _loadedProduct;
 
         [ObservableProperty] private string _name;
         [ObservableProperty] private string _description;
@@ -38,7 +39,7 @@ namespace MalyFarmar.ViewModels
         private bool _isBusyLoading;
 
         [ObservableProperty]
-        private string _errorMessage;
+        private string? _errorMessage;
 
 
         public EditProductViewModel(ApiClient apiClient)
@@ -89,12 +90,12 @@ namespace MalyFarmar.ViewModels
                 }
                 else
                 {
-                    ErrorMessage = "Product not found.";
+                    ErrorMessage = EditProductPageStrings.ErrorProductNotFound;
                 }
             }
             catch (Exception ex)
             {
-                ErrorMessage = $"Failed to load product: {ex.Message}";
+                ErrorMessage = $"{EditProductPageStrings.ErrorFailedToLoadProductPrefix}: {ex.Message}";
             }
             finally
             {
@@ -121,22 +122,29 @@ namespace MalyFarmar.ViewModels
             try
             {
                 await _apiClient.UpdateProductAsync(ProductId, productEditDto);
-                await Application.Current.MainPage.DisplayAlert("Success", "Product updated successfully!", "OK");
+                await Application.Current.MainPage.DisplayAlert(
+                    EditProductPageStrings.AlertUpdateSuccessTitle, 
+                    EditProductPageStrings.AlertUpdateSuccessMessage,
+                    CommonStrings.Ok);
                 
                 WeakReferenceMessenger.Default.Send(new ProductUpdatedMessage(ProductId)); 
                 WeakReferenceMessenger.Default.Send(new ProductListChangedMessage()); 
                 
                 await Shell.Current.GoToAsync("..");
             }
-            catch (ApiException apiEx) { ErrorMessage = $"Update failed: {apiEx.Message}"; }
-            catch (Exception ex) { ErrorMessage = $"An unexpected error occurred: {ex.Message}"; }
+            catch (ApiException apiEx) { ErrorMessage = $"{EditProductPageStrings.AlertUpdateFailedPrefix}: {apiEx.Message}"; }
+            catch (Exception ex) { ErrorMessage = $"{EditProductPageStrings.ErrorUnexpectedPrefix}: {ex.Message}"; }
             finally { IsSubmitting = false; }
         }
 
         [RelayCommand(CanExecute = nameof(CanSubmit))]
         private async Task DeleteProductAsync()
         {
-            bool confirm = await Application.Current.MainPage.DisplayAlert("Confirm Delete", "Are you sure you want to delete this product? This action cannot be undone.", "Yes, Delete", "Cancel");
+            bool confirm = await Application.Current.MainPage.DisplayAlert(
+                EditProductPageStrings.AlertDeleteConfirmTitle,
+                EditProductPageStrings.AlertDeleteConfirmMessage,
+                EditProductPageStrings.AlertDeleteConfirmYes,
+                EditProductPageStrings.AlertDeleteConfirmCancel);
             if (!confirm) return;
 
             IsSubmitting = true;
@@ -145,14 +153,16 @@ namespace MalyFarmar.ViewModels
             try
             {
                 await _apiClient.DeleteProductAsync(ProductId);
-                await Application.Current.MainPage.DisplayAlert("Success", "Product deleted successfully!", "OK");
-                
+                await Application.Current.MainPage.DisplayAlert(
+                    EditProductPageStrings.AlertDeleteSuccessTitle,
+                    EditProductPageStrings.AlertDeleteSuccessMessage,
+                    CommonStrings.Ok);                
                 WeakReferenceMessenger.Default.Send(new ProductListChangedMessage());
                 
                 await Shell.Current.GoToAsync("../.."); 
             }
-            catch (ApiException apiEx) { ErrorMessage = $"Delete failed: {apiEx.Message}"; }
-            catch (Exception ex) { ErrorMessage = $"An unexpected error occurred: {ex.Message}"; }
+            catch (ApiException apiEx) { ErrorMessage = $"{EditProductPageStrings.AlertDeleteFailedPrefix}: {apiEx.Message}"; }
+            catch (Exception ex) { ErrorMessage = $"{EditProductPageStrings.ErrorUnexpectedPrefix}: {ex.Message}"; }
             finally { IsSubmitting = false; }
         }
 
@@ -160,18 +170,21 @@ namespace MalyFarmar.ViewModels
         {
             dto = null;
             ErrorMessage = null;
-            if (string.IsNullOrWhiteSpace(Name)) { ErrorMessage = "Product name is required."; return false; }
+            if (string.IsNullOrWhiteSpace(Name)) { ErrorMessage = EditProductPageStrings.ValidationNameRequired; return false; }
             if (!double.TryParse(TotalAmountStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double totalAmount) || totalAmount < 0)
-            { ErrorMessage = "Valid total amount is required."; return false; }
+            { ErrorMessage = EditProductPageStrings.ValidationTotalAmountInvalid; return false; }
             if (!double.TryParse(PricePerUnitStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double pricePerUnit) || pricePerUnit <= 0)
-            { ErrorMessage = "Valid price per unit is required."; return false; }
+            { ErrorMessage = EditProductPageStrings.ValidationPricePerUnitInvalid; return false; }
 
             if (_loadedProduct != null)
             {
                 double soldAmount = _loadedProduct.TotalAmount - _loadedProduct.RemainingAmount;
                 if (totalAmount < soldAmount)
                 {
-                    ErrorMessage = $"Total amount ({totalAmount}) cannot be less than the already sold/used amount ({soldAmount}).";
+                    ErrorMessage = string.Format(
+                        EditProductPageStrings.ValidationTotalAmountTooLowFormat, 
+                        totalAmount, 
+                        soldAmount);
                     return false;
                 }
             }

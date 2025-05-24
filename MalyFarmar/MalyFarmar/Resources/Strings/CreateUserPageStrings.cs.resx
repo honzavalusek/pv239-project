@@ -39,10 +39,10 @@
         <value>např.: jan.novak@seznam.cz</value>
     </data>
     <data name="FirstNamePlaceholder" xml:space="preserve">
-        <value>např.: Novák</value>
+        <value>např.: Jan</value>
     </data>
     <data name="LastNamePlaceholder" xml:space="preserve">
-        <value>např.: Jan</value>
+        <value>např.: Novák</value>
     </data>
     <data name="PhoneNumberPlaceholder" xml:space="preserve">
         <value>např.: +420123456789</value>

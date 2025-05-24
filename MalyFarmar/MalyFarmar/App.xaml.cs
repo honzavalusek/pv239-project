@@ -16,10 +16,6 @@ public partial class App : Application
 
         var imageToUrlConverter = new ImageUrlConverter(apiOptions);
         Resources.Add("ImageUrlConverter", imageToUrlConverter);
-        
-        var inverseBoolConverter = new InverseBoolConverter();
-        Resources.Add("InverseBoolConverter", inverseBoolConverter);
-        
     }
 
     protected override Window CreateWindow(IActivationState activationState)

@@ -1,0 +1,84 @@
+<root>
+    <data name="PageTitle" xml:space="preserve">
+        <value>Přidání produktu</value>
+    </data>
+    <data name="LabelProductName" xml:space="preserve">
+        <value>Název produktu*</value>
+    </data>
+    <data name="PlaceholderProductName" xml:space="preserve">
+        <value>např. "Čerstvá jablka"</value>
+    </data>
+    <data name="LabelDescription" xml:space="preserve">
+        <value>Popis</value>
+    </data>
+    <data name="PlaceholderDescription" xml:space="preserve">
+        <value>Detailní popis produktu</value>
+    </data>
+    <data name="LabelTotalAmount" xml:space="preserve">
+        <value>Celkové množství*</value>
+    </data>
+    <data name="PlaceholderTotalAmount" xml:space="preserve">
+        <value>např. 50.5</value>
+    </data>
+    <data name="LabelUnit" xml:space="preserve">
+        <value>Jednotka*</value>
+    </data>
+    <data name="PlaceholderUnit" xml:space="preserve">
+        <value>např. kg, kus, litr, tucet</value>
+    </data>
+    <data name="LabelPricePerUnit" xml:space="preserve">
+        <value>Cena za jednotku*</value>
+    </data>
+    <data name="PlaceholderPricePerUnit" xml:space="preserve">
+        <value>např. 2.99</value>
+    </data>
+    <data name="LabelProductImage" xml:space="preserve">
+        <value>Obrázek produktu (nepovinný)</value>
+    </data>
+    <data name="ButtonSelectImage" xml:space="preserve">
+        <value>Přidat obrázek</value>
+    </data>
+    <data name="LabelSelectImage" xml:space="preserve">
+        <value>Zvolte obrázek produktu</value>
+    </data>
+    <data name="ButtonAddProduct" xml:space="preserve">
+        <value>Přidat produkt</value>
+    </data>
+
+    <data name="ErrorPickingImagePrefix" xml:space="preserve">
+        <value>Chyba při výběru obrázku</value>
+        </data>
+    <data name="ErrorProcessingImagePrefix" xml:space="preserve">
+        <value>Chyba při zpracování obrázku</value>
+        </data>
+    <data name="ErrorCurrentUser" xml:space="preserve">
+        <value>Přihlášený uživatel nebyl rozpoznán. Přihlaste se znovu, prosím.</value>
+    </data>
+    <data name="AlertCreateSuccessTitle" xml:space="preserve">
+        <value>Úspěch</value>
+        </data>
+    <data name="AlertCreateSuccessMessageFormat" xml:space="preserve">
+        <value>Produkt '{0}' úspěšně přidán!</value>
+        </data>
+    <data name="ErrorCreateFailedUnexpectedResponse" xml:space="preserve">
+        <value>Chyba při vytváření obrázku. Server vrátil nečekanou chybu.</value>
+    </data>
+    <data name="ErrorCreateFailedPrefix" xml:space="preserve">
+        <value>Vytváření selhalo</value>
+        </data>
+    <data name="ValidationNameRequired" xml:space="preserve">
+        <value>Název produktu je povinný.</value>
+    </data>
+    <data name="ValidationUnitRequired" xml:space="preserve">
+        <value>Jednotka je povinná (např. kg, kus, litr).</value>
+    </data>
+    <data name="ValidationTotalAmountInvalid" xml:space="preserve">
+        <value>Celkové množství musí být nezáporné číslo.</value>
+    </data>
+    <data name="ValidationPricePerUnitInvalid" xml:space="preserve">
+        <value>Cena za jednotku musí být nezáporné číslo.</value>
+    </data>
+    <data name="ErrorUnexpectedPrefix" xml:space="preserve">
+        <value>Vyskytla se neočekávaná chyba.</value>
+        </data>
+</root>
