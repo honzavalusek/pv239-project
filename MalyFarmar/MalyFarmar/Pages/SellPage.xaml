@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <sharedPages:BaseContentPage
     x:Class="MalyFarmar.Pages.SellPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -7,12 +6,9 @@
     xmlns:viewmodels="clr-namespace:MalyFarmar.ViewModels"
     xmlns:icons="http://www.aathifmahir.com/dotnet/2022/maui/icons"
     xmlns:clients="clr-namespace:MalyFarmar.Clients"
-    x:DataType="viewmodels:SellPageViewModel"
-    Title="My Products">
-
-    <sharedPages:BaseContentPage.ToolbarItems>
-        <ToolbarItem Text="Add Product"
-                     IconImageSource="{icons:MaterialOutlined AddCircleOutline}"
+    xmlns:strings="clr-namespace:MalyFarmar.Resources.Strings" x:DataType="viewmodels:SellPageViewModel"
+    Title="{x:Static strings:SellPageStrings.SellPageTitle}"> <sharedPages:BaseContentPage.ToolbarItems>
+        <ToolbarItem Text="{x:Static strings:SellPageStrings.AddProductToolbarItemText}" IconImageSource="{icons:MaterialOutlined AddCircleOutline}"
                      Command="{Binding NavigateToCreateProductCommand}"
                      Order="Primary" />
     </sharedPages:BaseContentPage.ToolbarItems>
@@ -45,8 +41,7 @@
                                 <Label Grid.Row="1" Grid.Column="1">
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="Price: "/>
-                                            <Span Text="{Binding PricePerUnit, StringFormat='{0:C}'}"/>
+                                            <Span Text="{x:Static strings:SellPageStrings.ProductItemPriceLabel}"/> <Span Text="{Binding PricePerUnit, StringFormat='{0:C}'}"/>
                                             <Span Text="/"/>
                                             <Span Text="{Binding Unit}"/>
                                         </FormattedString>
@@ -55,8 +50,7 @@
                                 <Label Grid.Row="2" Grid.Column="1">
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="Available: "/>
-                                            <Span Text="{Binding RemainingAmount}"/>
+                                            <Span Text="{x:Static strings:SellPageStrings.ProductItemAvailableLabel}"/> <Span Text="{Binding RemainingAmount}"/>
                                             <Span Text=" "/>
                                             <Span Text="{Binding Unit}"/>
                                         </FormattedString>

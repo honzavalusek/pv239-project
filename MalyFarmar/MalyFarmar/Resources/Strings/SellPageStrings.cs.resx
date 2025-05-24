@@ -1,0 +1,33 @@
+<root>
+    <data name="SellPageTitle" xml:space="preserve">
+        <value>Moje Produkty</value>
+    </data>
+    <data name="AddProductToolbarItemText" xml:space="preserve">
+        <value>Přidej Produkt</value>
+    </data>
+    <data name="ProductItemPriceLabel" xml:space="preserve">
+        <value>Cena: </value>
+    </data>
+    <data name="ProductItemAvailableLabel" xml:space="preserve">
+        <value>Dostupné: </value>
+    </data>
+
+    <data name="StatusCurrentUserError" xml:space="preserve">
+        <value>Přihlášený uživatel nebyl rozpoznán. Přihlaste se znovu, prosím.</value>
+    </data>
+    <data name="StatusNoProductsSelling" xml:space="preserve">
+        <value>Zatím nenabízíte žádné produkty.</value>
+    </data>
+    <data name="StatusNoProductsFoundOrError" xml:space="preserve">
+        <value>Žádné produkty nebyly nalezeny.</value>
+    </data>
+    <data name="StatusFailedToLoadProductsPrefix" xml:space="preserve">
+        <value>Nastala chyba při načítání Vašich produktů.</value>
+        </data>
+    <data name="StatusUnexpectedErrorPrefix" xml:space="preserve">
+        <value>Nastala neočekávaná chyba.</value>
+        </data>
+    <data name="StatusLoadingCancelled" xml:space="preserve">
+        <value>Načítání produktů bylo přerušeno.</value>
+    </data>
+</root>
