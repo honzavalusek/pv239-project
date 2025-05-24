@@ -10,7 +10,7 @@
     Title="{x:Static strings:CreateProductPageStrings.PageTitle}"> <sharedPages:BaseContentPage.Resources>
         <ResourceDictionary>
             <toolkit:IsStringNotNullOrEmptyConverter x:Key="IsStringNotNullOrEmptyConverter" />
-            <converters:InverseBoolConverter x:Key="InvertedBoolConverter" />
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
         </ResourceDictionary>
     </sharedPages:BaseContentPage.Resources>
 
