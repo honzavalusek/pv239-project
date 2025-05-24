@@ -6,6 +6,7 @@ using MalyFarmar.ViewModels.Shared; // For BaseViewModel
 using System.Globalization;
 using CommunityToolkit.Mvvm.Messaging;
 using MalyFarmar.Messages;
+using MalyFarmar.Resources.Strings;
 
 namespace MalyFarmar.ViewModels
 {
@@ -44,7 +45,7 @@ namespace MalyFarmar.ViewModels
             try
             {
                 ErrorMessage = null;
-                var result = await MediaPicker.Default.PickPhotoAsync(new MediaPickerOptions { Title = "Select Product Image" });
+                var result = await MediaPicker.Default.PickPhotoAsync(new MediaPickerOptions { Title = CreateProductPageStrings.LabelSelectImage });
                 if (result != null)
                 {
                     SelectedImageFile = result;
@@ -53,7 +54,7 @@ namespace MalyFarmar.ViewModels
             }
             catch (Exception ex)
             {
-                ErrorMessage = $"Error picking image: {ex.Message}";
+                ErrorMessage = $"{CreateProductPageStrings.ErrorPickingImagePrefix}: {ex.Message}";
             }
         }
 
@@ -74,7 +75,7 @@ namespace MalyFarmar.ViewModels
                 var sellerId = _preferencesService.GetCurrentUserId();
                 if (sellerId == null)
                 {
-                    ErrorMessage = "Could not determine current user. Please log in.";
+                    ErrorMessage = CreateProductPageStrings.ErrorCurrentUser;
                     IsSubmitting = false;
                     return;
                 }
@@ -96,7 +97,7 @@ namespace MalyFarmar.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        ErrorMessage = $"Error processing image file: {ex.Message}";
+                        ErrorMessage = $"{CreateProductPageStrings.ErrorProcessingImagePrefix}: {ex.Message}";
                         IsSubmitting = false;
                         imageStream?.Dispose();
                         return;
@@ -118,17 +119,20 @@ namespace MalyFarmar.ViewModels
 
                 if (createdProduct != null)
                 {
-                    await Application.Current.MainPage.DisplayAlert("Success", $"Product '{createdProduct.Name}' created!", "OK");
+                    await Application.Current.MainPage.DisplayAlert(
+                        CreateProductPageStrings.AlertCreateSuccessTitle,
+                        string.Format(CreateProductPageStrings.AlertCreateSuccessMessageFormat, createdProduct.Name),
+                        CommonStrings.Ok);                    
                     WeakReferenceMessenger.Default.Send(new ProductListChangedMessage());
                     await Shell.Current.GoToAsync("..");
                 }
                 else
                 {
-                    ErrorMessage = "Failed to create product. Server returned an unexpected response.";
+                    ErrorMessage = CreateProductPageStrings.ErrorCreateFailedUnexpectedResponse;
                 }
             }
-            catch (ApiException apiEx) { ErrorMessage = $"Creation failed: (Status {apiEx.StatusCode}) {apiEx.Message}"; }
-            catch (Exception ex) { ErrorMessage = $"An unexpected error occurred: {ex.Message}"; }
+            catch (ApiException apiEx) { ErrorMessage = $"{CreateProductPageStrings.ErrorCreateFailedPrefix}: (Status {apiEx.StatusCode}) {apiEx.Message}"; }
+            catch (Exception ex) { ErrorMessage = $"{CreateProductPageStrings.ErrorUnexpectedPrefix}: {ex.Message}"; }
             finally
             {
                 imageStream?.Dispose();
@@ -142,21 +146,21 @@ namespace MalyFarmar.ViewModels
             pricePerUnit = 0;
             ErrorMessage = null;
 
-            if (string.IsNullOrWhiteSpace(Name)) { ErrorMessage = "Product name is required."; return false; }
-            if (string.IsNullOrWhiteSpace(Unit)) { ErrorMessage = "Unit is required (e.g., kg, piece, liter)."; return false; }
+            if (string.IsNullOrWhiteSpace(Name)) { ErrorMessage = CreateProductPageStrings.ValidationNameRequired; return false; }
+            if (string.IsNullOrWhiteSpace(Unit)) { ErrorMessage = CreateProductPageStrings.ValidationUnitRequired; return false; }
 
             if (string.IsNullOrWhiteSpace(TotalAmountStr) ||
                 !double.TryParse(TotalAmountStr, NumberStyles.Any, CultureInfo.InvariantCulture, out totalAmount) ||
                 totalAmount <= 0)
             {
-                ErrorMessage = "Valid total amount is required (must be > 0).";
+                ErrorMessage = CreateProductPageStrings.ValidationTotalAmountInvalid;
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(PricePerUnitStr) || !double.TryParse(PricePerUnitStr, NumberStyles.Any,
                     CultureInfo.InvariantCulture, out pricePerUnit) || pricePerUnit <= 0)
             {
-                ErrorMessage = "Valid price per unit is required (must be > 0).";
+                ErrorMessage = CreateProductPageStrings.ValidationPricePerUnitInvalid;
                 return false;
             }
 

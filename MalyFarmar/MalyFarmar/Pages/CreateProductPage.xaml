@@ -3,11 +3,11 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:viewmodels="clr-namespace:MalyFarmar.ViewModels"
-    xmlns:strings="clr-namespace:MalyFarmar.Resources.Strings"
-    xmlns:sharedPages="clr-namespace:MalyFarmar.Pages.Shared" xmlns:converters="clr-namespace:MalyFarmar.Converters"
+    xmlns:strings="clr-namespace:MalyFarmar.Resources.Strings" xmlns:sharedPages="clr-namespace:MalyFarmar.Pages.Shared" 
+    xmlns:converters="clr-namespace:MalyFarmar.Converters"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     x:DataType="viewmodels:CreateProductViewModel" 
-    Title="{x:Static strings:CreateUserPageStrings.PageTitle}"> <sharedPages:BaseContentPage.Resources>
+    Title="{x:Static strings:CreateProductPageStrings.PageTitle}"> <sharedPages:BaseContentPage.Resources>
         <ResourceDictionary>
             <toolkit:IsStringNotNullOrEmptyConverter x:Key="IsStringNotNullOrEmptyConverter" />
             <converters:InverseBoolConverter x:Key="InvertedBoolConverter" />
@@ -18,33 +18,34 @@
         <VerticalStackLayout Spacing="10" Padding="20">
             <ActivityIndicator IsRunning="{Binding IsSubmitting}" IsVisible="{Binding IsSubmitting}" HorizontalOptions="Center" />
 
-            <Label Text="Product Name*" />
-            <Entry Text="{Binding Name}" Placeholder="e.g., Fresh Apples" />
+            <Label Text="{x:Static strings:CreateProductPageStrings.LabelProductName}" />
+            <Entry Text="{Binding Name}" Placeholder="{x:Static strings:CreateProductPageStrings.PlaceholderProductName}" />
 
-            <Label Text="Description" />
-            <Editor Text="{Binding Description}" Placeholder="Detailed description of your product" AutoSize="TextChanges" HeightRequest="100"/>
+            <Label Text="{x:Static strings:CreateProductPageStrings.LabelDescription}" />
+            <Editor Text="{Binding Description}" Placeholder="{x:Static strings:CreateProductPageStrings.PlaceholderDescription}" AutoSize="TextChanges" HeightRequest="100"/>
 
-            <Label Text="Total Amount*" />
-            <Entry Text="{Binding TotalAmountStr}" Keyboard="Numeric" Placeholder="e.g., 50.5" />
+            <Label Text="{x:Static strings:CreateProductPageStrings.LabelTotalAmount}" />
+            <Entry Text="{Binding TotalAmountStr}" Keyboard="Numeric" Placeholder="{x:Static strings:CreateProductPageStrings.PlaceholderTotalAmount}" />
 
-            <Label Text="Unit*" />
-            <Entry Text="{Binding Unit}" Placeholder="e.g., kg, piece, liter, bunch" />
+            <Label Text="{x:Static strings:CreateProductPageStrings.LabelUnit}" />
+            <Entry Text="{Binding Unit}" Placeholder="{x:Static strings:CreateProductPageStrings.PlaceholderUnit}" />
             
-            <Label Text="Price Per Unit*" />
-            <Entry Text="{Binding PricePerUnitStr}" Keyboard="Numeric" Placeholder="e.g., 2.99" />
+            <Label Text="{x:Static strings:CreateProductPageStrings.LabelPricePerUnit}" />
+            <Entry Text="{Binding PricePerUnitStr}" Keyboard="Numeric" Placeholder="{x:Static strings:CreateProductPageStrings.PlaceholderPricePerUnit}" />
 
-            <Label Text="Product Image (Optional)" Margin="0,10,0,0"/>
-            <Button Text="Select Image" Command="{Binding PickImageCommand}" IsEnabled="{Binding IsSubmitting, Converter={StaticResource InvertedBoolConverter}}" Margin="0,0,0,5"/>
+            <Label Text="{x:Static strings:CreateProductPageStrings.LabelProductImage}" Margin="0,10,0,0"/>
+            <Button Text="{x:Static strings:CreateProductPageStrings.ButtonSelectImage}" Command="{Binding PickImageCommand}" IsEnabled="{Binding IsSubmitting, Converter={StaticResource InvertedBoolConverter}}" Margin="0,0,0,5"/>
             <Image Source="{Binding ProductImageSource, TargetNullValue='placeholder_generic.png'}" 
                    HeightRequest="150" Aspect="AspectFit" BackgroundColor="LightGray"/>
             <Label Text="{Binding SelectedImageFile.FileName}" FontSize="Small" TextColor="Gray"/>
+
 
             <Label Text="{Binding ErrorMessage}"
                    TextColor="Red"
                    IsVisible="{Binding ErrorMessage, Converter={StaticResource IsStringNotNullOrEmptyConverter}}"
                    Margin="0,10,0,0"/>
 
-            <Button Text="Add Product"
+            <Button Text="{x:Static strings:CreateProductPageStrings.ButtonAddProduct}"
                     Command="{Binding CreateProductCommand}"
                     IsEnabled="{Binding IsSubmitting, Converter={StaticResource InvertedBoolConverter}}"
                     HorizontalOptions="FillAndExpand" Margin="0,20,0,0" />
