@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using MalyFarmar.Messages;
+using MalyFarmar.Resources.Strings;
 using MalyFarmar.Services.Interfaces;
 using MalyFarmar.ViewModels.Shared;
 
@@ -101,7 +102,7 @@ namespace MalyFarmar.ViewModels
                 var sellerId = _preferencesService.GetCurrentUserId();
                 if (sellerId == null)
                 {
-                    StatusMessage = "Could not identify current user. Please log in again.";
+                    StatusMessage = StatusMessage = SellPageStrings.StatusCurrentUserError;
                     return;
                 }
                 cancellationToken.ThrowIfCancellationRequested();
@@ -116,23 +117,23 @@ namespace MalyFarmar.ViewModels
                         UserProducts.Add(product);
                     }
 
-                    if (!UserProducts.Any()) StatusMessage = "You are not currently selling any products.";
+                    if (!UserProducts.Any()) StatusMessage = SellPageStrings.StatusNoProductsSelling;
                     else StatusMessage = null;
                 }
-                else StatusMessage = "No products found or an error occurred while loading.";
+                else StatusMessage = SellPageStrings.StatusNoProductsFoundOrError;
             }
             catch (OperationCanceledException)
             {
                 System.Diagnostics.Debug.WriteLine("[SellPageVM] Product loading cancelled.");
-                StatusMessage = "Product loading cancelled.";
+                StatusMessage = SellPageStrings.StatusLoadingCancelled;
             }
             catch (ApiException apiEx)
             {
-                StatusMessage = $"Failed to load your products: {apiEx.Message}";
+                StatusMessage = $"{SellPageStrings.StatusFailedToLoadProductsPrefix}: {apiEx.Message}";
             }
             catch (Exception ex)
             {
-                StatusMessage = $"An unexpected error occurred: {ex.Message}";
+                StatusMessage = $"{SellPageStrings.StatusUnexpectedErrorPrefix}: {ex.Message}";
             }
             finally
             {

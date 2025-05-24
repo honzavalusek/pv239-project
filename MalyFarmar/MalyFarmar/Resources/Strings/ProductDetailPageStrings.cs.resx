@@ -1,0 +1,39 @@
+<root>
+    <data name="PageTitleFallback" xml:space="preserve">
+        <value>Detaily Produktu</value>
+    </data>
+    <data name="ToolbarItemEditText" xml:space="preserve">
+        <value>Upravit</value>
+    </data>
+    <data name="LabelDescription" xml:space="preserve">
+        <value>Popis:</value>
+    </data>
+    <data name="DescriptionNotAvailable" xml:space="preserve">
+        <value>Žádný popis není k dispozici.</value>
+    </data>
+    <data name="LabelPrice" xml:space="preserve">
+        <value>Cena:</value>
+    </data>
+    <data name="LabelAvailable" xml:space="preserve">
+        <value>Dostupno:</value>
+    </data>
+    <data name="LabelTotalInitial" xml:space="preserve">
+        <value>Celkový počáteční počet:</value>
+    </data>
+    <data name="LabelSellerInformation" xml:space="preserve">
+        <value>Informace o prodejci</value>
+    </data>
+    <data name="ValueNotAvailable" xml:space="preserve">
+        <value>N/A</value>
+    </data>
+
+    <data name="ErrorProductIdInvalid" xml:space="preserve">
+        <value>ID produktu není validní.</value>
+    </data>
+    <data name="ErrorProductNotFound" xml:space="preserve">
+        <value>Produkt nenalezen.</value>
+    </data>
+    <data name="ErrorFailedToLoadDetailsPrefix" xml:space="preserve">
+        <value>Chyba při načítání detailů produktu.</value>
+        </data>
+</root>

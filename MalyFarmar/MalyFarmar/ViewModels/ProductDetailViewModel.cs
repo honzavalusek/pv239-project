@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using MalyFarmar.Clients;
 using MalyFarmar.Messages;
 using MalyFarmar.Pages;
+using MalyFarmar.Resources.Strings;
 using MalyFarmar.Services.Interfaces;
 using MalyFarmar.ViewModels.Shared; 
 
@@ -96,7 +97,7 @@ namespace MalyFarmar.ViewModels
         {
             if (ProductId == 0)
             {
-                ErrorMessage = "Product ID is invalid for loading.";
+                ErrorMessage = ProductDetailPageStrings.ErrorProductIdInvalid;
                 HasError = true;
                 return;
             }
@@ -110,7 +111,7 @@ namespace MalyFarmar.ViewModels
                 var tempProduct = await _apiClient.GetProductAsync(ProductId);
                 if (tempProduct == null)
                 {
-                    ErrorMessage = "Product not found or error fetching details.";
+                    ErrorMessage = ProductDetailPageStrings.ErrorProductNotFound;
                     HasError = true;
                     Product = null; 
                 }
@@ -121,7 +122,7 @@ namespace MalyFarmar.ViewModels
             }
             catch (Exception ex)
             {
-                ErrorMessage = $"Failed to load product details: {ex.Message}";
+                ErrorMessage = $"{ProductDetailPageStrings.ErrorFailedToLoadDetailsPrefix}: {ex.Message}";
                 HasError = true;
                 Product = null; // Ensure product is null on error
                 System.Diagnostics.Debug.WriteLine($"Error in ProductDetailViewModel.LoadProductDetailsAsync: {ex}");
