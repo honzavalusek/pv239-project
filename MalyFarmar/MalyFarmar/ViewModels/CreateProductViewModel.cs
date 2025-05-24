@@ -4,6 +4,8 @@ using MalyFarmar.Clients;
 using MalyFarmar.Services.Interfaces;
 using MalyFarmar.ViewModels.Shared; // For BaseViewModel
 using System.Globalization;
+using CommunityToolkit.Mvvm.Messaging;
+using MalyFarmar.Messages;
 
 namespace MalyFarmar.ViewModels
 {
@@ -116,6 +118,7 @@ namespace MalyFarmar.ViewModels
                 if (createdProduct != null)
                 {
                     await Application.Current.MainPage.DisplayAlert("Success", $"Product '{createdProduct.Name}' created!", "OK");
+                    WeakReferenceMessenger.Default.Send(new ProductListChangedMessage());
                     await Shell.Current.GoToAsync("..");
                 }
                 else

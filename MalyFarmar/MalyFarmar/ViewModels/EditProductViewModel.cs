@@ -3,35 +3,29 @@ using CommunityToolkit.Mvvm.Input;
 using MalyFarmar.Clients;
 using MalyFarmar.ViewModels.Shared;
 using System.Globalization;
+using CommunityToolkit.Mvvm.Messaging;
+using MalyFarmar.Messages;
 
 namespace MalyFarmar.ViewModels
 {
-    [QueryProperty(nameof(ProductId), nameof(ProductId))]
     public partial class EditProductViewModel : BaseViewModel
     {
         private readonly ApiClient _apiClient;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SaveProductCommand))]
+        [NotifyCanExecuteChangedFor(nameof(DeleteProductCommand))]
+        private int _productId;
+
+        [ObservableProperty]
         private ProductDetailViewDto _loadedProduct;
-        private bool _isBusy;
-        
-        public int ProductId { get; set; } = 0;
-        
-        [ObservableProperty]
-        private string _name;
 
-        [ObservableProperty]
-        private string _description;
-
-        [ObservableProperty]
-        private string _totalAmountStr;
-
-        [ObservableProperty]
-        private string _pricePerUnitStr;
-
-        [ObservableProperty]
-        private string _unitDisplay;
-
-        [ObservableProperty]
-        private string _imageUrl;
+        [ObservableProperty] private string _name;
+        [ObservableProperty] private string _description;
+        [ObservableProperty] private string _totalAmountStr;
+        [ObservableProperty] private string _pricePerUnitStr;
+        [ObservableProperty] private string _unitDisplay;
+        [ObservableProperty] private string _imageUrl;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveProductCommand))]
@@ -39,47 +33,59 @@ namespace MalyFarmar.ViewModels
         private bool _isSubmitting;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SaveProductCommand))]
+        [NotifyCanExecuteChangedFor(nameof(DeleteProductCommand))]
+        private bool _isBusyLoading;
+
+        [ObservableProperty]
         private string _errorMessage;
 
-        public bool IsBusy { get => _isBusy; set => SetProperty(ref _isBusy, value); }
-        
+
         public EditProductViewModel(ApiClient apiClient)
         {
             _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
         }
 
-        public async Task OnAppearingAsync()
+        partial void OnProductIdChanged(int value)
         {
-            if (ProductId > 0 && _loadedProduct == null)
+            if (value > 0)
             {
-                await ExecuteLoadProductAsync(ProductId);
+                LoadedProduct = null; 
+                _ = ExecuteLoadProductAsync(value);
             }
         }
-
+        
+        public async Task OnAppearingAsync()
+        {
+            await base.OnAppearingAsync();
+            if (ProductId > 0 && LoadedProduct == null && !IsBusyLoading && !IsSubmitting)
+            {
+                 await ExecuteLoadProductAsync(ProductId);
+            }
+        }
+        
         protected override async Task LoadDataAsync()
         {
             await ExecuteLoadProductAsync(ProductId);
-            IsBusy = false;
-            IsSubmitting = false;
         }
 
         private async Task ExecuteLoadProductAsync(int productIdToLoad)
         {
-            if (IsBusy) return;
-            IsBusy = true;
+            if (IsBusyLoading) return;
+            IsBusyLoading = true;
             ErrorMessage = null;
 
             try
             {
-                _loadedProduct = await _apiClient.GetProductAsync(productIdToLoad);
-                if (_loadedProduct != null)
+                LoadedProduct = await _apiClient.GetProductAsync(productIdToLoad); // Set the ObservableProperty
+                if (LoadedProduct != null)
                 {
-                    Name = _loadedProduct.Name;
-                    Description = _loadedProduct.Description;
-                    TotalAmountStr = _loadedProduct.TotalAmount.ToString(CultureInfo.InvariantCulture);
-                    PricePerUnitStr = _loadedProduct.PricePerUnit.ToString(CultureInfo.InvariantCulture);
-                    UnitDisplay = _loadedProduct.Unit;
-                    ImageUrl = _loadedProduct.ImageUrl;
+                    Name = LoadedProduct.Name;
+                    Description = LoadedProduct.Description;
+                    TotalAmountStr = LoadedProduct.TotalAmount.ToString(CultureInfo.InvariantCulture);
+                    PricePerUnitStr = LoadedProduct.PricePerUnit.ToString(CultureInfo.InvariantCulture);
+                    UnitDisplay = LoadedProduct.Unit;
+                    ImageUrl = LoadedProduct.ImageUrl;
                 }
                 else
                 {
@@ -92,11 +98,15 @@ namespace MalyFarmar.ViewModels
             }
             finally
             {
-                IsBusy = false;
+                IsBusyLoading = false;
             }
         }
 
-        private bool CanSubmit() => !IsSubmitting && ProductId > 0 && !IsBusy;
+        private bool CanSubmit()
+        {
+            bool canSubmit = !IsSubmitting && !IsBusyLoading && ProductId > 0;
+            return canSubmit;
+        }
 
         [RelayCommand(CanExecute = nameof(CanSubmit))]
         private async Task SaveProductAsync()
@@ -108,11 +118,14 @@ namespace MalyFarmar.ViewModels
 
             IsSubmitting = true;
             ErrorMessage = null;
-
             try
             {
                 await _apiClient.UpdateProductAsync(ProductId, productEditDto);
                 await Application.Current.MainPage.DisplayAlert("Success", "Product updated successfully!", "OK");
+                
+                WeakReferenceMessenger.Default.Send(new ProductUpdatedMessage(ProductId)); 
+                WeakReferenceMessenger.Default.Send(new ProductListChangedMessage()); 
+                
                 await Shell.Current.GoToAsync("..");
             }
             catch (ApiException apiEx) { ErrorMessage = $"Update failed: {apiEx.Message}"; }
@@ -133,7 +146,10 @@ namespace MalyFarmar.ViewModels
             {
                 await _apiClient.DeleteProductAsync(ProductId);
                 await Application.Current.MainPage.DisplayAlert("Success", "Product deleted successfully!", "OK");
-                await Shell.Current.GoToAsync("../.."); // Example: To go back two levels
+                
+                WeakReferenceMessenger.Default.Send(new ProductListChangedMessage());
+                
+                await Shell.Current.GoToAsync("../.."); 
             }
             catch (ApiException apiEx) { ErrorMessage = $"Delete failed: {apiEx.Message}"; }
             catch (Exception ex) { ErrorMessage = $"An unexpected error occurred: {ex.Message}"; }

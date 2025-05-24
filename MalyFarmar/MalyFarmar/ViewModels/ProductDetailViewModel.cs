@@ -1,6 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using MalyFarmar.Clients;
+using MalyFarmar.Messages;
 using MalyFarmar.Pages;
 using MalyFarmar.Services.Interfaces;
 using MalyFarmar.ViewModels.Shared; 
@@ -45,6 +47,21 @@ namespace MalyFarmar.ViewModels
         {
             _apiClient = apiClient;
             _preferencesService = preferencesService;
+            
+            WeakReferenceMessenger.Default.Register<ProductUpdatedMessage>(this, async (recipient, message) =>
+            {
+                if (message.ProductId == ProductId && ProductId > 0)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[ProductDetailVM] ProductUpdatedMessage received for ProductId {ProductId}. Reloading details.");
+                    await MainThread.InvokeOnMainThreadAsync(async () =>
+                    {
+                        if (!IsLoading)
+                        {
+                            await LoadProductDetailsAsync();
+                        }
+                    });
+                }
+            });
         }
 
         public async Task OnAppearingAsync()

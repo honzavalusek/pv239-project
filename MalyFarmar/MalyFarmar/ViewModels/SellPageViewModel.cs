@@ -3,6 +3,8 @@ using MalyFarmar.Pages;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using MalyFarmar.Messages;
 using MalyFarmar.Services.Interfaces;
 using MalyFarmar.ViewModels.Shared;
 
@@ -36,6 +38,18 @@ namespace MalyFarmar.ViewModels
             _apiClient = apiClient;
             _preferencesService = preferencesService;
             UserProducts = new ObservableCollection<ProductListViewDto>();
+            
+            WeakReferenceMessenger.Default.Register<ProductListChangedMessage>(this, async (recipient, message) =>
+            {
+                System.Diagnostics.Debug.WriteLine("[SellPageVM] ProductListChangedMessage received. Forcing refresh.");
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    if (!IsBusy)
+                    {
+                        await ExecuteLoadProductsAsync(isRefresh: true, cancellationToken: CancellationToken.None);
+                    }
+                });
+            });
         }
 
         protected async Task OnAppearingAsync()

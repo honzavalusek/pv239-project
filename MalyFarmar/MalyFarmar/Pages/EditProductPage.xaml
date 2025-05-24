@@ -19,8 +19,8 @@
         <VerticalStackLayout Spacing="10" Padding="20">
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
 
-            <Image Source="{Binding ImageUrl, TargetNullValue='placeholder_product.png'}"
-                   HeightRequest="200" Aspect="AspectFit" BackgroundColor="LightGray" Margin="0,0,0,10"/>
+            <!-- <Image Source="{Binding ImageUrl, TargetNullValue='placeholder_product.png'}" -->
+                   <!-- HeightRequest="200" Aspect="AspectFit" BackgroundColor="LightGray" Margin="0,0,0,10"/> -->
 
             <Label Text="Product Name*" />
             <Entry Text="{Binding Name}" Placeholder="Enter product name" />
