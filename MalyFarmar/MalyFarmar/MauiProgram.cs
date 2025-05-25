@@ -93,6 +93,7 @@ public static class MauiProgram
         services.AddTransient<ProductDetailPage>();
         services.AddTransient<ProfilePage>();
         services.AddTransient<SellPage>();
+        services.AddTransient<AppShell>();
     }
 
     private static void ConfigureConfiguration(MauiAppBuilder builder)

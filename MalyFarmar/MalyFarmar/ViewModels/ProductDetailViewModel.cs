@@ -6,18 +6,18 @@ using MalyFarmar.Messages;
 using MalyFarmar.Pages;
 using MalyFarmar.Resources.Strings;
 using MalyFarmar.Services.Interfaces;
-using MalyFarmar.ViewModels.Shared; 
+using MalyFarmar.ViewModels.Shared;
 
 namespace MalyFarmar.ViewModels
 {
     [QueryProperty(nameof(ProductId), "ProductId")]
-    public partial class ProductDetailViewModel : BaseViewModel 
+    public partial class ProductDetailViewModel : BaseViewModel
     {
         private readonly ApiClient _apiClient;
         private readonly IPreferencesService _preferencesService;
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(EditProductCommand))] 
+        [NotifyCanExecuteChangedFor(nameof(EditProductCommand))]
         ProductDetailViewDto? _product;
 
         public int ProductId
@@ -33,42 +33,44 @@ namespace MalyFarmar.ViewModels
         }
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(EditProductCommand))] 
-        bool _isLoading;
+        [NotifyCanExecuteChangedFor(nameof(EditProductCommand))]
+        bool _isLoading = false;
 
         [ObservableProperty]
         string? _errorMessage;
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(EditProductCommand))] 
-        bool _hasError;
+        [NotifyCanExecuteChangedFor(nameof(EditProductCommand))]
+        bool _hasError = false;
 
 
         public ProductDetailViewModel(ApiClient apiClient, IPreferencesService preferencesService)
         {
             _apiClient = apiClient;
             _preferencesService = preferencesService;
-            
+
             WeakReferenceMessenger.Default.Register<ProductUpdatedMessage>(this, async (recipient, message) =>
             {
-                if (message.ProductId == ProductId && ProductId > 0)
+                if (message.ProductId != ProductId || ProductId <= 0)
                 {
-                    System.Diagnostics.Debug.WriteLine($"[ProductDetailVM] ProductUpdatedMessage received for ProductId {ProductId}. Reloading details.");
-                    await MainThread.InvokeOnMainThreadAsync(async () =>
-                    {
-                        if (!IsLoading)
-                        {
-                            await LoadProductDetailsAsync();
-                        }
-                    });
+                    return;
                 }
+
+                System.Diagnostics.Debug.WriteLine($"[ProductDetailVM] ProductUpdatedMessage received for ProductId {ProductId}. Reloading details.");
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    if (!IsLoading)
+                    {
+                        await LoadProductDetailsAsync();
+                    }
+                });
             });
         }
 
         public async Task OnAppearingAsync()
         {
-            await base.OnAppearingAsync(); 
-            if (ProductId > 0) 
+            await base.OnAppearingAsync();
+            if (ProductId > 0)
             {
                 await LoadProductDetailsAsync();
             }
@@ -76,19 +78,27 @@ namespace MalyFarmar.ViewModels
 
         private bool CanEditProduct()
         {
-            return Product != null && !IsLoading && !_hasError && IsCurrentUserTheSeller();
+            return Product != null && !IsLoading && !HasError && IsCurrentUserTheSeller();
         }
 
         [RelayCommand(CanExecute = nameof(CanEditProduct))]
-        private async Task EditProduct() 
+        private async Task EditProduct()
         {
-            if (Product == null) return;
+            if (Product == null)
+            {
+                return;
+            }
+
             await Shell.Current.GoToAsync($"{nameof(EditProductPage)}?productId={Product.Id}");
         }
 
         private bool IsCurrentUserTheSeller()
         {
-            if (Product == null || Product.Seller == null) return false;
+            if (Product?.Seller == null)
+            {
+                return false;
+            }
+
             var currentUserId = _preferencesService.GetCurrentUserId(); // Returns int?
             return currentUserId.HasValue && Product.Seller.Id == currentUserId.Value;
         }
@@ -113,12 +123,12 @@ namespace MalyFarmar.ViewModels
                 {
                     ErrorMessage = ProductDetailPageStrings.ErrorProductNotFound;
                     HasError = true;
-                    Product = null; 
+                    Product = null;
+
+                    return;
                 }
-                else
-                {
-                    Product = tempProduct; 
-                }
+
+                Product = tempProduct;
             }
             catch (Exception ex)
             {

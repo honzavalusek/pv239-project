@@ -20,26 +20,19 @@ namespace MalyFarmar.ViewModels
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(LoadUserProductsCommand))]
         [NotifyCanExecuteChangedFor(nameof(RefreshCommand))]
-        private bool _isBusyInternal;
+        private bool _isBusy = false;
 
         [ObservableProperty]
         private string? _statusMessage;
 
         public ObservableCollection<ProductListViewDto> UserProducts { get; }
 
-        public new bool IsBusy 
-        {
-            get => _isBusyInternal;
-            set => SetProperty(ref _isBusyInternal, value, nameof(IsBusy));
-        }
-
-
         public SellPageViewModel(ApiClient apiClient, IPreferencesService preferencesService)
         {
             _apiClient = apiClient;
             _preferencesService = preferencesService;
             UserProducts = new ObservableCollection<ProductListViewDto>();
-            
+
             WeakReferenceMessenger.Default.Register<ProductListChangedMessage>(this, async (recipient, message) =>
             {
                 System.Diagnostics.Debug.WriteLine("[SellPageVM] ProductListChangedMessage received. Forcing refresh.");
@@ -88,7 +81,12 @@ namespace MalyFarmar.ViewModels
                 System.Diagnostics.Debug.WriteLine("[SellPageVM] Load ignored, another operation in progress or cancelled.");
                 return;
             }
-            if (cancellationToken.IsCancellationRequested) { _loadProductsSemaphore.Release(); return; }
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                _loadProductsSemaphore.Release();
+                return;
+            }
 
 
             IsBusy = true;
@@ -105,22 +103,24 @@ namespace MalyFarmar.ViewModels
                     StatusMessage = StatusMessage = SellPageStrings.StatusCurrentUserError;
                     return;
                 }
+
                 cancellationToken.ThrowIfCancellationRequested();
-                var productsListDto = await _apiClient.GetProductsBySellerAsync(sellerId.Value); 
+                var productsListDto = await _apiClient.GetProductsBySellerAsync(sellerId.Value);
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (productsListDto?.Products != null)
+                if (productsListDto?.Products == null)
                 {
-                    foreach (var product in productsListDto.Products)
-                    {
-                        cancellationToken.ThrowIfCancellationRequested();
-                        UserProducts.Add(product);
-                    }
-
-                    if (!UserProducts.Any()) StatusMessage = SellPageStrings.StatusNoProductsSelling;
-                    else StatusMessage = null;
+                    StatusMessage = SellPageStrings.StatusNoProductsFoundOrError;
+                    return;
                 }
-                else StatusMessage = SellPageStrings.StatusNoProductsFoundOrError;
+
+                foreach (var product in productsListDto.Products)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    UserProducts.Add(product);
+                }
+
+                StatusMessage = UserProducts.Any() ? null : SellPageStrings.StatusNoProductsSelling;
             }
             catch (OperationCanceledException)
             {
@@ -149,7 +149,7 @@ namespace MalyFarmar.ViewModels
         }
 
         [RelayCommand]
-        async Task GoToProductDetailsAsync(ProductListViewDto? product)
+        private async Task GoToProductDetailsAsync(ProductListViewDto? product)
         {
             if (product == null) return;
             await Shell.Current.GoToAsync($"{nameof(ProductDetailPage)}?ProductId={product.Id}");
