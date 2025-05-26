@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using MalyFarmar.Clients;
 using MalyFarmar.ViewModels.Shared;
 using System.Globalization;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.Messaging;
 using MalyFarmar.Messages;
 using MalyFarmar.Resources.Strings;
@@ -21,22 +22,22 @@ namespace MalyFarmar.ViewModels
         [ObservableProperty]
         private ProductDetailViewDto? _loadedProduct;
 
-        [ObservableProperty] private string _name;
-        [ObservableProperty] private string _description;
-        [ObservableProperty] private string _totalAmountStr;
-        [ObservableProperty] private string _pricePerUnitStr;
-        [ObservableProperty] private string _unitDisplay;
-        [ObservableProperty] private string _imageUrl;
+        [ObservableProperty] private string? _name;
+        [ObservableProperty] private string? _description;
+        [ObservableProperty] private string? _totalAmountStr;
+        [ObservableProperty] private string? _pricePerUnitStr;
+        [ObservableProperty] private string? _unitDisplay;
+        [ObservableProperty] private string? _imageUrl;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveProductCommand))]
         [NotifyCanExecuteChangedFor(nameof(DeleteProductCommand))]
-        private bool _isSubmitting;
+        private bool _isSubmitting = false;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveProductCommand))]
         [NotifyCanExecuteChangedFor(nameof(DeleteProductCommand))]
-        private bool _isBusyLoading;
+        private bool _isBusyLoading = false;
 
         [ObservableProperty]
         private string? _errorMessage;
@@ -49,22 +50,24 @@ namespace MalyFarmar.ViewModels
 
         partial void OnProductIdChanged(int value)
         {
-            if (value > 0)
+            if (value <= 0)
             {
-                LoadedProduct = null; 
-                _ = ExecuteLoadProductAsync(value);
+                return;
             }
+
+            LoadedProduct = null;
+            _ = ExecuteLoadProductAsync(value);
         }
-        
+
         public async Task OnAppearingAsync()
         {
             await base.OnAppearingAsync();
             if (ProductId > 0 && LoadedProduct == null && !IsBusyLoading && !IsSubmitting)
             {
-                 await ExecuteLoadProductAsync(ProductId);
+                await ExecuteLoadProductAsync(ProductId);
             }
         }
-        
+
         protected override async Task LoadDataAsync()
         {
             await ExecuteLoadProductAsync(ProductId);
@@ -78,20 +81,20 @@ namespace MalyFarmar.ViewModels
 
             try
             {
-                LoadedProduct = await _apiClient.GetProductAsync(productIdToLoad); // Set the ObservableProperty
-                if (LoadedProduct != null)
-                {
-                    Name = LoadedProduct.Name;
-                    Description = LoadedProduct.Description;
-                    TotalAmountStr = LoadedProduct.TotalAmount.ToString(CultureInfo.InvariantCulture);
-                    PricePerUnitStr = LoadedProduct.PricePerUnit.ToString(CultureInfo.InvariantCulture);
-                    UnitDisplay = LoadedProduct.Unit;
-                    ImageUrl = LoadedProduct.ImageUrl;
-                }
-                else
+                LoadedProduct = await _apiClient.GetProductAsync(productIdToLoad);
+
+                if (LoadedProduct == null)
                 {
                     ErrorMessage = EditProductPageStrings.ErrorProductNotFound;
+                    return;
                 }
+
+                Name = LoadedProduct.Name;
+                Description = LoadedProduct.Description;
+                TotalAmountStr = LoadedProduct.TotalAmount.ToString(CultureInfo.InvariantCulture);
+                PricePerUnitStr = LoadedProduct.PricePerUnit.ToString(CultureInfo.InvariantCulture);
+                UnitDisplay = LoadedProduct.Unit;
+                ImageUrl = LoadedProduct.ImageUrl;
             }
             catch (Exception ex)
             {
@@ -105,14 +108,13 @@ namespace MalyFarmar.ViewModels
 
         private bool CanSubmit()
         {
-            bool canSubmit = !IsSubmitting && !IsBusyLoading && ProductId > 0;
-            return canSubmit;
+            return !IsSubmitting && !IsBusyLoading && ProductId > 0;
         }
 
         [RelayCommand(CanExecute = nameof(CanSubmit))]
         private async Task SaveProductAsync()
         {
-            if (!ValidateInput(out ProductEditDto productEditDto))
+            if (!ValidateInput(out var productEditDto))
             {
                 return;
             }
@@ -122,19 +124,27 @@ namespace MalyFarmar.ViewModels
             try
             {
                 await _apiClient.UpdateProductAsync(ProductId, productEditDto);
-                await Application.Current.MainPage.DisplayAlert(
-                    EditProductPageStrings.AlertUpdateSuccessTitle, 
-                    EditProductPageStrings.AlertUpdateSuccessMessage,
-                    CommonStrings.Ok);
-                
-                WeakReferenceMessenger.Default.Send(new ProductUpdatedMessage(ProductId)); 
-                WeakReferenceMessenger.Default.Send(new ProductListChangedMessage()); 
-                
+
+                var toast = Toast.Make(EditProductPageStrings.AlertUpdateSuccessMessage);
+                await toast.Show();
+
+                WeakReferenceMessenger.Default.Send(new ProductUpdatedMessage(ProductId));
+                WeakReferenceMessenger.Default.Send(new ProductListChangedMessage());
+
                 await Shell.Current.GoToAsync("..");
             }
-            catch (ApiException apiEx) { ErrorMessage = $"{EditProductPageStrings.AlertUpdateFailedPrefix}: {apiEx.Message}"; }
-            catch (Exception ex) { ErrorMessage = $"{EditProductPageStrings.ErrorUnexpectedPrefix}: {ex.Message}"; }
-            finally { IsSubmitting = false; }
+            catch (ApiException apiEx)
+            {
+                ErrorMessage = $"{EditProductPageStrings.AlertUpdateFailedPrefix}: {apiEx.Message}";
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"{EditProductPageStrings.ErrorUnexpectedPrefix}: {ex.Message}";
+            }
+            finally
+            {
+                IsSubmitting = false;
+            }
         }
 
         [RelayCommand(CanExecute = nameof(CanSubmit))]
@@ -145,7 +155,11 @@ namespace MalyFarmar.ViewModels
                 EditProductPageStrings.AlertDeleteConfirmMessage,
                 EditProductPageStrings.AlertDeleteConfirmYes,
                 EditProductPageStrings.AlertDeleteConfirmCancel);
-            if (!confirm) return;
+
+            if (!confirm)
+            {
+                return;
+            }
 
             IsSubmitting = true;
             ErrorMessage = null;
@@ -153,37 +167,59 @@ namespace MalyFarmar.ViewModels
             try
             {
                 await _apiClient.DeleteProductAsync(ProductId);
-                await Application.Current.MainPage.DisplayAlert(
-                    EditProductPageStrings.AlertDeleteSuccessTitle,
-                    EditProductPageStrings.AlertDeleteSuccessMessage,
-                    CommonStrings.Ok);                
+
+                var toast = Toast.Make(EditProductPageStrings.AlertDeleteSuccessMessage);
+                await toast.Show();
+
                 WeakReferenceMessenger.Default.Send(new ProductListChangedMessage());
-                
-                await Shell.Current.GoToAsync("../.."); 
+
+                await Shell.Current.GoToAsync("../..");
             }
-            catch (ApiException apiEx) { ErrorMessage = $"{EditProductPageStrings.AlertDeleteFailedPrefix}: {apiEx.Message}"; }
-            catch (Exception ex) { ErrorMessage = $"{EditProductPageStrings.ErrorUnexpectedPrefix}: {ex.Message}"; }
-            finally { IsSubmitting = false; }
+            catch (ApiException apiEx)
+            {
+                ErrorMessage = $"{EditProductPageStrings.AlertDeleteFailedPrefix}: {apiEx.Message}";
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"{EditProductPageStrings.ErrorUnexpectedPrefix}: {ex.Message}";
+            }
+            finally
+            {
+                IsSubmitting = false;
+            }
         }
 
-        private bool ValidateInput(out ProductEditDto dto)
+        private bool ValidateInput(out ProductEditDto? dto)
         {
             dto = null;
             ErrorMessage = null;
-            if (string.IsNullOrWhiteSpace(Name)) { ErrorMessage = EditProductPageStrings.ValidationNameRequired; return false; }
-            if (!double.TryParse(TotalAmountStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double totalAmount) || totalAmount < 0)
-            { ErrorMessage = EditProductPageStrings.ValidationTotalAmountInvalid; return false; }
-            if (!double.TryParse(PricePerUnitStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double pricePerUnit) || pricePerUnit <= 0)
-            { ErrorMessage = EditProductPageStrings.ValidationPricePerUnitInvalid; return false; }
 
-            if (_loadedProduct != null)
+            if (string.IsNullOrWhiteSpace(Name))
             {
-                double soldAmount = _loadedProduct.TotalAmount - _loadedProduct.RemainingAmount;
+                ErrorMessage = EditProductPageStrings.ValidationNameRequired;
+                return false;
+            }
+
+            if (!double.TryParse(TotalAmountStr, NumberStyles.Any, CultureInfo.InvariantCulture, out var totalAmount) || totalAmount < 0)
+            {
+                ErrorMessage = EditProductPageStrings.ValidationTotalAmountInvalid;
+                return false;
+            }
+
+            if (!double.TryParse(PricePerUnitStr, NumberStyles.Any, CultureInfo.InvariantCulture, out var pricePerUnit) || pricePerUnit <= 0)
+            {
+                ErrorMessage = EditProductPageStrings.ValidationPricePerUnitInvalid;
+                return false;
+            }
+
+            if (LoadedProduct != null)
+            {
+                var soldAmount = LoadedProduct.TotalAmount - LoadedProduct.RemainingAmount;
                 if (totalAmount < soldAmount)
                 {
                     ErrorMessage = string.Format(
-                        EditProductPageStrings.ValidationTotalAmountTooLowFormat, 
-                        totalAmount, 
+                        EditProductPageStrings.ValidationTotalAmountTooLowFormat,
+                        totalAmount,
                         soldAmount);
                     return false;
                 }
@@ -196,6 +232,7 @@ namespace MalyFarmar.ViewModels
                 TotalAmount = totalAmount,
                 PricePerUnit = pricePerUnit
             };
+
             return true;
         }
     }

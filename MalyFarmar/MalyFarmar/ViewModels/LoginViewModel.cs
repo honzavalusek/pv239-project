@@ -5,7 +5,7 @@ using MalyFarmar.Pages;
 using MalyFarmar.Services.Interfaces;
 using MalyFarmar.ViewModels.Shared;
 using System.Collections.ObjectModel;
-using MalyFarmar.Resources.Strings;
+using CommunityToolkit.Maui.Alerts;
 
 namespace MalyFarmar.ViewModels
 {
@@ -13,12 +13,18 @@ namespace MalyFarmar.ViewModels
     {
         private readonly ApiClient _apiClient;
         private readonly IPreferencesService _preferencesService;
+        private readonly CreateUserPage _createUserPage;
 
         public ObservableCollection<UserListViewDto> Users { get; }
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SignInCommand))]
         private UserListViewDto? _selectedUser;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SignInCommand))]
+        [NotifyCanExecuteChangedFor(nameof(CreateUserCommand))]
+        private bool _isBusy = false;
 
         partial void OnSelectedUserChanged(UserListViewDto? value)
         {
@@ -32,10 +38,12 @@ namespace MalyFarmar.ViewModels
             }
         }
 
-        public LoginViewModel(ApiClient apiClient, IPreferencesService preferencesService)
+        public LoginViewModel(ApiClient apiClient, IPreferencesService preferencesService, CreateUserPage createUserPage)
         {
             _apiClient = apiClient;
             _preferencesService = preferencesService;
+            _createUserPage = createUserPage;
+
             Users = new ObservableCollection<UserListViewDto>();
             IsBusy = false;
         }
@@ -52,21 +60,20 @@ namespace MalyFarmar.ViewModels
             {
                 var usersList = await _apiClient.GetAllUsersAsync();
                 Users.Clear();
-                if (usersList?.Users != null)
+                if (usersList?.Users == null)
                 {
-                    foreach (var user in usersList.Users)
-                    {
-                        Users.Add(user);
-                    }
+                    return;
+                }
+
+                foreach (var user in usersList.Users)
+                {
+                    Users.Add(user);
                 }
             }
             catch (Exception ex)
             {
-                await Application.Current.MainPage.DisplayAlert(
-                    "Error",
-                    "Error loading users: " + ex.Message,
-                    "OK"
-                );
+                var toast = Toast.Make("Error loading users: " + ex.Message);
+                await toast.Show();
             }
             finally
             {
@@ -81,67 +88,34 @@ namespace MalyFarmar.ViewModels
         {
             if (SelectedUser == null)
             {
-                await Application.Current.MainPage.DisplayAlert(
-                    "Select User",
-                    "Please tap one of the profiles above first.",
-                    "Error"
-                );
+                var toast = Toast.Make("Please tap one of the profiles above first.");
+                await toast.Show();
+
                 return;
             }
 
             System.Diagnostics.Debug.WriteLine("Signing in as user: " + SelectedUser.Id);
 
-            Application.Current.MainPage = new AppShell();
+            var app = Application.Current as App;
+            app?.SwitchToShell();
         }
 
         [RelayCommand(CanExecute = nameof(CanNavigate))]
         private async Task CreateUser()
         {
-            if (Application.Current?.MainPage?.Navigation != null)
-            {
-                var serviceProvider = Application.Current.Handler?.MauiContext?.Services ??
-                                      (Application.Current as IPlatformApplication)?.Services;
+            var navigation = Application.Current?.MainPage?.Navigation;
 
-                if (serviceProvider != null)
-                {
-                    var createUserPage = serviceProvider.GetService<CreateUserPage>();
-                    if (createUserPage != null)
-                    {
-                        await Application.Current.MainPage.Navigation.PushAsync(createUserPage);
-                    }
-                    else
-                    {
-                        await Application.Current.MainPage.DisplayAlert(
-                            "Error",
-                            "Unable to open the create user page. Please try again later.",
-                            CommonStrings.Ok);
-                    }
-                }
-                else
-                {
-                    await Application.Current.MainPage.DisplayAlert(
-                        "Error",
-                        "Application services not available to open create user page.",
-                        CommonStrings.Ok);
-                }
-            }
-            else
+            if (navigation != null)
             {
-                // This would happen if MainPage is not a NavigationPage or not set.
-                await Application.Current.MainPage.DisplayAlert(
-                    "Navigation Error",
-                    "Cannot navigate at this time. Please restart the application.",
-                    CommonStrings.Ok);
+                await navigation.PushAsync(_createUserPage);
+                return;
             }
+
+            var toast = Toast.Make("Cannot navigate at this time. Please restart the application.");
+            await toast.Show();
         }
 
 
         private bool CanNavigate() => !IsBusy;
-
-
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(SignInCommand))]
-        [NotifyCanExecuteChangedFor(nameof(CreateUserCommand))]
-        private bool _isBusy;
     }
 }
