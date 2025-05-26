@@ -48,26 +48,9 @@ namespace MalyFarmar.ViewModels
         {
             _apiClient = apiClient;
             _preferencesService = preferencesService;
-
-            WeakReferenceMessenger.Default.Register<ProductUpdatedMessage>(this, async (recipient, message) =>
-            {
-                if (message.ProductId != ProductId || ProductId <= 0)
-                {
-                    return;
-                }
-
-                System.Diagnostics.Debug.WriteLine($"[ProductDetailVM] ProductUpdatedMessage received for ProductId {ProductId}. Reloading details.");
-                await MainThread.InvokeOnMainThreadAsync(async () =>
-                {
-                    if (!IsLoading)
-                    {
-                        await LoadProductDetailsAsync();
-                    }
-                });
-            });
         }
 
-        public async Task OnAppearingAsync()
+        public override async Task OnAppearingAsync()
         {
             await base.OnAppearingAsync();
             if (ProductId > 0)

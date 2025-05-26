@@ -6,7 +6,7 @@ public abstract class BaseViewModel : ObservableObject
 {
     protected bool ForceDataRefresh = true;
 
-    public async Task OnAppearingAsync()
+    public virtual async Task OnAppearingAsync()
     {
         if (ForceDataRefresh)
         {

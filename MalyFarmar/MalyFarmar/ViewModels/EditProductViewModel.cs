@@ -59,7 +59,7 @@ namespace MalyFarmar.ViewModels
             _ = ExecuteLoadProductAsync(value);
         }
 
-        public async Task OnAppearingAsync()
+        public override async Task OnAppearingAsync()
         {
             await base.OnAppearingAsync();
             if (ProductId > 0 && LoadedProduct == null && !IsBusyLoading && !IsSubmitting)
@@ -128,9 +128,6 @@ namespace MalyFarmar.ViewModels
                 var toast = Toast.Make(EditProductPageStrings.AlertUpdateSuccessMessage);
                 await toast.Show();
 
-                WeakReferenceMessenger.Default.Send(new ProductUpdatedMessage(ProductId));
-                WeakReferenceMessenger.Default.Send(new ProductListChangedMessage());
-
                 await Shell.Current.GoToAsync("..");
             }
             catch (ApiException apiEx)
@@ -170,8 +167,6 @@ namespace MalyFarmar.ViewModels
 
                 var toast = Toast.Make(EditProductPageStrings.AlertDeleteSuccessMessage);
                 await toast.Show();
-
-                WeakReferenceMessenger.Default.Send(new ProductListChangedMessage());
 
                 await Shell.Current.GoToAsync("../..");
             }

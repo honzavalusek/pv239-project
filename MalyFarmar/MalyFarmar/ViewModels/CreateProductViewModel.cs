@@ -132,7 +132,6 @@ namespace MalyFarmar.ViewModels
                     createdProduct.Name));
                 await toast.Show();
 
-                WeakReferenceMessenger.Default.Send(new ProductListChangedMessage());
                 await Shell.Current.GoToAsync("..");
             }
             catch (ApiException apiEx)
