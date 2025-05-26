@@ -9,6 +9,5 @@ namespace MalyFarmar.Pages
         {
             InitializeComponent();
         }
-
     }
 }

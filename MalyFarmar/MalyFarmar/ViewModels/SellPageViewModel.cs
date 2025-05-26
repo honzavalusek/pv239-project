@@ -3,8 +3,6 @@ using MalyFarmar.Pages;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using MalyFarmar.Messages;
 using MalyFarmar.Resources.Strings;
 using MalyFarmar.Services.Interfaces;
 using MalyFarmar.ViewModels.Shared;
@@ -15,15 +13,18 @@ namespace MalyFarmar.ViewModels
     {
         private readonly ApiClient _apiClient;
         private readonly IPreferencesService _preferencesService;
-        private readonly SemaphoreSlim _loadProductsSemaphore = new(1, 1);
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(LoadUserProductsCommand))]
         [NotifyCanExecuteChangedFor(nameof(RefreshCommand))]
         private bool _isBusy = false;
 
         [ObservableProperty]
+        private bool _isRefreshing = false;
+
+        [ObservableProperty]
         private string? _statusMessage;
+
+        private bool CanExecuteLoadOrRefresh() => !IsBusy;
 
         public ObservableCollection<ProductListViewDto> UserProducts { get; }
 
@@ -36,49 +37,38 @@ namespace MalyFarmar.ViewModels
 
         public override async Task OnAppearingAsync()
         {
-            await ExecuteLoadProductsAsync(isRefresh: false);
+            ForceDataRefresh = true;
+            await base.OnAppearingAsync();
         }
 
         protected override async Task LoadDataAsync()
         {
-            await base.LoadDataAsync();
-            if (UserProducts.Count == 0 || string.IsNullOrEmpty(StatusMessage))
-            {
-                await ExecuteLoadProductsAsync(isRefresh: false);
-            }
-        }
-
-        private bool CanExecuteLoadOrRefresh() => !IsBusy;
-
-        [RelayCommand(CanExecute = nameof(CanExecuteLoadOrRefresh), IncludeCancelCommand = true)]
-        private async Task LoadUserProducts(CancellationToken cancellationToken)
-        {
-            await ExecuteLoadProductsAsync(isRefresh: false, cancellationToken: cancellationToken);
+            await ExecuteLoadProductsAsync();
         }
 
         [RelayCommand(CanExecute = nameof(CanExecuteLoadOrRefresh), IncludeCancelCommand = true)]
         private async Task Refresh(CancellationToken cancellationToken)
         {
-            await ExecuteLoadProductsAsync(isRefresh: true, cancellationToken: cancellationToken);
+            IsRefreshing = true;
+            try
+            {
+                await ExecuteLoadProductsAsync(cancellationToken: cancellationToken);
+            }
+            finally
+            {
+                IsRefreshing = false;
+            }
         }
 
-        private async Task ExecuteLoadProductsAsync(bool isRefresh = false, CancellationToken cancellationToken = default)
+        private async Task ExecuteLoadProductsAsync(CancellationToken cancellationToken = default)
         {
-            if (!await _loadProductsSemaphore.WaitAsync(0, cancellationToken))
+            if (cancellationToken.IsCancellationRequested || IsBusy)
             {
-                System.Diagnostics.Debug.WriteLine("[SellPageVM] Load ignored, another operation in progress or cancelled.");
                 return;
             }
-
-            if (cancellationToken.IsCancellationRequested)
-            {
-                _loadProductsSemaphore.Release();
-                return;
-            }
-
 
             IsBusy = true;
-            if (!isRefresh) StatusMessage = null;
+            StatusMessage = null;
 
             try
             {
@@ -93,7 +83,7 @@ namespace MalyFarmar.ViewModels
                 }
 
                 cancellationToken.ThrowIfCancellationRequested();
-                var productsListDto = await _apiClient.GetProductsBySellerAsync(sellerId.Value);
+                var productsListDto = await _apiClient.GetProductsBySellerAsync(sellerId.Value, cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
 
                 if (productsListDto?.Products == null)
@@ -126,7 +116,6 @@ namespace MalyFarmar.ViewModels
             finally
             {
                 IsBusy = false;
-                _loadProductsSemaphore.Release();
             }
         }
 
@@ -139,8 +128,15 @@ namespace MalyFarmar.ViewModels
         [RelayCommand]
         private async Task GoToProductDetailsAsync(ProductListViewDto? product)
         {
-            if (product == null) return;
-            await Shell.Current.GoToAsync($"{nameof(ProductDetailPage)}?ProductId={product.Id}");
+            if (product == null)
+            {
+                return;
+            }
+
+            await Shell.Current.GoToAsync(nameof(ProductDetailPage), new Dictionary<string, object>
+            {
+                [nameof(ProductDetailViewModel.ProductId)] = product.Id
+            });
         }
     }
 }

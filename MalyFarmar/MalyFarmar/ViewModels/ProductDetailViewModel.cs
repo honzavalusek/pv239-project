@@ -1,8 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using MalyFarmar.Clients;
-using MalyFarmar.Messages;
 using MalyFarmar.Pages;
 using MalyFarmar.Resources.Strings;
 using MalyFarmar.Services.Interfaces;
@@ -10,15 +8,11 @@ using MalyFarmar.ViewModels.Shared;
 
 namespace MalyFarmar.ViewModels
 {
-    [QueryProperty(nameof(ProductId), "ProductId")]
+    [QueryProperty(nameof(ProductId), nameof(ProductId))]
     public partial class ProductDetailViewModel : BaseViewModel
     {
         private readonly ApiClient _apiClient;
         private readonly IPreferencesService _preferencesService;
-
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(EditProductCommand))]
-        ProductDetailViewDto? _product;
 
         public int ProductId
         {
@@ -27,10 +21,15 @@ namespace MalyFarmar.ViewModels
             {
                 if (SetProperty(ref field, value) && field > 0)
                 {
-                    LoadProductDetailsAsync();
+                    LoadDataAsync();
                 }
             }
         }
+
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(EditProductCommand))]
+        ProductDetailViewDto? _product;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(EditProductCommand))]
@@ -43,6 +42,7 @@ namespace MalyFarmar.ViewModels
         [NotifyCanExecuteChangedFor(nameof(EditProductCommand))]
         bool _hasError = false;
 
+        private bool CanEditProduct() => Product != null && !IsLoading && !HasError && IsCurrentUserTheSeller();
 
         public ProductDetailViewModel(ApiClient apiClient, IPreferencesService preferencesService)
         {
@@ -52,16 +52,8 @@ namespace MalyFarmar.ViewModels
 
         public override async Task OnAppearingAsync()
         {
+            ForceDataRefresh = true;
             await base.OnAppearingAsync();
-            if (ProductId > 0)
-            {
-                await LoadProductDetailsAsync();
-            }
-        }
-
-        private bool CanEditProduct()
-        {
-            return Product != null && !IsLoading && !HasError && IsCurrentUserTheSeller();
         }
 
         [RelayCommand(CanExecute = nameof(CanEditProduct))]
@@ -72,7 +64,10 @@ namespace MalyFarmar.ViewModels
                 return;
             }
 
-            await Shell.Current.GoToAsync($"{nameof(EditProductPage)}?productId={Product.Id}");
+            await Shell.Current.GoToAsync(nameof(EditProductPage), new Dictionary<string, object>
+            {
+                [nameof(EditProductViewModel.ProductId)] = Product.Id
+            });
         }
 
         private bool IsCurrentUserTheSeller()
@@ -86,7 +81,7 @@ namespace MalyFarmar.ViewModels
             return currentUserId.HasValue && Product.Seller.Id == currentUserId.Value;
         }
 
-        public async Task LoadProductDetailsAsync()
+        protected override async Task LoadDataAsync()
         {
             if (ProductId == 0)
             {
