@@ -61,14 +61,15 @@ namespace MalyFarmar.ViewModels
 
         private CancellationTokenSource? _cancelTokenSource;
 
+        private bool CanGetLocation() => !IsProcessing && !IsCheckingLocation;
+        private bool CanCreateAccount() => !IsProcessing;
+
         public CreateUserViewModel(ApiClient apiClient, IPreferencesService preferencesService, ILocationService locationService)
         {
             _apiClient = apiClient;
             _preferencesService = preferencesService;
             _locationService = locationService;
         }
-
-        private bool CanGetLocation() => !IsProcessing && !IsCheckingLocation;
 
         [RelayCommand(CanExecute = nameof(CanGetLocation))]
         private async Task GetLocationAsync()
@@ -112,8 +113,6 @@ namespace MalyFarmar.ViewModels
                 IsProcessing = false;
             }
         }
-
-        private bool CanCreateAccount() => !IsProcessing;
 
         [RelayCommand(CanExecute = nameof(CanCreateAccount))]
         private async Task CreateAccountAsync()

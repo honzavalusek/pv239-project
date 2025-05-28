@@ -26,6 +26,9 @@ namespace MalyFarmar.ViewModels
         [NotifyCanExecuteChangedFor(nameof(CreateUserCommand))]
         private bool _isBusy = false;
 
+        private bool CanSignIn() => SelectedUser != null && !IsBusy;
+        private bool CanNavigate() => !IsBusy;
+
         partial void OnSelectedUserChanged(UserListViewDto? value)
         {
             if (value != null)
@@ -49,11 +52,6 @@ namespace MalyFarmar.ViewModels
         }
 
         protected override async Task LoadDataAsync()
-        {
-            await LoadUsersAsync();
-        }
-
-        private async Task LoadUsersAsync()
         {
             IsBusy = true;
             try
@@ -80,8 +78,6 @@ namespace MalyFarmar.ViewModels
                 IsBusy = false;
             }
         }
-
-        private bool CanSignIn() => SelectedUser != null && !IsBusy;
 
         [RelayCommand(CanExecute = nameof(CanSignIn))]
         private async Task SignIn()
@@ -114,8 +110,5 @@ namespace MalyFarmar.ViewModels
             var toast = Toast.Make("Cannot navigate at this time. Please restart the application.");
             await toast.Show();
         }
-
-
-        private bool CanNavigate() => !IsBusy;
     }
 }

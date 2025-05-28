@@ -28,8 +28,6 @@ public partial class ProfileViewModel : BaseViewModel
 
     protected override async Task LoadDataAsync()
     {
-        await base.LoadDataAsync();
-
         var currentUserId = _preferencesService.GetCurrentUserId() ?? throw new Exception("User ID not found");
 
         var fetched = await _apiClient.GetUserAsync(currentUserId);

@@ -10,14 +10,22 @@ using MalyFarmar.Resources.Strings;
 
 namespace MalyFarmar.ViewModels
 {
+    [QueryProperty(nameof(ProductId), nameof(ProductId))]
     public partial class EditProductViewModel : BaseViewModel
     {
         private readonly ApiClient _apiClient;
 
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(SaveProductCommand))]
-        [NotifyCanExecuteChangedFor(nameof(DeleteProductCommand))]
-        private int _productId;
+        public int ProductId
+        {
+            get;
+            set
+            {
+                if (SetProperty(ref field, value) && field > 0)
+                {
+                    LoadDataAsync();
+                }
+            }
+        }
 
         [ObservableProperty]
         private ProductDetailViewDto? _loadedProduct;
@@ -42,30 +50,11 @@ namespace MalyFarmar.ViewModels
         [ObservableProperty]
         private string? _errorMessage;
 
+        private bool CanSubmit() => !IsSubmitting && !IsBusyLoading && ProductId > 0;
 
         public EditProductViewModel(ApiClient apiClient)
         {
             _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
-        }
-
-        partial void OnProductIdChanged(int value)
-        {
-            if (value <= 0)
-            {
-                return;
-            }
-
-            LoadedProduct = null;
-            _ = ExecuteLoadProductAsync(value);
-        }
-
-        public override async Task OnAppearingAsync()
-        {
-            await base.OnAppearingAsync();
-            if (ProductId > 0 && LoadedProduct == null && !IsBusyLoading && !IsSubmitting)
-            {
-                await ExecuteLoadProductAsync(ProductId);
-            }
         }
 
         protected override async Task LoadDataAsync()
@@ -75,7 +64,11 @@ namespace MalyFarmar.ViewModels
 
         private async Task ExecuteLoadProductAsync(int productIdToLoad)
         {
-            if (IsBusyLoading) return;
+            if (IsBusyLoading)
+            {
+                return;
+            }
+
             IsBusyLoading = true;
             ErrorMessage = null;
 
@@ -104,11 +97,6 @@ namespace MalyFarmar.ViewModels
             {
                 IsBusyLoading = false;
             }
-        }
-
-        private bool CanSubmit()
-        {
-            return !IsSubmitting && !IsBusyLoading && ProductId > 0;
         }
 
         [RelayCommand(CanExecute = nameof(CanSubmit))]

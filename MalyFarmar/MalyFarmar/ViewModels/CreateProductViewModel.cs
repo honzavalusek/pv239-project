@@ -32,13 +32,13 @@ namespace MalyFarmar.ViewModels
         [ObservableProperty]
         private string? _errorMessage;
 
+        private bool CanExecuteActions() => !IsSubmitting;
+
         public CreateProductViewModel(ApiClient apiClient, IPreferencesService preferencesService)
         {
             _apiClient = apiClient;
             _preferencesService = preferencesService;
         }
-
-        private bool CanExecuteActions() => !IsSubmitting;
 
         [RelayCommand(CanExecute = nameof(CanExecuteActions))]
         private async Task PickImageAsync()
