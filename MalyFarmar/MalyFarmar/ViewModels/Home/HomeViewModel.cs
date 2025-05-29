@@ -23,6 +23,12 @@ public partial class HomeViewModel : BaseViewModel
         _apiClient = apiClient;
         _preferencesService = preferencesService;
     }
+    
+    public override async Task OnAppearingAsync()
+    {
+        ForceDataRefresh = true;
+        await base.OnAppearingAsync();
+    }
 
     protected override async Task LoadDataAsync()
     {
