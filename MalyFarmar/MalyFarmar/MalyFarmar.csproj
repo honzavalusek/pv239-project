@@ -122,6 +122,31 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>HomePageStrings.resx</DependentUpon>
       </Compile>
+      <Compile Update="Resources\Strings\SellPageStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>SellPageStrings.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Strings\ProductDetailPageStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>ProductDetailPageStrings.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Strings\EditProductPageStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>EditProductPageStrings.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Strings\CreateProductPageStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>CreateProductPageStrings.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Strings\MyReservationsPageStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>MyReservationsPageStrings.resx</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -158,6 +183,26 @@
       <EmbeddedResource Update="Resources\Strings\HomePageStrings.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>HomePageStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Strings\SellPageStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>SellPageStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Strings\ProductDetailPageStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>ProductDetailPageStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Strings\EditProductPageStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>EditProductPageStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Strings\CreateProductPageStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>CreateProductPageStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Strings\MyReservationsPageStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>MyReservationsPageStrings.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
 

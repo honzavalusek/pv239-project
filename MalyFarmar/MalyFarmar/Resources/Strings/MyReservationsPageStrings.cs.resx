@@ -1,0 +1,67 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    
+    <data name="PageTitle" xml:space="preserve">
+        <value>Moje rezervace</value>
+    </data>
+    <data name="LabelReservationId" xml:space="preserve">
+        <value>Číslo rezervace:</value>
+    </data>
+    <data name="LabelPickUpAt" xml:space="preserve">
+        <value>Místo vyzvednutí:</value>
+    </data>
+    <data name="LabelStatus" xml:space="preserve">
+        <value>Stav:</value>
+    </data>
+    <data name="LabelTotalPrice" xml:space="preserve">
+        <value>Celková cena:</value>
+    </data>
+    <data name="LabelCreatedAt" xml:space="preserve">
+        <value>Vytvořeno:</value>
+    </data>
+    <data name="LabelNotSet" xml:space="preserve">
+        <value>Nenastaveno</value>
+    </data>
+
+    <data name="StatusCurrentUserError" xml:space="preserve">
+        <value>Nepodařilo se identifikovat uživatele. Prosím, přihlaste se znovu.</value>
+    </data>
+    <data name="StatusNoReservations" xml:space="preserve">
+        <value>Zatím nejsou vytvořeny žádné rezervace na vaše produkty.</value>
+    </data>
+    <data name="StatusNoReservationsFoundOrError" xml:space="preserve">
+        <value>Nebyly nalezeny rezervace.</value>
+    </data>
+    <data name="StatusFailedToLoadPrefix" xml:space="preserve">
+        <value>Chyba při načítání rezervací.</value>
+    </data>
+    <data name="StatusUnexpectedErrorPrefix" xml:space="preserve">
+        <value>Nastala neočekávaná chyba.</value>
+    </data>
+    <data name="StatusLoadingCancelled" xml:space="preserve">
+        <value>Načítání rezervací bylo přerušeno.</value>
+    </data>
+    <data name="OrderStatusCreated" xml:space="preserve">
+        <value>Nová objednávka</value>
+    </data>
+    <data name="OrderStatusPickUpSet" xml:space="preserve">
+        <value>Domluvené vyzvednutí</value>
+    </data>
+    <data name="OrderStatusCompleted" xml:space="preserve">
+        <value>Dokončeno</value>
+    </data>
+    <data name="OrderStatusUnknown" xml:space="preserve">
+        <value>Neznámý status</value>
+    </data>
+</root>

@@ -80,10 +80,12 @@ public static class MauiProgram
         services.AddTransient<CreateProductViewModel>();
         services.AddTransient<ProfileViewModel>();
         services.AddTransient<HomeViewModel>();
+        services.AddTransient<MyReservationsViewModel>();
     }
 
     private static void ConfigurePages(IServiceCollection services)
     {
+        services.AddTransient<MyReservationsPage>();
         services.AddTransient<BuyPage>();
         services.AddTransient<CreateProductPage>();
         services.AddTransient<CreateUserPage>();
