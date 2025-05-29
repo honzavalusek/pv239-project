@@ -1,14 +1,14 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MalyFarmar.ViewModels;
+using MalyFarmar.Pages.Shared;
 
-namespace MalyFarmar.Pages;
-
-public partial class BuyPage : ContentPage
+namespace MalyFarmar.Pages
 {
-    public BuyPage()
+    public partial class BuyPage : BaseContentPage
     {
-        InitializeComponent();
+        public BuyPage(BuyPageViewModel viewModel) : base(viewModel)
+        {
+            InitializeComponent();
+        }
+
     }
 }
