@@ -3,7 +3,7 @@
         <value>Moje Produkty</value>
     </data>
     <data name="AddProductToolbarItemText" xml:space="preserve">
-        <value>Přidej Produkt</value>
+        <value>Přidat Produkt</value>
     </data>
     <data name="ProductItemPriceLabel" xml:space="preserve">
         <value>Cena: </value>

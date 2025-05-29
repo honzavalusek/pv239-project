@@ -15,11 +15,16 @@ namespace MalyFarmar.ViewModels
         private readonly IPreferencesService _preferencesService;
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(RefreshCommand))] // Only RefreshCommand in this VM for now
-        private bool _isBusy;
+        [NotifyCanExecuteChangedFor(nameof(RefreshCommand))]
+        private bool _isBusy = false;
+        
+        [ObservableProperty]
+        private bool _isRefreshing = false;
 
         [ObservableProperty]
         private string? _statusMessage;
+        
+        private bool CanExecuteRefresh() => !IsBusy;
 
         public ObservableCollection<OrderListViewDto> Reservations { get; }
 
@@ -32,53 +37,49 @@ namespace MalyFarmar.ViewModels
 
         public override async Task OnAppearingAsync()
         {
+            ForceDataRefresh = true;
             await base.OnAppearingAsync();
-            if (!Reservations.Any() && !IsBusy) // Load only if empty and not already busy
-            {
-                await ExecuteLoadReservationsAsync(isRefresh: false, CancellationToken.None);
-            }
-        }
-
-        private bool CanExecuteRefresh() => !IsBusy;
-
-        [RelayCommand]
-        private async Task NavigateToHomeAsync()
-        {
-            await Shell.Current.GoToAsync("..");
         }
         
-        [RelayCommand(CanExecute = nameof(CanExecuteRefresh))]
+        protected override async Task LoadDataAsync()
+        {
+            await ExecuteLoadReservationsAsync();
+        }
+        
+        [RelayCommand(CanExecute = nameof(CanExecuteRefresh), IncludeCancelCommand = true)]
         private async Task Refresh(CancellationToken cancellationToken)
         {
-            await ExecuteLoadReservationsAsync(isRefresh: true, cancellationToken: cancellationToken);
+            IsRefreshing = true;
+            try
+            {
+                await ExecuteLoadReservationsAsync(cancellationToken: cancellationToken);
+            }
+            finally
+            {
+                IsRefreshing = false;
+            }
         }
 
         private async Task ExecuteLoadReservationsAsync(bool isRefresh = false, CancellationToken cancellationToken = default)
         {
-            if (IsBusy) return;
-
-            if (cancellationToken.IsCancellationRequested)
+            if (cancellationToken.IsCancellationRequested || IsBusy)
             {
                 System.Diagnostics.Debug.WriteLine("[MyReservationsVM] Load cancelled before starting.");
                 return;
             }
 
             IsBusy = true;
-            if (!isRefresh) StatusMessage = null;
+            StatusMessage = null;
 
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                // Clear reservations only if we are about to fetch new ones or it's a refresh.
-                if (isRefresh || !Reservations.Any() || StatusMessage == null)
-                {
-                    Reservations.Clear();
-                }
-
+                Reservations.Clear();
+                
                 var sellerId = _preferencesService.GetCurrentUserId();
                 if (sellerId == null)
                 {
-                    StatusMessage = MyReservationsPageStrings.StatusCurrentUserError; // Use new stringsmmmm
+                    StatusMessage = MyReservationsPageStrings.StatusCurrentUserError;
                 }
                 else
                 {
@@ -92,7 +93,6 @@ namespace MalyFarmar.ViewModels
                         {
                             cancellationToken.ThrowIfCancellationRequested();
                             
-                            // Filter out finished orders 
                             if (order.StatusId != OrderStatusEnum._3)
                             {
                                 Reservations.Add(order);
@@ -128,8 +128,14 @@ namespace MalyFarmar.ViewModels
                 IsBusy = false;
             }
         }
+        
+        [RelayCommand]
+        private async Task NavigateToHomeAsync()
+        {
+            await Shell.Current.GoToAsync("..");
+        }
 
-        [RelayCommand(CanExecute = nameof(CanExecuteRefresh))] // Example, use appropriate CanExecute
+        [RelayCommand(CanExecute = nameof(CanExecuteRefresh))]
         private async Task GoToReservationDetailAsync(OrderListViewDto order)
         {
             if (order == null) return;

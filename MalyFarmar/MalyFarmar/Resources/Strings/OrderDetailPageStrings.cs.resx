@@ -24,7 +24,7 @@
     <data name="AlertOrderCompletedSuccess" xml:space="preserve"><value>Objednávka byla úspěšně ukončena!</value></data>
     <data name="ValueNotSet" xml:space="preserve"><value>Nenastaveno</value></data>
     <data name="AlertFinishConfirmTitle" xml:space="preserve"><value>Dokončení objednávky</value></data>
-    <data name="AlertFinishConfirmMessage" xml:space="preserve"><value>Doopravdy chceš tuto objednávku dokončit? Tato akce je nevratná.</value></data>
+    <data name="AlertFinishConfirmMessage" xml:space="preserve"><value>Doopravdy chcete tuto objednávku dokončit? Tato akce je nevratná.</value></data>
     <data name="AlertFinishConfirmYes" xml:space="preserve"><value>Ano, dokončit</value></data>
     <data name="AlertFinishConfirmCancel" xml:space="preserve"><value>Storno</value></data>
 

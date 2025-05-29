@@ -22,7 +22,7 @@
     </sharedPages:BaseContentPage.Resources>
     
     <Grid RowDefinitions="Auto, *" Margin="10">
-        <RefreshView Grid.Row="1" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsBusy}">
+        <RefreshView Grid.Row="1" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
             <CollectionView ItemsSource="{Binding Reservations}" SelectionMode="None">
                 <CollectionView.EmptyView>
                     </CollectionView.EmptyView>

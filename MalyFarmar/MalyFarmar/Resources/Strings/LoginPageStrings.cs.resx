@@ -27,6 +27,6 @@
         <value>Zvolte uživatele</value>
     </data>
     <data name="SelectUserAlertDescription" xml:space="preserve">
-        <value>První zvolte jeden z profilů nahoře.</value>
+        <value>Nejdříve zvolte jeden z profilů.</value>
     </data>
 </root>
