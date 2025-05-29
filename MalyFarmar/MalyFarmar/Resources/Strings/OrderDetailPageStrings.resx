@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="PageTitle" xml:space="preserve"><value>Reservation Details</value></data>
+    <data name="LabelOrderId" xml:space="preserve"><value>Order ID:</value></data>
+    <data name="LabelStatus" xml:space="preserve"><value>Status:</value></data>
+    <data name="LabelTotalPrice" xml:space="preserve"><value>Total Price:</value></data>
+    <data name="LabelCreatedAt" xml:space="preserve"><value>Created:</value></data>
+    <data name="LabelPickUpAt" xml:space="preserve"><value>Pick-up At:</value></data>
+    <data name="LabelPickUpDate" xml:space="preserve"><value>Pick-up Date:</value></data>
+    <data name="LabelPickUpTime" xml:space="preserve"><value>Pick-up Time:</value></data>
+    <data name="LabelBuyerInfo" xml:space="preserve"><value>Buyer Information</value></data>
+    <data name="LabelItems" xml:space="preserve"><value>Items</value></data>
+    <data name="LabelProductName" xml:space="preserve"><value>Product:</value></data>
+    <data name="LabelAmount" xml:space="preserve"><value>Amount:</value></data>
+    <data name="LabelPrice" xml:space="preserve"><value>Price:</value></data>
+    <data name="LabelSubtotal" xml:space="preserve"><value>Subtotal:</value></data>
+    <data name="ButtonSetPickUp" xml:space="preserve"><value>Set Pick-up Time</value></data>
+    <data name="ButtonCompleteOrder" xml:space="preserve"><value>Mark as Completed</value></data>
+    <data name="ErrorOrderNotFound" xml:space="preserve"><value>Order details not found.</value></data>
+    <data name="ErrorFailedToLoadDetailsPrefix" xml:space="preserve"><value>Failed to load order details</value></data>
+    <data name="ErrorPickUpTimeInPast" xml:space="preserve"><value>Pick-up date and time must be in the future.</value></data>
+    <data name="ErrorSettingPickUpTimePrefix" xml:space="preserve"><value>Error setting pick-up time</value></data>
+    <data name="ErrorCompletingOrderPrefix" xml:space="preserve"><value>Error completing order</value></data>
+    <data name="AlertPickUpSetSuccess" xml:space="preserve"><value>Pick-up date and time have been set successfully!</value></data>
+    <data name="AlertOrderCompletedSuccess" xml:space="preserve"><value>Order marked as completed successfully!</value></data>
+    <data name="ValueNotSet" xml:space="preserve"><value>Not set</value></data>
+    <data name="AlertFinishConfirmTitle" xml:space="preserve"><value>Finish Order</value></data>
+    <data name="AlertFinishConfirmMessage" xml:space="preserve"><value>Do you really want to finish this order? This action is irreversible.</value></data>
+    <data name="AlertFinishConfirmYes" xml:space="preserve"><value>Yes, finish</value></data>
+    <data name="AlertFinishConfirmCancel" xml:space="preserve"><value>Back</value></data>
+</root>

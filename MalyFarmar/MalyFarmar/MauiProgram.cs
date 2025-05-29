@@ -80,10 +80,13 @@ public static class MauiProgram
         services.AddTransient<CreateProductViewModel>();
         services.AddTransient<ProfileViewModel>();
         services.AddTransient<HomeViewModel>();
+        services.AddTransient<MyReservationsViewModel>();
+        services.AddTransient<OrderDetailViewModel>();
     }
 
     private static void ConfigurePages(IServiceCollection services)
     {
+        services.AddTransient<MyReservationsPage>();
         services.AddTransient<BuyPage>();
         services.AddTransient<CreateProductPage>();
         services.AddTransient<CreateUserPage>();
@@ -94,6 +97,7 @@ public static class MauiProgram
         services.AddTransient<ProfilePage>();
         services.AddTransient<SellPage>();
         services.AddTransient<AppShell>();
+        services.AddTransient<OrderDetailPage>();
     }
 
     private static void ConfigureConfiguration(MauiAppBuilder builder)

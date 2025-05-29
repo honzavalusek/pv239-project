@@ -1,6 +1,7 @@
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MalyFarmar.Pages;
 using MalyFarmar.Clients;
 using MalyFarmar.Mappers;
 using MalyFarmar.Models.Home;
@@ -21,6 +22,12 @@ public partial class HomeViewModel : BaseViewModel
     {
         _apiClient = apiClient;
         _preferencesService = preferencesService;
+    }
+    
+    public override async Task OnAppearingAsync()
+    {
+        ForceDataRefresh = true;
+        await base.OnAppearingAsync();
     }
 
     protected override async Task LoadDataAsync()
@@ -48,8 +55,6 @@ public partial class HomeViewModel : BaseViewModel
     [RelayCommand]
     private async Task NavigateToMyActiveReservationsAsync()
     {
-        // TODO: Implement navigation to My Active Reservations page
-        var toast = Toast.Make("TODO: Implement Me!");
-        await toast.Show();
+        await Shell.Current.GoToAsync(nameof(MyReservationsPage));
     }
 }

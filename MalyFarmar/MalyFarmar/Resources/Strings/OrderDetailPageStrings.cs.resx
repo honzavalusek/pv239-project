@@ -1,0 +1,31 @@
+<root>
+    <data name="PageTitle" xml:space="preserve"><value>Detaily rezervace</value></data>
+    <data name="LabelOrderId" xml:space="preserve"><value>Číslo rezervace:</value></data>
+    <data name="LabelStatus" xml:space="preserve"><value>Stav:</value></data>
+    <data name="LabelTotalPrice" xml:space="preserve"><value>Celková cena:</value></data>
+    <data name="LabelCreatedAt" xml:space="preserve"><value>Vytvořeno:</value></data>
+    <data name="LabelPickUpAt" xml:space="preserve"><value>Čas vyzvednutí:</value></data>
+    <data name="LabelPickUpDate" xml:space="preserve"><value>Datum vyzvednutí:</value></data>
+    <data name="LabelPickUpTime" xml:space="preserve"><value>Čas vyzvednutí:</value></data>
+    <data name="LabelBuyerInfo" xml:space="preserve"><value>Informace o zájemci</value></data>
+    <data name="LabelItems" xml:space="preserve"><value>Položky</value></data>
+    <data name="LabelProductName" xml:space="preserve"><value>Produkt:</value></data>
+    <data name="LabelAmount" xml:space="preserve"><value>Množství:</value></data>
+    <data name="LabelPrice" xml:space="preserve"><value>Cena:</value></data>
+    <data name="LabelSubtotal" xml:space="preserve"><value>Součet:</value></data>
+    <data name="ButtonSetPickUp" xml:space="preserve"><value>Nastavit čas vyzvednutí</value></data>
+    <data name="ButtonCompleteOrder" xml:space="preserve"><value>Označit jako dokončenou</value></data>
+    <data name="ErrorOrderNotFound" xml:space="preserve"><value>Detaily objednávky se nepodařilo najít.</value></data>
+    <data name="ErrorFailedToLoadDetailsPrefix" xml:space="preserve"><value>Detaily objednávky se nepodařilo načíst.</value></data>
+    <data name="ErrorPickUpTimeInPast" xml:space="preserve"><value>Datum vyzvednutí musí být v budoucnosti.</value></data>
+    <data name="ErrorSettingPickUpTimePrefix" xml:space="preserve"><value>Chyba při nastavení času vyzvednutí.</value></data>
+    <data name="ErrorCompletingOrderPrefix" xml:space="preserve"><value>Chyba při ukončení objednávky</value></data>
+    <data name="AlertPickUpSetSuccess" xml:space="preserve"><value>Čas vyzvednutí byl úspěšně nastaven!</value></data>
+    <data name="AlertOrderCompletedSuccess" xml:space="preserve"><value>Objednávka byla úspěšně ukončena!</value></data>
+    <data name="ValueNotSet" xml:space="preserve"><value>Nenastaveno</value></data>
+    <data name="AlertFinishConfirmTitle" xml:space="preserve"><value>Dokončení objednávky</value></data>
+    <data name="AlertFinishConfirmMessage" xml:space="preserve"><value>Doopravdy chcete tuto objednávku dokončit? Tato akce je nevratná.</value></data>
+    <data name="AlertFinishConfirmYes" xml:space="preserve"><value>Ano, dokončit</value></data>
+    <data name="AlertFinishConfirmCancel" xml:space="preserve"><value>Storno</value></data>
+
+</root>
