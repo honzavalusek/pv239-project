@@ -103,5 +103,9 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </RefreshView>
-        </Grid>
+        <Label Grid.Row="1" Text="{Binding StatusMessage}"
+               IsVisible="{Binding StatusMessage, Converter={StaticResource IsStringNotNullOrEmptyConverter}}"
+               VerticalOptions="Center" HorizontalOptions="Center"
+               HorizontalTextAlignment="Center"/>
+    </Grid>
 </sharedPages:BaseContentPage>
