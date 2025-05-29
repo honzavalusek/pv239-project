@@ -212,5 +212,41 @@ namespace MalyFarmar.Resources.Strings {
                 return ResourceManager.GetString("AlertFinishConfirmCancel", resourceCulture);
             }
         }
+        
+        internal static string AlertCancelConfirmTitle {
+            get {
+                return ResourceManager.GetString("AlertCancelConfirmTitle", resourceCulture);
+            }
+        }
+        
+        internal static string AlertCancelConfirmMessage {
+            get {
+                return ResourceManager.GetString("AlertCancelConfirmMessage", resourceCulture);
+            }
+        }
+        
+        internal static string AlertCancelConfirmYes {
+            get {
+                return ResourceManager.GetString("AlertCancelConfirmYes", resourceCulture);
+            }
+        }
+        
+        internal static string AlertCancelConfirmCancel {
+            get {
+                return ResourceManager.GetString("AlertCancelConfirmCancel", resourceCulture);
+            }
+        }
+        
+        internal static string AlertCancelCompletedSuccess {
+            get {
+                return ResourceManager.GetString("AlertCancelCompletedSuccess", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonCancelOrder {
+            get {
+                return ResourceManager.GetString("ButtonCancelOrder", resourceCulture);
+            }
+        }
     }
 }

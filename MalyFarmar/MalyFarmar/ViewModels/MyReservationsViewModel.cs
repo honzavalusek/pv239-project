@@ -106,6 +106,7 @@ namespace MalyFarmar.ViewModels
                     {
                         StatusMessage = MyReservationsPageStrings.StatusNoReservationsFoundOrError;
                     }
+                    StatusMessage = Reservations.Any() ? null : MyReservationsPageStrings.StatusNoReservations;
                 }
             }
             catch (OperationCanceledException)

@@ -94,6 +94,12 @@
                                 IsEnabled="{Binding IsSubmittingAction, Converter={StaticResource InvertedBoolConverter}}"/>
                     </VerticalStackLayout>
 
+                    <Button Text="{x:Static strings:OrderDetailPageStrings.ButtonCancelOrder}" 
+
+                            Command="{Binding CancelOrderCommand}" 
+                            IsEnabled="{Binding IsSubmittingAction, Converter={StaticResource InvertedBoolConverter}}"
+                            BackgroundColor="IndianRed" TextColor="White" Margin="0,10,0,0"/>
+                    
                     <Button Text="{x:Static strings:OrderDetailPageStrings.ButtonCompleteOrder}" 
                             Command="{Binding CompleteOrderCommand}" 
                             IsVisible="{Binding CanCompleteOrder}"
@@ -101,7 +107,6 @@
                             BackgroundColor="ForestGreen" TextColor="White" Margin="0,10,0,0"/>
                     
                     <ActivityIndicator IsRunning="{Binding IsSubmittingAction}" IsVisible="{Binding IsSubmittingAction}" HorizontalOptions="Center"/>
-
                 </VerticalStackLayout>
             </Frame>
         </VerticalStackLayout>

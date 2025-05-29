@@ -46,4 +46,10 @@
     <data name="AlertFinishConfirmMessage" xml:space="preserve"><value>Do you really want to finish this order? This action is irreversible.</value></data>
     <data name="AlertFinishConfirmYes" xml:space="preserve"><value>Yes, finish</value></data>
     <data name="AlertFinishConfirmCancel" xml:space="preserve"><value>Back</value></data>
+    <data name="AlertCancelConfirmTitle" xml:space="preserve"><value>Cancel Order</value></data>
+    <data name="AlertCancelConfirmMessage" xml:space="preserve"><value>Do you really want to cancel this order? This action is irreversible.</value></data>
+    <data name="AlertCancelConfirmYes" xml:space="preserve"><value>Yes, cancel</value></data>
+    <data name="AlertCancelConfirmCancel" xml:space="preserve"><value>Back</value></data>
+    <data name="AlertCancelCompletedSuccess" xml:space="preserve"><value>Order canceled successfully!</value></data>
+    <data name="ButtonCancelOrder" xml:space="preserve"><value>Cancel Order</value></data>
 </root>

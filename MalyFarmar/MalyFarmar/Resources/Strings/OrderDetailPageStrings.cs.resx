@@ -27,5 +27,10 @@
     <data name="AlertFinishConfirmMessage" xml:space="preserve"><value>Doopravdy chcete tuto objednávku dokončit? Tato akce je nevratná.</value></data>
     <data name="AlertFinishConfirmYes" xml:space="preserve"><value>Ano, dokončit</value></data>
     <data name="AlertFinishConfirmCancel" xml:space="preserve"><value>Storno</value></data>
-
+    <data name="AlertCancelConfirmTitle" xml:space="preserve"><value>Zrušení objednávky</value></data>
+    <data name="AlertCancelConfirmMessage" xml:space="preserve"><value>Doopravdy chcete tuto objednávku zrušit? Tato akce je nevratná.</value></data>
+    <data name="AlertCancelConfirmYes" xml:space="preserve"><value>Ano, zrušit</value></data>
+    <data name="AlertCancelConfirmCancel" xml:space="preserve"><value>Storno</value></data>
+    <data name="AlertCancelCompletedSuccess" xml:space="preserve"><value>Objednávka úspěšně zrušena!</value></data>
+    <data name="ButtonCancelOrder" xml:space="preserve"><value>Zrušit objednávku</value></data>
 </root>

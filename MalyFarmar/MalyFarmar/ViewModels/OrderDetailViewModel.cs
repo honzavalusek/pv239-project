@@ -32,11 +32,13 @@ namespace MalyFarmar.ViewModels
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SetPickUpDateTimeCommand))]
         [NotifyCanExecuteChangedFor(nameof(CompleteOrderCommand))]
+        [NotifyCanExecuteChangedFor(nameof(CancelOrderCommand))]
         private bool _canSetPickUpDate;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SetPickUpDateTimeCommand))]
         [NotifyCanExecuteChangedFor(nameof(CompleteOrderCommand))]
+        [NotifyCanExecuteChangedFor(nameof(CancelOrderCommand))]
         private bool _canCompleteOrder;
 
         [ObservableProperty]
@@ -48,11 +50,13 @@ namespace MalyFarmar.ViewModels
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SetPickUpDateTimeCommand))]
         [NotifyCanExecuteChangedFor(nameof(CompleteOrderCommand))]
+        [NotifyCanExecuteChangedFor(nameof(CancelOrderCommand))]
         private bool _isSubmittingAction;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SetPickUpDateTimeCommand))]
         [NotifyCanExecuteChangedFor(nameof(CompleteOrderCommand))]
+        [NotifyCanExecuteChangedFor(nameof(CancelOrderCommand))]
         private bool _isLoadingData;
 
         [ObservableProperty]
@@ -79,6 +83,7 @@ namespace MalyFarmar.ViewModels
                 UpdateActionVisibilities(); 
                 SetPickUpDateTimeCommand.NotifyCanExecuteChanged();
                 CompleteOrderCommand.NotifyCanExecuteChanged();
+                CancelOrderCommand.NotifyCanExecuteChanged();
             }
         }
 
@@ -195,6 +200,42 @@ namespace MalyFarmar.ViewModels
                 await _apiClient.SetOrderCompletedAsync(OrderId, cancellationToken);
                 await Application.Current.MainPage.DisplayAlert(CommonStrings.Success,
                     OrderDetailPageStrings.AlertOrderCompletedSuccess, CommonStrings.Ok);
+                CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new ProductListChangedMessage(),
+                    cancellationToken);
+                await ExecuteLoadOrderDetailsAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"{OrderDetailPageStrings.ErrorCompletingOrderPrefix}: {ex.Message}";
+            }
+            finally
+            {
+                IsSubmittingAction = false;
+                await Shell.Current.GoToAsync("..");
+            }
+        }
+        
+        [RelayCommand(CanExecute = nameof(CanExecuteAction))]
+        private async Task CancelOrder(CancellationToken cancellationToken)
+        {
+            bool confirm = await Application.Current.MainPage.DisplayAlert(
+                OrderDetailPageStrings.AlertCancelConfirmTitle,
+                OrderDetailPageStrings.AlertCancelConfirmMessage,
+                OrderDetailPageStrings.AlertCancelConfirmYes,
+                OrderDetailPageStrings.AlertCancelConfirmCancel);
+
+            if (!confirm)
+            {
+                return;
+            }
+
+            IsSubmittingAction = true;
+            ErrorMessage = null;
+            try
+            {
+                await _apiClient.SetOrderCompletedAsync(OrderId, cancellationToken);
+                await Application.Current.MainPage.DisplayAlert(CommonStrings.Success,
+                    OrderDetailPageStrings.AlertCancelCompletedSuccess, CommonStrings.Ok);
                 CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new ProductListChangedMessage(),
                     cancellationToken);
                 await ExecuteLoadOrderDetailsAsync(cancellationToken);
