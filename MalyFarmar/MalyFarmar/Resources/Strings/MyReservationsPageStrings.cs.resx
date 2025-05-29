@@ -19,7 +19,7 @@
         <value>Číslo rezervace:</value>
     </data>
     <data name="LabelPickUpAt" xml:space="preserve">
-        <value>Místo vyzvednutí:</value>
+        <value>Datum vyzvednutí:</value>
     </data>
     <data name="LabelStatus" xml:space="preserve">
         <value>Stav:</value>

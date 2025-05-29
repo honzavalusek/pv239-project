@@ -29,6 +29,10 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="dtos_output:OrderListViewDto">
                         <Frame Padding="10" Margin="0,5" CornerRadius="5" BorderColor="LightGray" HasShadow="True">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MyReservationsViewModel}}, Path=GoToReservationDetailCommand}"
+                                                      CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
                             <VerticalStackLayout Spacing="8"> <Label FontSize="Medium" FontAttributes="Bold">
                         <Label.FormattedText>
                             <FormattedString>

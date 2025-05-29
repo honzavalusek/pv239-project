@@ -5,6 +5,7 @@ using MalyFarmar.Services.Interfaces;
 using MalyFarmar.ViewModels.Shared;
 using MalyFarmar.Resources.Strings; 
 using System.Collections.ObjectModel;
+using MalyFarmar.Pages;
 
 namespace MalyFarmar.ViewModels
 {
@@ -128,11 +129,11 @@ namespace MalyFarmar.ViewModels
             }
         }
 
-        // [RelayCommand(CanExecute = nameof(CanExecuteRefresh))] // Example, use appropriate CanExecute
-        // private async Task GoToReservationDetailAsync(OrderListViewDto order)
-        // {
-        //     if (order == null) return;
-        //     await Shell.Current.GoToAsync($"{nameof(ReservationDetailPage)}?OrderId={order.Id}");
-        // }
+        [RelayCommand(CanExecute = nameof(CanExecuteRefresh))] // Example, use appropriate CanExecute
+        private async Task GoToReservationDetailAsync(OrderListViewDto order)
+        {
+            if (order == null) return;
+            await Shell.Current.GoToAsync($"{nameof(OrderDetailPage)}?OrderId={order.Id}");
+        }
     }
 }

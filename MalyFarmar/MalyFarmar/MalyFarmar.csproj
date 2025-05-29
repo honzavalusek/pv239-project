@@ -147,6 +147,11 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>MyReservationsPageStrings.resx</DependentUpon>
       </Compile>
+      <Compile Update="Resources\Strings\OrderDetailPageStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>OrderDetailPageStrings.resx</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -203,6 +208,10 @@
       <EmbeddedResource Update="Resources\Strings\MyReservationsPageStrings.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>MyReservationsPageStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Strings\OrderDetailPageStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>OrderDetailPageStrings.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
 
