@@ -203,7 +203,7 @@
         }
       }
     },
-    "/api/Order/ger-reservations/{sellerId}": {
+    "/api/Order/get-reservations/{sellerId}": {
       "post": {
         "tags": [
           "Order"

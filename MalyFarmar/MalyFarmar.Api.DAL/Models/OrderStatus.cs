@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Common.Enums;
+using MalyFarmar.Api.DAL.Enums;
 
 namespace MalyFarmar.Api.DAL.Models;
 

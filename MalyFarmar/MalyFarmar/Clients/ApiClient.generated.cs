@@ -505,8 +505,8 @@ namespace MalyFarmar.Clients
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                     if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "api/Order/ger-reservations/{sellerId}"
-                    urlBuilder_.Append("api/Order/ger-reservations/");
+                    // Operation Path: "api/Order/get-reservations/{sellerId}"
+                    urlBuilder_.Append("api/Order/get-reservations/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(sellerId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);

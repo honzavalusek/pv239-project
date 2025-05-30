@@ -1,4 +1,4 @@
-﻿namespace Common.Enums;
+﻿namespace MalyFarmar.Api.DAL.Enums;
 
 public enum OrderStatusEnum
 {

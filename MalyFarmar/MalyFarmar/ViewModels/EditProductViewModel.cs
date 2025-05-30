@@ -4,8 +4,6 @@ using MalyFarmar.Clients;
 using MalyFarmar.ViewModels.Shared;
 using System.Globalization;
 using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Mvvm.Messaging;
-using MalyFarmar.Messages;
 using MalyFarmar.Resources.Strings;
 
 namespace MalyFarmar.ViewModels
