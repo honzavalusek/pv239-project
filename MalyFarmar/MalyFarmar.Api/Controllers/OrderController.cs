@@ -90,7 +90,7 @@ public class OrderController : Controller
     }
 
     [HttpPost]
-    [Route("ger-reservations/{sellerId:int}")]
+    [Route("get-reservations/{sellerId:int}")]
     public async Task<ActionResult<OrdersListDto>> GetReservations([FromRoute] int sellerId)
     {
         var ordersDto = await _orderService.GetReservationsBySeller(sellerId);
