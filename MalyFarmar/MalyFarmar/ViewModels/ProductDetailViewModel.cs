@@ -9,6 +9,7 @@ using MalyFarmar.ViewModels.Shared;
 namespace MalyFarmar.ViewModels
 {
     [QueryProperty(nameof(ProductId), nameof(ProductId))]
+    [QueryProperty(nameof(IsBuyMode), "isBuyMode")]
     public partial class ProductDetailViewModel : BaseViewModel
     {
         private readonly ApiClient _apiClient;
@@ -43,6 +44,12 @@ namespace MalyFarmar.ViewModels
         bool _hasError = false;
 
         private bool CanEditProduct() => Product != null && !IsLoading && !HasError && IsCurrentUserTheSeller();
+        public bool IsBuyMode
+        {
+            get;
+            set => SetProperty(ref field, value);
+        }
+
 
         public ProductDetailViewModel(ApiClient apiClient, IPreferencesService preferencesService)
         {

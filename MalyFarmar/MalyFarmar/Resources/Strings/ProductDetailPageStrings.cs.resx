@@ -36,4 +36,7 @@
     <data name="ErrorFailedToLoadDetailsPrefix" xml:space="preserve">
         <value>Chyba při načítání detailů produktu.</value>
         </data>
+    <data name="BuyButtonText" xml:space="preserve">
+        <value>Koupit</value>
+    </data>
 </root>

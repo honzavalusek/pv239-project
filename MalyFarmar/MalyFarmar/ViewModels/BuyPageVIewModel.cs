@@ -82,7 +82,7 @@ namespace MalyFarmar.ViewModels
                     RadiusInMeters = DefaultRadius
                 };
                 
-                // 3) fetch *all* nearby products
+                // 3) fetch all nearby products
                 var allResult = await _apiClient.GetProductsAsync(searchDto);
                 if (allResult?.Products == null)
                 {
@@ -90,7 +90,7 @@ namespace MalyFarmar.ViewModels
                     return;
                 }
 
-                // 4) fetch *your* products (to subtract their IDs)
+                // 4) fetch your products to subtract their IDs
                 var me    = _preferencesService.GetCurrentUserId().Value;
                 var mine  = await _apiClient.GetProductsBySellerAsync(me);
                 var myIds = new HashSet<int>(mine.Products.Select(x => x.Id));
@@ -125,12 +125,16 @@ namespace MalyFarmar.ViewModels
             }
         }
 
+        // goto product detail with buy button
         [RelayCommand]
         private async Task GoToProductDetailsAsync(ProductListViewDto? product)
         {
             if (product == null) return;
-            await Shell.Current.GoToAsync($"{nameof(ProductDetailPage)}?ProductId={product.Id}");
+            await Shell.Current.GoToAsync(
+                $"{nameof(ProductDetailPage)}?ProductId={product.Id}&isBuyMode=true"
+            );
         }
+
 
         [RelayCommand]
         private async Task BuyProductAsync(ProductListViewDto product)

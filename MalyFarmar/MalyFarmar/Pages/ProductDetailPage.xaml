@@ -65,6 +65,12 @@
                     <Label Text="{Binding Product.Seller.FullName, TargetNullValue={x:Static strings:ProductDetailPageStrings.ValueNotAvailable}}" /> 
                     <Label Text="{Binding Product.Seller.Email, TargetNullValue={x:Static strings:ProductDetailPageStrings.ValueNotAvailable}}" /> 
                     <Label Text="{Binding Product.Seller.PhoneNumber, TargetNullValue={x:Static strings:ProductDetailPageStrings.ValueNotAvailable}}" /> 
+                    
+                    <Button
+                        Text="{x:Static strings:ProductDetailPageStrings.DescriptionNotAvailable}"
+                        Command="{Binding BuyCommand}"
+                        IsVisible="{Binding IsBuyMode}" />
+
                 </VerticalStackLayout>
             </Grid>
         </VerticalStackLayout>
