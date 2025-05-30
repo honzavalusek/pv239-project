@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Common.Enums;
+using MalyFarmar.Api.DAL.Enums;
 using MalyFarmar.Api.DAL.Models.Shared;
 
 namespace MalyFarmar.Api.DAL.Models;

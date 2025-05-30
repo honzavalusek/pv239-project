@@ -1,9 +1,9 @@
-using Common.Enums;
 using MalyFarmar.Api.BusinessLayer.DTOs.Input;
 using MalyFarmar.Api.BusinessLayer.DTOs.Output;
 using MalyFarmar.Api.BusinessLayer.Mappers;
 using MalyFarmar.Api.BusinessLayer.Services.Interfaces;
 using MalyFarmar.Api.DAL.Data;
+using MalyFarmar.Api.DAL.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace MalyFarmar.Api.BusinessLayer.Services;

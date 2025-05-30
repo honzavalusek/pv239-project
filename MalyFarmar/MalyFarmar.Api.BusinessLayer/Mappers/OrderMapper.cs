@@ -1,7 +1,7 @@
-using Common.Enums;
 using MalyFarmar.Api.DAL.Models;
 using MalyFarmar.Api.BusinessLayer.DTOs.Input;
 using MalyFarmar.Api.BusinessLayer.DTOs.Output;
+using MalyFarmar.Api.DAL.Enums;
 
 namespace MalyFarmar.Api.BusinessLayer.Mappers;
 

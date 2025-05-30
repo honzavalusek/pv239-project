@@ -1,4 +1,4 @@
-using Common.Enums;
+using MalyFarmar.Api.DAL.Enums;
 
 namespace MalyFarmar.Api.BusinessLayer.DTOs.Output;
 

@@ -1,5 +1,5 @@
-using Common.Enums;
 using MalyFarmar.Api.DAL.Data;
+using MalyFarmar.Api.DAL.Enums;
 using MalyFarmar.Api.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 
