@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using MalyFarmar.Api.BusinessLayer.Services;
 using MalyFarmar.Api.BusinessLayer.Services.Interfaces;
 using MalyFarmar.Api.DAL.Data;
@@ -22,7 +23,11 @@ builder.Services.AddDbContext<MalyFarmarDbContext>(options =>
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 builder.Services.AddEndpointsApiExplorer();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 // builder.Services.AddOpenApi();

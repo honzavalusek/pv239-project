@@ -1,33 +1,26 @@
 using System.Globalization;
+using CommunityToolkit.Maui.Converters;
 using MalyFarmar.Clients;
 using MalyFarmar.Resources.Strings;
 
-namespace MalyFarmar.Converters
-{
-    public class OrderStatusToStringConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is OrderStatusEnum status)
-            {
-                switch (status)
-                {
-                    case OrderStatusEnum._1:
-                        return MyReservationsPageStrings.OrderStatusCreated;
-                    case OrderStatusEnum._2:
-                        return MyReservationsPageStrings.OrderStatusPickUpSet;
-                    case OrderStatusEnum._3:
-                        return MyReservationsPageStrings.OrderStatusCompleted;
-                    default:
-                        return MyReservationsPageStrings.OrderStatusUnknown + $" ({status})";
-                }
-            }
-            return string.Empty; 
-        }
+namespace MalyFarmar.Converters;
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+public class OrderStatusToStringConverter : BaseConverterOneWay<OrderStatusEnum, string>
+{
+    public override string DefaultConvertReturnValue { get; set; } = MyReservationsPageStrings.OrderStatusUnknown;
+
+    public override string ConvertFrom(OrderStatusEnum value, CultureInfo? culture)
+    {
+        switch (value)
         {
-            throw new NotImplementedException("Converting string back to OrderStatusEnum is not implemented.");
+            case OrderStatusEnum.Created:
+                return MyReservationsPageStrings.OrderStatusCreated;
+            case OrderStatusEnum.PickUpSet:
+                return MyReservationsPageStrings.OrderStatusPickUpSet;
+            case OrderStatusEnum.Completed:
+                return MyReservationsPageStrings.OrderStatusCompleted;
+            default:
+                return DefaultConvertReturnValue + $" ({value})";
         }
     }
 }

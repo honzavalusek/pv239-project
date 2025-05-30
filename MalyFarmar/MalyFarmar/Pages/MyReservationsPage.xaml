@@ -72,7 +72,7 @@
                             <Image.Triggers>
                                 <DataTrigger TargetType="Image"
                                              Binding="{Binding StatusId}"
-                                             Value="{x:Static dtos_output:OrderStatusEnum._1}">
+                                             Value="{x:Static dtos_output:OrderStatusEnum.Created}">
                                     <Setter Property="IsVisible" Value="True" />
                                 </DataTrigger>
                             </Image.Triggers>

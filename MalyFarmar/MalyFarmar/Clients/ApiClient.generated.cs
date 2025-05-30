@@ -1594,6 +1594,7 @@ namespace MalyFarmar.Clients
         public System.DateTimeOffset? PickUpAt { get; set; }
 
         [Newtonsoft.Json.JsonProperty("statusId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public OrderStatusEnum StatusId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("items", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -1657,6 +1658,7 @@ namespace MalyFarmar.Clients
         public System.DateTimeOffset? PickUpAt { get; set; }
 
         [Newtonsoft.Json.JsonProperty("statusId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public OrderStatusEnum StatusId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("totalPrice", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -1683,11 +1685,14 @@ namespace MalyFarmar.Clients
     public enum OrderStatusEnum
     {
 
-        _1 = 1,
+        [System.Runtime.Serialization.EnumMember(Value = @"Created")]
+        Created = 0,
 
-        _2 = 2,
+        [System.Runtime.Serialization.EnumMember(Value = @"PickUpSet")]
+        PickUpSet = 1,
 
-        _3 = 3,
+        [System.Runtime.Serialization.EnumMember(Value = @"Completed")]
+        Completed = 2,
 
     }
 

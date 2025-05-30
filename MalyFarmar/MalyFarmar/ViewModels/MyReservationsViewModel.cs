@@ -1,9 +1,9 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MalyFarmar.Clients; 
+using MalyFarmar.Clients;
 using MalyFarmar.Services.Interfaces;
 using MalyFarmar.ViewModels.Shared;
-using MalyFarmar.Resources.Strings; 
+using MalyFarmar.Resources.Strings;
 using System.Collections.ObjectModel;
 using MalyFarmar.Pages;
 
@@ -17,13 +17,13 @@ namespace MalyFarmar.ViewModels
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(RefreshCommand))]
         private bool _isBusy = false;
-        
+
         [ObservableProperty]
         private bool _isRefreshing = false;
 
         [ObservableProperty]
         private string? _statusMessage;
-        
+
         private bool CanExecuteRefresh() => !IsBusy;
 
         public ObservableCollection<OrderListViewDto> Reservations { get; }
@@ -40,12 +40,12 @@ namespace MalyFarmar.ViewModels
             ForceDataRefresh = true;
             await base.OnAppearingAsync();
         }
-        
+
         protected override async Task LoadDataAsync()
         {
             await ExecuteLoadReservationsAsync();
         }
-        
+
         [RelayCommand(CanExecute = nameof(CanExecuteRefresh), IncludeCancelCommand = true)]
         private async Task Refresh(CancellationToken cancellationToken)
         {
@@ -75,39 +75,44 @@ namespace MalyFarmar.ViewModels
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 Reservations.Clear();
-                
+
                 var sellerId = _preferencesService.GetCurrentUserId();
+
                 if (sellerId == null)
                 {
                     StatusMessage = MyReservationsPageStrings.StatusCurrentUserError;
+                    return;
+                }
+
+                cancellationToken.ThrowIfCancellationRequested();
+                var ordersListDto = await _apiClient.GetReservationsAsync(sellerId.Value, cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+
+                if (ordersListDto?.Orders != null)
+                {
+                    foreach (var order in ordersListDto.Orders)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        if (order.StatusId != OrderStatusEnum.Completed)
+                        {
+                            Reservations.Add(order);
+                        }
+                    }
+
+                    if (!Reservations.Any())
+                    {
+                        StatusMessage = MyReservationsPageStrings.StatusNoReservations;
+                        return;
+                    }
+
+                    StatusMessage = null;
                 }
                 else
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    var ordersListDto = await _apiClient.GetReservationsAsync(sellerId.Value, cancellationToken);
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    if (ordersListDto?.Orders != null)
-                    {
-                        foreach (var order in ordersListDto.Orders)
-                        {
-                            cancellationToken.ThrowIfCancellationRequested();
-                            
-                            if (order.StatusId != OrderStatusEnum._3)
-                            {
-                                Reservations.Add(order);
-                            }
-                        }
-
-                        if (!Reservations.Any()) StatusMessage = MyReservationsPageStrings.StatusNoReservations;
-                        else StatusMessage = null;
-                    }
-                    else
-                    {
-                        StatusMessage = MyReservationsPageStrings.StatusNoReservationsFoundOrError;
-                    }
-                    StatusMessage = Reservations.Any() ? null : MyReservationsPageStrings.StatusNoReservations;
+                    StatusMessage = MyReservationsPageStrings.StatusNoReservationsFoundOrError;
                 }
+                StatusMessage = Reservations.Any() ? null : MyReservationsPageStrings.StatusNoReservations;
             }
             catch (OperationCanceledException)
             {
@@ -129,7 +134,7 @@ namespace MalyFarmar.ViewModels
                 IsBusy = false;
             }
         }
-        
+
         [RelayCommand]
         private async Task NavigateToHomeAsync()
         {
@@ -137,10 +142,17 @@ namespace MalyFarmar.ViewModels
         }
 
         [RelayCommand(CanExecute = nameof(CanExecuteRefresh))]
-        private async Task GoToReservationDetailAsync(OrderListViewDto order)
+        private async Task GoToReservationDetailAsync(OrderListViewDto? order)
         {
-            if (order == null) return;
-            await Shell.Current.GoToAsync($"{nameof(OrderDetailPage)}?OrderId={order.Id}");
+            if (order == null)
+            {
+                return;
+            }
+
+            await Shell.Current.GoToAsync(nameof(OrderDetailPage), new Dictionary<string, object>
+            {
+                [nameof(OrderDetailViewModel.OrderId)] = order.Id
+            });
         }
     }
 }
