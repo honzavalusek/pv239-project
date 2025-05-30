@@ -870,12 +870,11 @@
       },
       "OrderStatusEnum": {
         "enum": [
-          1,
-          2,
-          3
+          "Created",
+          "PickUpSet",
+          "Completed"
         ],
-        "type": "integer",
-        "format": "int32"
+        "type": "string"
       },
       "OrdersListDto": {
         "type": "object",

@@ -1,8 +1,7 @@
-// ViewModels/OrderDetailViewModel.cs
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MalyFarmar.Clients;
-using MalyFarmar.Messages;
 using MalyFarmar.Resources.Strings;
 using MalyFarmar.ViewModels.Shared;
 
@@ -13,15 +12,14 @@ namespace MalyFarmar.ViewModels
     {
         private readonly ApiClient _apiClient;
 
-        private int _orderId;
         public int OrderId
         {
-            get => _orderId;
+            get;
             set
             {
-                if (SetProperty(ref _orderId, value) && _orderId > 0)
+                if (SetProperty(ref field, value) && field > 0)
                 {
-                     _ = LoadDataAsync();
+                    LoadDataAsync();
                 }
             }
         }
@@ -62,6 +60,8 @@ namespace MalyFarmar.ViewModels
         [ObservableProperty]
         private string? _errorMessage;
 
+        private bool CanExecuteAction() => !IsSubmittingAction && !IsLoadingData && OrderDetail != null;
+
         public OrderDetailViewModel(ApiClient apiClient)
         {
             _apiClient = apiClient;
@@ -74,23 +74,29 @@ namespace MalyFarmar.ViewModels
                 await ExecuteLoadOrderDetailsAsync(CancellationToken.None);
             }
         }
-        
+
         public override async Task OnAppearingAsync()
         {
-            await base.OnAppearingAsync(); 
-            if (OrderDetail != null) 
+            await base.OnAppearingAsync();
+
+            if (OrderDetail == null)
             {
-                UpdateActionVisibilities(); 
-                SetPickUpDateTimeCommand.NotifyCanExecuteChanged();
-                CompleteOrderCommand.NotifyCanExecuteChanged();
-                CancelOrderCommand.NotifyCanExecuteChanged();
+                return;
             }
+
+            UpdateActionVisibilities();
+            SetPickUpDateTimeCommand.NotifyCanExecuteChanged();
+            CompleteOrderCommand.NotifyCanExecuteChanged();
+            CancelOrderCommand.NotifyCanExecuteChanged();
         }
 
 
         private async Task ExecuteLoadOrderDetailsAsync(CancellationToken cancellationToken)
         {
-            if (IsLoadingData || OrderId == 0) return;
+            if (IsLoadingData || OrderId == 0)
+            {
+                return;
+            }
 
             IsLoadingData = true;
             ErrorMessage = null;
@@ -98,19 +104,20 @@ namespace MalyFarmar.ViewModels
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 OrderDetail = await _apiClient.GetOrderAsync(OrderId, cancellationToken);
-                if (OrderDetail != null)
-                {
-                    if (OrderDetail.PickUpAt.HasValue)
-                    {
-                        SelectedPickUpDate = OrderDetail.PickUpAt.Value.Date;
-                        SelectedPickUpTime = OrderDetail.PickUpAt.Value.TimeOfDay;
-                    }
-                    UpdateActionVisibilities();
-                }
-                else
+
+                if (OrderDetail == null)
                 {
                     ErrorMessage = OrderDetailPageStrings.ErrorOrderNotFound;
+                    return;
                 }
+
+                if (OrderDetail.PickUpAt.HasValue)
+                {
+                    SelectedPickUpDate = OrderDetail.PickUpAt.Value.Date;
+                    SelectedPickUpTime = OrderDetail.PickUpAt.Value.TimeOfDay;
+                }
+
+                UpdateActionVisibilities();
             }
             catch (OperationCanceledException)
             {
@@ -135,11 +142,9 @@ namespace MalyFarmar.ViewModels
                 CanCompleteOrder = false;
                 return;
             }
-            CanSetPickUpDate = OrderDetail.StatusId == OrderStatusEnum._1;
-            CanCompleteOrder = OrderDetail.StatusId == OrderStatusEnum._2;
+            CanSetPickUpDate = OrderDetail.StatusId == OrderStatusEnum.Created;
+            CanCompleteOrder = OrderDetail.StatusId == OrderStatusEnum.PickUpSet;
         }
-
-        private bool CanExecuteAction() => !IsSubmittingAction && !IsLoadingData && OrderDetail != null;
 
         [RelayCommand(CanExecute = nameof(CanExecuteAction))]
         private async Task SetPickUpDateTime(CancellationToken cancellationToken) // Method name changed for generated command
@@ -165,8 +170,9 @@ namespace MalyFarmar.ViewModels
                 var dto = new OrderSetPickUpDateDto { PickUpAt = combinedPickUpAt };
                 await _apiClient.SetPickUpDateTimeAsync(OrderId, dto, cancellationToken);
 
-                await Application.Current.MainPage.DisplayAlert(CommonStrings.Success, OrderDetailPageStrings.AlertPickUpSetSuccess, CommonStrings.Ok);
-                CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new ProductListChangedMessage(), cancellationToken);
+                var toast = Toast.Make(OrderDetailPageStrings.AlertPickUpSetSuccess);
+                await toast.Show();
+
                 await ExecuteLoadOrderDetailsAsync(cancellationToken);
             }
             catch (Exception ex) { ErrorMessage = $"{OrderDetailPageStrings.ErrorSettingPickUpTimePrefix}: {ex.Message}"; }
@@ -181,7 +187,7 @@ namespace MalyFarmar.ViewModels
                 ErrorMessage = "Cannot complete this order at its current status.";
                 return;
             }
-            
+
             bool confirm = await Application.Current.MainPage.DisplayAlert(
                 OrderDetailPageStrings.AlertFinishConfirmTitle,
                 OrderDetailPageStrings.AlertFinishConfirmMessage,
@@ -198,10 +204,10 @@ namespace MalyFarmar.ViewModels
             try
             {
                 await _apiClient.SetOrderCompletedAsync(OrderId, cancellationToken);
-                await Application.Current.MainPage.DisplayAlert(CommonStrings.Success,
-                    OrderDetailPageStrings.AlertOrderCompletedSuccess, CommonStrings.Ok);
-                CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new ProductListChangedMessage(),
-                    cancellationToken);
+
+                var toast = Toast.Make(OrderDetailPageStrings.AlertOrderCompletedSuccess);
+                await toast.Show();
+
                 await ExecuteLoadOrderDetailsAsync(cancellationToken);
             }
             catch (Exception ex)
@@ -214,7 +220,7 @@ namespace MalyFarmar.ViewModels
                 await Shell.Current.GoToAsync("..");
             }
         }
-        
+
         [RelayCommand(CanExecute = nameof(CanExecuteAction))]
         private async Task CancelOrder(CancellationToken cancellationToken)
         {
@@ -234,10 +240,10 @@ namespace MalyFarmar.ViewModels
             try
             {
                 await _apiClient.SetOrderCompletedAsync(OrderId, cancellationToken);
-                await Application.Current.MainPage.DisplayAlert(CommonStrings.Success,
-                    OrderDetailPageStrings.AlertCancelCompletedSuccess, CommonStrings.Ok);
-                CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new ProductListChangedMessage(),
-                    cancellationToken);
+
+                var toast = Toast.Make(OrderDetailPageStrings.AlertCancelCompletedSuccess);
+                await toast.Show();
+
                 await ExecuteLoadOrderDetailsAsync(cancellationToken);
             }
             catch (Exception ex)
