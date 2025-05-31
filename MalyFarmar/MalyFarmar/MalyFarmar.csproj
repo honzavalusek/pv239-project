@@ -127,6 +127,11 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>BuyPageStrings.resx</DependentUpon>
       </Compile>
+      <Compile Update="Resources\Strings\CreateOrderPageStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>CreateOrderPageStrings.resx</DependentUpon>
+      </Compile>
       <Compile Update="Resources\Strings\SellPageStrings.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
@@ -220,6 +225,10 @@
       <EmbeddedResource Update="Resources\Strings\BuyPageStrings.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>BuyPageStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Strings\CreateOrderPageStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>CreateOrderPageStrings.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
 

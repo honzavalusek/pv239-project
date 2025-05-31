@@ -136,5 +136,16 @@ namespace MalyFarmar.ViewModels
                 await Shell.Current.GoToAsync("..");
             }
         }
+        
+        [RelayCommand]
+        async Task BuyAsync()
+        {
+            if (Product == null)
+                return;
+
+            // goto create order page 
+            await Shell.Current.GoToAsync(
+                $"{nameof(CreateOrderPage)}?ProductId={Product.Id}");
+        }
     }
 }

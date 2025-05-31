@@ -100,6 +100,7 @@ public static class MauiProgram
         services.AddTransient<AppShell>();
         services.AddTransient<BuyPage>();
         services.AddTransient<OrderDetailPage>();
+        services.AddTransient<CreateOrderViewModel>();
     }
 
     private static void ConfigureConfiguration(MauiAppBuilder builder)
