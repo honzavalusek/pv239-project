@@ -5,7 +5,7 @@ using MalyFarmar.Clients;
 
 namespace MalyFarmar.Converters
 {
-    public class OrderStatusToBoolConverter : BaseConverterOneWay<OrderStatusEnum, bool>
+    public class IsOrderStatusCreatedConverter : BaseConverterOneWay<OrderStatusEnum, bool>
     {
         public override bool DefaultConvertReturnValue { get; set; } = false;
 
