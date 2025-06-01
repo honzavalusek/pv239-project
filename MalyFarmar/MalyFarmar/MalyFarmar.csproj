@@ -162,6 +162,16 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>OrderDetailPageStrings.resx</DependentUpon>
       </Compile>
+      <Compile Update="Resources\Strings\MyOrdersPageStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>MyOrdersPageStrings.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Strings\MyOrderDetailPageStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>MyOrderDetailPageStrings.resx</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -229,6 +239,14 @@
       <EmbeddedResource Update="Resources\Strings\CreateOrderPageStrings.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>CreateOrderPageStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Strings\MyOrdersPageStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>MyOrdersPageStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Strings\MyOrderDetailPageStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>MyOrderDetailPageStrings.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
 

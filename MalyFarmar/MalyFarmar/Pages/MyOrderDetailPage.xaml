@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<sharedPages:BaseContentPage
+    x:Class="MalyFarmar.Pages.MyOrderDetailPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:MalyFarmar.ViewModels"
+    xmlns:sharedPages="clr-namespace:MalyFarmar.Pages.Shared"
+    xmlns:strings="clr-namespace:MalyFarmar.Resources.Strings"
+    xmlns:icons="http://www.aathifmahir.com/dotnet/2022/maui/icons"
+    xmlns:clients="clr-namespace:MalyFarmar.Clients"
+    x:DataType="vm:MyOrderDetailViewModel"
+    Title="{Binding OrderDetail.Id, StringFormat='Order #{0}'}">
+
+    <Grid Margin="10">
+        <!-- Busy overlay -->
+        <ActivityIndicator
+            IsRunning="{Binding IsLoading}"
+            IsVisible="{Binding IsLoading}"
+            VerticalOptions="Center"
+            HorizontalOptions="Center"
+            Color="DarkGray" />
+
+        <!-- Main scrollable content, visible once OrderDetail is non-null -->
+        <ScrollView IsVisible="{Binding OrderDetail, Converter={StaticResource IsNotNullConverter}}">
+            <VerticalStackLayout Spacing="15" Padding="10">
+
+                <!-- Show any error at top -->
+                <Label
+                    Text="{Binding ErrorMessage}"
+                    TextColor="Red"
+                    IsVisible="{Binding ErrorMessage, Converter={StaticResource IsStringNotNullOrEmptyConverter}}"
+                    HorizontalTextAlignment="Center" />
+
+                <!-- Order ID + status -->
+                <Label
+                    Text="{Binding OrderDetail.Id, StringFormat='Order #{0}'}"
+                    FontAttributes="Bold"
+                    FontSize="Title" />
+
+                <Label
+                    Text="{Binding OrderDetail.StatusId, Converter={StaticResource OrderStatusEnumToStringConverter}}"
+                    FontAttributes="Bold"
+                    TextColor="Gray" />
+
+                <Label
+                    Text="{Binding OrderDetail.CreatedAt, StringFormat='Placed on {0:dd.MM.yyyy HH:mm}'}" />
+
+                <!-- Seller info -->
+                <Label
+                    Text="{x:Static strings:MyOrderDetailPageStrings.LabelSeller}"
+                    FontAttributes="Bold" />
+                <Label
+                    Text="{Binding OrderDetail.Seller.FullName}"
+                    IsVisible="{Binding OrderDetail.Seller, Converter={StaticResource IsNotNullConverter}}" />
+                <Label
+                    Text="{Binding OrderDetail.Seller.Email}"
+                    IsVisible="{Binding OrderDetail.Seller, Converter={StaticResource IsNotNullConverter}}" />
+
+                <!-- Buyer info -->
+                <Label
+                    Text="{x:Static strings:MyOrderDetailPageStrings.LabelBuyer}"
+                    FontAttributes="Bold" />
+                <Label
+                    Text="{Binding OrderDetail.Buyer.FullName}"
+                    IsVisible="{Binding OrderDetail.Buyer, Converter={StaticResource IsNotNullConverter}}" />
+                <Label
+                    Text="{Binding OrderDetail.Buyer.Email}"
+                    IsVisible="{Binding OrderDetail.Buyer, Converter={StaticResource IsNotNullConverter}}" />
+
+                <!-- Total price -->
+                <Label
+                    Text="{Binding OrderDetail.TotalPrice, StringFormat='Total Price: {0:C}'}"
+                    FontAttributes="Bold" />
+
+                <!-- Items in this order -->
+                <Label
+                    Text="{x:Static strings:MyOrderDetailPageStrings.LabelItems}"
+                    FontAttributes="Bold" />
+                <CollectionView
+                    ItemsSource="{Binding OrderDetail.Items}"
+                    SelectionMode="None"
+                    HeightRequest="200">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="clients:OrderItemDetailViewDto">
+                            <Frame
+                                Padding="10"
+                                CornerRadius="5"
+                                BorderColor="LightGray"
+                                HasShadow="True"
+                                Margin="0,5">
+                                <Grid
+                                    ColumnDefinitions="*,Auto"
+                                    RowDefinitions="Auto,Auto"
+                                    ColumnSpacing="10">
+                                    
+                                    <Label
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        Text="{Binding Product.Name}"
+                                        FontAttributes="Bold" />
+
+                                    <Label
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        Text="{Binding PricePerUnit, StringFormat='{0:C}'}" />
+
+                                    <Label
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        Text="{Binding Amount, StringFormat='Qty: {0}'}" />
+
+                                    <Label
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Text="{Binding Product.Unit}" />
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Pick-up date, if any -->
+                <Label
+                    Text="{x:Static strings:MyOrderDetailPageStrings.LabelPickUpAt}"
+                    FontAttributes="Bold" />
+                <Label
+                    Text="{Binding OrderDetail.PickUpAt, StringFormat='{0:dd.MM.yyyy HH:mm}'}"
+                    IsVisible="{Binding OrderDetail.PickUpAt, Converter={StaticResource IsNotNullConverter}}" />
+
+                <!-- “Cancel Order” button: only visible if the status is still pending (enum _1) -->
+                <Button
+                    Text="{x:Static strings:MyOrderDetailPageStrings.ButtonCancelOrderText}"
+                    Command="{Binding CancelOrderCommand}"
+                    IsVisible="{Binding OrderDetail.StatusId, Converter={StaticResource CanCancelOrderConverter}}"
+                    HorizontalOptions="FillAndExpand"
+                    Margin="0,20,0,0" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</sharedPages:BaseContentPage>

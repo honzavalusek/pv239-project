@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<sharedPages:BaseContentPage
+    x:Class="MalyFarmar.Pages.MyOrdersPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:MalyFarmar.ViewModels"
+    xmlns:sharedPages="clr-namespace:MalyFarmar.Pages.Shared"
+    xmlns:converters="clr-namespace:MalyFarmar.Converters"
+    xmlns:strings="clr-namespace:MalyFarmar.Resources.Strings"
+    xmlns:icons="http://www.aathifmahir.com/dotnet/2022/maui/icons"
+    xmlns:clients="clr-namespace:MalyFarmar.Clients"
+    x:DataType="vm:MyOrdersPageViewModel"
+    Title="{x:Static strings:MyOrdersPageStrings.PageTitle}">
+
+    <!-- Optional: a Refresh toolbar item -->
+    <sharedPages:BaseContentPage.ToolbarItems>
+        <ToolbarItem
+            Text="{x:Static strings:MyOrdersPageStrings.RefreshButtonText}"
+            IconImageSource="{icons:MaterialOutlined Refresh}"
+            Command="{Binding RefreshCommand}"
+            Order="Primary" />
+    </sharedPages:BaseContentPage.ToolbarItems>
+    
+    <sharedPages:BaseContentPage.Resources>
+        <ResourceDictionary>
+            <converters:OrderStatusToStringConverter x:Key="OrderStatusToStringConverter" /> </ResourceDictionary>
+    </sharedPages:BaseContentPage.Resources>
+
+    <Grid Margin="10">
+        <!-- Busy indicator overlay -->
+        <ActivityIndicator
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
+            VerticalOptions="Center"
+            HorizontalOptions="Center"
+            Color="DarkGray" />
+
+        <!-- Pull-to-refresh + list of orders -->
+        <RefreshView
+            Grid.RowSpan="2"
+            Command="{Binding RefreshCommand}"
+            IsRefreshing="{Binding IsBusy}">
+            
+            <CollectionView
+                ItemsSource="{Binding Orders}"
+                SelectionMode="None">
+
+                <!-- When there are no orders, show a message -->
+                <CollectionView.EmptyView>
+                    <StackLayout
+                        Padding="20"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center">
+                        <Label
+                            Text="{Binding StatusMessage}"
+                            TextColor="Gray"
+                            IsVisible="{Binding StatusMessage, Converter={StaticResource IsStringNotNullOrEmptyConverter}}"
+                            HorizontalTextAlignment="Center" />
+                    </StackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="clients:OrderListViewDto">
+                        <Frame
+                            Padding="10"
+                            Margin="0,5"
+                            CornerRadius="5"
+                            BorderColor="LightGray"
+                            HasShadow="True">
+                            
+                            <Grid
+                                ColumnDefinitions="*,Auto"
+                                RowDefinitions="Auto,Auto"
+                                ColumnSpacing="10"
+                                VerticalOptions="Center">
+
+                                <!-- Left: order summary -->
+                                <VerticalStackLayout Grid.Column="0" Spacing="3">
+                                    <Label
+                                        Text="{Binding Id, StringFormat='Order #{0}'}"
+                                        FontAttributes="Bold" />
+
+                                    <Label
+                                        FontSize="Subtitle"
+                                        Text="{Binding CreatedAt, StringFormat='Placed: {0:dd.MM.yyyy}'}" />
+
+                                    <Label
+                                        Text="{Binding TotalPrice, StringFormat='Total: {0:C}'}" />
+
+                                    <Label
+                                        Text="{Binding StatusId, Converter={StaticResource OrderStatusToStringConverter}}"
+                                        TextColor="Gray" />
+                                </VerticalStackLayout>
+
+                                <!-- Right: “Cancel” button (visible only if status == Pending) -->
+                                <Button
+                                    Text="{x:Static strings:MyOrdersPageStrings.ButtonCancelText}"
+                                    VerticalOptions="Center"
+                                    IsVisible="{Binding StatusId, Converter={StaticResource OrderStatusToStringConverter}}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MyOrdersPageViewModel}}, Path=CancelOrderCommand}"
+                                    CommandParameter="{Binding Id}" />
+                            </Grid>
+
+                            <!-- Tapping the Frame (aside from “Cancel”) navigates to detail -->
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MyOrdersPageViewModel}}, Path=GoToOrderDetailsCommand}"
+                                    CommandParameter="{Binding Id}" />
+                            </Frame.GestureRecognizers>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <!-- If there’s an error message (e.g. “Failed to load”), show it here -->
+        <Label
+            Grid.Row="1"
+            Text="{Binding StatusMessage}"
+            TextColor="Red"
+            IsVisible="{Binding StatusMessage, Converter={StaticResource IsStringNotNullOrEmptyConverter}}"
+            HorizontalTextAlignment="Center"
+            VerticalOptions="Center"
+            HorizontalOptions="Center" />
+    </Grid>
+</sharedPages:BaseContentPage>

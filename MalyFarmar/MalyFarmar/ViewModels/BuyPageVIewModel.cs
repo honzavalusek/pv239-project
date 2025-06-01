@@ -36,6 +36,12 @@ namespace MalyFarmar.ViewModels
             _locationService = locationService;
             AvailableProducts = new ObservableCollection<ProductListViewDto>();
         }
+        
+        public override async Task OnAppearingAsync()
+        {
+            ForceDataRefresh = true;
+            await base.OnAppearingAsync();
+        }
 
         protected override async Task LoadDataAsync()
         {
