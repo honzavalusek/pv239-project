@@ -14,4 +14,34 @@
     <data name="LabelSeller" xml:space="preserve">
         <value>Prodávájící</value>
     </data>
+    <data name="ButtonCancelOrderText" xml:space="preserve">
+        <value>Zrušit objednávku</value>
+    </data>
+    <data name="ErrorFailedToCancelPrefix" xml:space="preserve">
+        <value>Nelze zrušit</value>
+    </data>
+    <data name="ErrorFailedToLoadOrderPrefix" xml:space="preserve">
+        <value>Nelze načíst</value>
+    </data>
+    <data name="ErrorNotBuyer" xml:space="preserve">
+        <value>Žádný kupující</value>
+    </data>
+    <data name="ErrorOrderIdInvalid" xml:space="preserve">
+        <value>Nevalidní objednávka</value>
+    </data>
+    <data name="ErrorOrderNotFound" xml:space="preserve">
+        <value>Objednávka nenalezena</value>
+    </data>
+    <data name="ErrorUnexpectedPrefix" xml:space="preserve">
+        <value>Neočekávaná chyba</value>
+    </data>
+    <data name="LabelItems" xml:space="preserve">
+        <value>Položky</value>
+    </data>
+    <data name="LabelPickUpAt" xml:space="preserve">
+        <value>Datum vyzvednutí</value>
+    </data>
+    <data name="LabelBuyer" xml:space="preserve">
+        <value>Nakupující</value>
+    </data>
 </root>

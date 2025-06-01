@@ -14,4 +14,28 @@
     <data name="PageTitle" xml:space="preserve">
         <value>Moje objednávky</value>
     </data>
+    <data name="ButtonCancelText" xml:space="preserve">
+        <value>Zrušit objednávku</value>
+    </data>
+    <data name="ErrorCurrentUserUnavailable" xml:space="preserve">
+        <value>Uživatel nedostupný</value>
+    </data>
+    <data name="RefreshButtonText" xml:space="preserve">
+        <value>Znovu načíst</value>
+    </data>
+    <data name="StatusFailedToCancelOrderPrefix" xml:space="preserve">
+        <value>Nelze zrušit</value>
+    </data>
+    <data name="StatusFailedToLoadOrdersPrefix" xml:space="preserve">
+        <value>Nelze načíst</value>
+    </data>
+    <data name="StatusLoadingCancelled" xml:space="preserve">
+        <value>Načítání zrušeno</value>
+    </data>
+    <data name="StatusNoOrdersFound" xml:space="preserve">
+        <value>Žádné objednávky nebyly nalezeny</value>
+    </data>
+    <data name="StatusUnexpectedErrorPrefix" xml:space="preserve">
+        <value>Neočekávaná chyba</value>
+    </data>
 </root>

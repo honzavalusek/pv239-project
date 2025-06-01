@@ -20,4 +20,19 @@
     <data name="StatusUnexpectedErrorPrefix" xml:space="preserve">
         <value>Chyba</value>
     </data>
+    <data name="StatusCurrentUserError" xml:space="preserve">
+        <value>Nelze identifikovat aktuálního uživatele.</value>
+    </data>
+    <data name="StatusFailedToLoadProductsPrefix" xml:space="preserve">
+        <value>Nelze načíst produkty</value>
+    </data>
+    <data name="StatusLoadingCancelled" xml:space="preserve">
+        <value>Načítání zrušeno</value>
+    </data>
+    <data name="StatusLocationUnavailable" xml:space="preserve">
+        <value>Načítání nedostupné</value>
+    </data>
+    <data name="StatusNoProductsFound" xml:space="preserve">
+        <value>Žádné produkty nebyly nalezeny</value>
+    </data>
 </root>
