@@ -23,8 +23,12 @@
     
     <sharedPages:BaseContentPage.Resources>
         <ResourceDictionary>
-            <converters:OrderStatusToStringConverter x:Key="OrderStatusToStringConverter" /> </ResourceDictionary>
+            <converters:OrderStatusToStringConverter x:Key="OrderStatusToStringConverter" />
+            <converters:OrderStatusToStringConverter x:Key="OrderStatusToBoolConverter" />
+        </ResourceDictionary>
     </sharedPages:BaseContentPage.Resources>
+    
+    
 
     <Grid Margin="10">
         <!-- Busy indicator overlay -->
@@ -96,7 +100,7 @@
                                 <Button
                                     Text="{x:Static strings:MyOrdersPageStrings.ButtonCancelText}"
                                     VerticalOptions="Center"
-                                    IsVisible="{Binding StatusId, Converter={StaticResource OrderStatusToStringConverter}}"
+                                    IsVisible="{Binding StatusId, Converter={StaticResource OrderStatusToBoolConverter}}"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MyOrdersPageViewModel}}, Path=CancelOrderCommand}"
                                     CommandParameter="{Binding Id}" />
                             </Grid>

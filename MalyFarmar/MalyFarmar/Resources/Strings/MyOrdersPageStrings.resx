@@ -22,27 +22,27 @@
         <value>My Orders</value>
     </data>
     <data name="RefreshButtonText" xml:space="preserve">
-        <value />
+        <value>Refresh</value>
     </data>
     <data name="StatusNoOrdersFound" xml:space="preserve">
-        <value />
+        <value>No orders found</value>
     </data>
     <data name="StatusFailedToLoadOrdersPrefix" xml:space="preserve">
-        <value />
+        <value>Failed to load</value>
     </data>
     <data name="StatusLoadingCancelled" xml:space="preserve">
-        <value />
+        <value>Loading cancelled</value>
     </data>
     <data name="StatusUnexpectedErrorPrefix" xml:space="preserve">
-        <value />
+        <value>Unexpected error</value>
     </data>
     <data name="StatusFailedToCancelOrderPrefix" xml:space="preserve">
-        <value />
+        <value>Failed to cancel</value>
     </data>
     <data name="ErrorCurrentUserUnavailable" xml:space="preserve">
-        <value />
+        <value>Current user unavailable</value>
     </data>
     <data name="ButtonCancelText" xml:space="preserve">
-        <value />
+        <value>Cancel order</value>
     </data>
 </root>
