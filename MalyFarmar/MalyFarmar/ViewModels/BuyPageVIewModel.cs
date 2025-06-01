@@ -48,12 +48,12 @@ namespace MalyFarmar.ViewModels
         {
             await base.LoadDataAsync();
             if (AvailableProducts.Count == 0 || !string.IsNullOrEmpty(StatusMessage))
-                await ExecuteLoadProductsAsync(isRefresh: false);
+                await ExecuteLoadProductsAsync();
         }
 
         [RelayCommand(CanExecute = nameof(CanExecuteLoadOrRefresh), IncludeCancelCommand = true)]
         private async Task LoadProducts(CancellationToken ct)
-            => await ExecuteLoadProductsAsync(isRefresh: false, cancellationToken: ct);
+            => await ExecuteLoadProductsAsync(cancellationToken: ct);
 
         [RelayCommand(CanExecute = nameof(CanExecuteLoadOrRefresh), IncludeCancelCommand = true)]
         private async Task Refresh(CancellationToken ct)
@@ -61,7 +61,7 @@ namespace MalyFarmar.ViewModels
             IsRefreshing = true;
             try
             {
-                await ExecuteLoadProductsAsync(isRefresh: true, cancellationToken: ct);
+                await ExecuteLoadProductsAsync(cancellationToken: ct);
             }
             finally
             {
@@ -69,7 +69,7 @@ namespace MalyFarmar.ViewModels
             }
         }
 
-        private async Task ExecuteLoadProductsAsync(bool isRefresh = false, CancellationToken cancellationToken = default)
+        private async Task ExecuteLoadProductsAsync(CancellationToken cancellationToken = default)
         {
             if (cancellationToken.IsCancellationRequested || IsBusy)
             {

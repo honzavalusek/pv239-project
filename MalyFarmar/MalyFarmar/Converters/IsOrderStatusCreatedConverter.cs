@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 using CommunityToolkit.Maui.Converters;
-using MalyFarmar.Clients;            
+using MalyFarmar.Clients;
 
 namespace MalyFarmar.Converters
 {

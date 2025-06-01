@@ -17,7 +17,10 @@ namespace MalyFarmar.ViewModels
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(LoadOrdersCommand))]
         [NotifyCanExecuteChangedFor(nameof(RefreshCommand))]
-        private bool _isBusy;
+        private bool _isBusy = false;
+
+        [ObservableProperty]
+        private bool _isRefreshing = false;
 
         [ObservableProperty]
         private string? _statusMessage;
@@ -41,7 +44,7 @@ namespace MalyFarmar.ViewModels
             await base.LoadDataAsync();
             if (Orders.Count == 0 || !string.IsNullOrEmpty(StatusMessage))
             {
-                await ExecuteLoadOrdersAsync(isRefresh: false);
+                await ExecuteLoadOrdersAsync();
             }
         }
 
@@ -49,22 +52,34 @@ namespace MalyFarmar.ViewModels
 
         [RelayCommand(CanExecute = nameof(CanExecuteLoadOrRefresh), IncludeCancelCommand = true)]
         private async Task LoadOrders(CancellationToken ct)
-            => await ExecuteLoadOrdersAsync(isRefresh: false, cancellationToken: ct);
+            => await ExecuteLoadOrdersAsync(cancellationToken: ct);
 
         [RelayCommand(CanExecute = nameof(CanExecuteLoadOrRefresh), IncludeCancelCommand = true)]
         private async Task Refresh(CancellationToken ct)
-            => await ExecuteLoadOrdersAsync(isRefresh: true, cancellationToken: ct);
+        {
+            IsRefreshing = true;
+            try
+            {
+                await ExecuteLoadOrdersAsync(cancellationToken: ct);
+            }
+            finally
+            {
+                IsRefreshing = false;
+            }
+        }
 
         /// <summary>
         /// Actually calls GET api/Order/get-orders/{buyerId} to fetch all orders.
         /// </summary>
-        private async Task ExecuteLoadOrdersAsync(bool isRefresh, CancellationToken cancellationToken = default)
+        private async Task ExecuteLoadOrdersAsync(CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested)
+            if (cancellationToken.IsCancellationRequested || IsBusy)
+            {
                 return;
+            }
 
             IsBusy = true;
-            if (!isRefresh) StatusMessage = null;
+            StatusMessage = null;
 
             try
             {
@@ -133,13 +148,17 @@ namespace MalyFarmar.ViewModels
         [RelayCommand]
         private async Task CancelOrderAsync(int orderId)
         {
-            if (IsBusy) return;
+            if (IsBusy)
+            {
+                return;
+            }
+
             IsBusy = true;
 
             try
             {
                 await _apiClient.SetOrderCompletedAsync(orderId);
-                await ExecuteLoadOrdersAsync(isRefresh: false);
+                await ExecuteLoadOrdersAsync();
             }
             catch (ApiException aex)
             {

@@ -43,7 +43,7 @@
         <RefreshView
             Grid.RowSpan="2"
             Command="{Binding RefreshCommand}"
-            IsRefreshing="{Binding IsBusy}">
+            IsRefreshing="{Binding IsRefreshing}">
             
             <CollectionView
                 ItemsSource="{Binding Orders}"
