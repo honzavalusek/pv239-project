@@ -9,7 +9,7 @@ using MalyFarmar.ViewModels.Shared;
 namespace MalyFarmar.ViewModels
 {
     [QueryProperty(nameof(ProductId), nameof(ProductId))]
-    [QueryProperty(nameof(IsBuyMode), "isBuyMode")]
+    [QueryProperty(nameof(IsBuyMode), nameof(IsBuyMode))]
     public partial class ProductDetailViewModel : BaseViewModel
     {
         private readonly ApiClient _apiClient;
@@ -136,7 +136,7 @@ namespace MalyFarmar.ViewModels
                 await Shell.Current.GoToAsync("..");
             }
         }
-        
+
         [RelayCommand]
         async Task BuyAsync()
         {

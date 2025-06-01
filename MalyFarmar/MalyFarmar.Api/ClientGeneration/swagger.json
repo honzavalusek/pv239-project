@@ -1001,6 +1001,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "sellerId": {
+            "type": "integer",
+            "format": "int32"
+          },
           "name": {
             "type": "string",
             "nullable": true
@@ -1030,19 +1034,11 @@
         "additionalProperties": false
       },
       "ProductSearchDto": {
-        "required": [
-          "latitude",
-          "longitude"
-        ],
         "type": "object",
         "properties": {
-          "latitude": {
-            "type": "number",
-            "format": "double"
-          },
-          "longitude": {
-            "type": "number",
-            "format": "double"
+          "userSearchingId": {
+            "type": "integer",
+            "format": "int32"
           },
           "radiusInMeters": {
             "type": "number",

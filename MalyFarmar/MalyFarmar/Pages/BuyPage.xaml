@@ -23,7 +23,7 @@
 
         <RefreshView Grid.Row="1"
                      Command="{Binding RefreshCommand}"
-                     IsRefreshing="{Binding IsBusy}">
+                     IsRefreshing="{Binding IsRefreshing}">
             <CollectionView ItemsSource="{Binding AvailableProducts}"
                             SelectionMode="None">
                                 

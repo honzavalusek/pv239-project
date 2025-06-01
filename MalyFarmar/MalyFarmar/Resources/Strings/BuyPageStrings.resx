@@ -39,4 +39,7 @@
     <data name="StatusLocationUnavailable" xml:space="preserve">
         <value>Location unavailable</value>
     </data>
+    <data name="StatusCurrentUserError" xml:space="preserve">
+        <value>Could not identify current user. Please log in again.</value>
+    </data>
 </root>
