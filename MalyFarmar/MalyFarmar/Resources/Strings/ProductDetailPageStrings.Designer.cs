@@ -116,5 +116,11 @@ namespace MalyFarmar.Resources.Strings {
                 return ResourceManager.GetString("ErrorFailedToLoadDetailsPrefix", resourceCulture);
             }
         }
+        
+        internal static string BuyButtonText {
+            get {
+                return ResourceManager.GetString("BuyButtonText", resourceCulture);
+            }
+        }
     }
 }
