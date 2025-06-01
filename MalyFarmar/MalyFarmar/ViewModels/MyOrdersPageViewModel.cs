@@ -23,7 +23,7 @@ namespace MalyFarmar.ViewModels
         private string? _statusMessage;
 
         // The buyer’s orders come from OrderListViewDto
-        public ObservableCollection<OrderListViewDto> Orders { get; } 
+        public ObservableCollection<OrderListViewDto> Orders { get; }
             = new ObservableCollection<OrderListViewDto>();
 
         public MyOrdersPageViewModel(ApiClient apiClient, IPreferencesService prefs)
@@ -91,8 +91,8 @@ namespace MalyFarmar.ViewModels
                     Orders.Add(o);
                 }
 
-                StatusMessage = Orders.Count > 0 
-                    ? null 
+                StatusMessage = Orders.Count > 0
+                    ? null
                     : MyOrdersPageStrings.StatusNoOrdersFound;
             }
             catch (OperationCanceledException)

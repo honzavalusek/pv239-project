@@ -86,5 +86,11 @@ namespace MalyFarmar.Resources.Strings {
                 return ResourceManager.GetString("StatusLocationUnavailable", resourceCulture);
             }
         }
+        
+        internal static string StatusCurrentUserError {
+            get {
+                return ResourceManager.GetString("StatusCurrentUserError", resourceCulture);
+            }
+        }
     }
 }

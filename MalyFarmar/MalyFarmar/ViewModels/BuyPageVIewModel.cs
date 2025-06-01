@@ -13,30 +13,31 @@ namespace MalyFarmar.ViewModels
     {
         private readonly ApiClient _apiClient;
         private readonly IPreferencesService _preferencesService;
-        private readonly ILocationService _locationService;
         private const double DefaultRadius = 10_000;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(LoadProductsCommand))]
         [NotifyCanExecuteChangedFor(nameof(RefreshCommand))]
-        private bool _isBusy;
+        private bool _isBusy = false;
+
+        [ObservableProperty]
+        private bool _isRefreshing = false;
 
         [ObservableProperty]
         private string? _statusMessage;
 
-        // ← show ProductListViewDto, not ProductSearchDto
-        public ObservableCollection<ProductListViewDto> AvailableProducts { get; } 
+        private bool CanExecuteLoadOrRefresh() => !IsBusy;
 
-        public BuyPageViewModel(ApiClient apiClient, 
-                                IPreferencesService preferencesService,
-                                ILocationService locationService)
+        public ObservableCollection<ProductListViewDto> AvailableProducts { get; }
+
+        public BuyPageViewModel(ApiClient apiClient,
+                                IPreferencesService preferencesService)
         {
             _apiClient = apiClient;
             _preferencesService = preferencesService;
-            _locationService = locationService;
             AvailableProducts = new ObservableCollection<ProductListViewDto>();
         }
-        
+
         public override async Task OnAppearingAsync()
         {
             ForceDataRefresh = true;
@@ -50,45 +51,54 @@ namespace MalyFarmar.ViewModels
                 await ExecuteLoadProductsAsync(isRefresh: false);
         }
 
-        private bool CanExecuteLoadOrRefresh() => !IsBusy;
-
         [RelayCommand(CanExecute = nameof(CanExecuteLoadOrRefresh), IncludeCancelCommand = true)]
         private async Task LoadProducts(CancellationToken ct)
             => await ExecuteLoadProductsAsync(isRefresh: false, cancellationToken: ct);
 
         [RelayCommand(CanExecute = nameof(CanExecuteLoadOrRefresh), IncludeCancelCommand = true)]
         private async Task Refresh(CancellationToken ct)
-            => await ExecuteLoadProductsAsync(isRefresh: true, cancellationToken: ct);
+        {
+            IsRefreshing = true;
+            try
+            {
+                await ExecuteLoadProductsAsync(isRefresh: true, cancellationToken: ct);
+            }
+            finally
+            {
+                IsRefreshing = false;
+            }
+        }
 
         private async Task ExecuteLoadProductsAsync(bool isRefresh = false, CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested)
+            if (cancellationToken.IsCancellationRequested || IsBusy)
+            {
                 return;
+            }
 
             IsBusy = true;
-            if (!isRefresh) StatusMessage = null;
+            StatusMessage = null;
 
             try
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 AvailableProducts.Clear();
-                
-                // 1) get user location
-                var loc = await _locationService.GetCurrentLocationAsync();
-                if (loc == null)
+
+                var currentUserId = _preferencesService.GetCurrentUserId();
+                if (!currentUserId.HasValue)
                 {
-                    StatusMessage = BuyPageStrings.StatusLocationUnavailable;
+                    StatusMessage = BuyPageStrings.StatusCurrentUserError;
                     return;
                 }
-                
-                // 2) build search DTO
+
                 var searchDto = new ProductSearchDto
                 {
-                    Latitude       = loc.Location.Latitude,
-                    Longitude      = loc.Location.Longitude,
+                    UserSearchingId = currentUserId.Value,
                     RadiusInMeters = DefaultRadius
                 };
-                
-                // 3) fetch all nearby products
+
+                cancellationToken.ThrowIfCancellationRequested();
+
                 var allResult = await _apiClient.GetProductsAsync(searchDto);
                 if (allResult?.Products == null)
                 {
@@ -96,17 +106,10 @@ namespace MalyFarmar.ViewModels
                     return;
                 }
 
-                // 4) fetch your products to subtract their IDs
-                var me    = _preferencesService.GetCurrentUserId().Value;
-                var mine  = await _apiClient.GetProductsBySellerAsync(me);
-                var myIds = new HashSet<int>(mine.Products.Select(x => x.Id));
-
-                // 5) show only those NOT in your own list
                 foreach (var p in allResult.Products)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    if (!myIds.Contains(p.Id))
-                        AvailableProducts.Add(p);
+                    AvailableProducts.Add(p);
                 }
 
                 StatusMessage = AvailableProducts.Any()
@@ -131,21 +134,30 @@ namespace MalyFarmar.ViewModels
             }
         }
 
-        // goto product detail with buy button
         [RelayCommand]
         private async Task GoToProductDetailsAsync(ProductListViewDto? product)
         {
-            if (product == null) return;
-            await Shell.Current.GoToAsync(
-                $"{nameof(ProductDetailPage)}?ProductId={product.Id}&isBuyMode=true"
-            );
+            if (product == null)
+            {
+                return;
+            }
+
+            await Shell.Current.GoToAsync(nameof(ProductDetailPage), new Dictionary<string, object>
+            {
+                [nameof(ProductDetailViewModel.ProductId)] = product.Id,
+                [nameof(ProductDetailViewModel.IsBuyMode)] = true
+            });
         }
 
 
         [RelayCommand]
-        private async Task BuyProductAsync(ProductListViewDto product)
+        private async Task BuyProductAsync(ProductListViewDto? product)
         {
-            if (product == null) return;
+            if (product == null)
+            {
+                return;
+            }
+
             await Shell.Current.GoToAsync($"{nameof(BuyPage)}?ProductId={product.Id}");
         }
     }

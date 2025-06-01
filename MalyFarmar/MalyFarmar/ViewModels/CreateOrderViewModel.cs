@@ -13,15 +13,15 @@ namespace MalyFarmar.ViewModels
     {
         private readonly ApiClient _apiClient;
         private readonly IPreferencesService _prefs;
-        
+
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(PlaceOrderCommand))]
         ProductDetailViewDto? _product;
-        
+
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(PlaceOrderCommand))]
         string? _quantityStr;
-        
+
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(PlaceOrderCommand))]
         bool _isSubmitting;
@@ -84,9 +84,9 @@ namespace MalyFarmar.ViewModels
                 var buyerId = _prefs.GetCurrentUserId().Value;
                 var dto = new OrderCreateDto
                 {
-                    BuyerId  = buyerId,
+                    BuyerId = buyerId,
                     PickUpAt = PickUpDate,
-                    Items    = new List<OrderItemCreateDto>
+                    Items = new List<OrderItemCreateDto>
                     {
                         new OrderItemCreateDto
                         {
@@ -98,7 +98,7 @@ namespace MalyFarmar.ViewModels
                 };
 
                 var result = await _apiClient.CreateOrderAsync(dto);
-                
+
                 await Shell.Current.GoToAsync("..");
             }
             catch (ApiException a)
@@ -107,7 +107,7 @@ namespace MalyFarmar.ViewModels
             }
             finally
             {
-                IsSubmitting = false; 
+                IsSubmitting = false;
             }
         }
     }

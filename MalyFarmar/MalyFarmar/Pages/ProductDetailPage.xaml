@@ -67,7 +67,7 @@
                     <Label Text="{Binding Product.Seller.PhoneNumber, TargetNullValue={x:Static strings:ProductDetailPageStrings.ValueNotAvailable}}" /> 
                     
                     <Button
-                        Text="{x:Static strings:ProductDetailPageStrings.DescriptionNotAvailable}"
+                        Text="{x:Static strings:ProductDetailPageStrings.BuyButtonText}"
                         Command="{Binding BuyCommand}"
                         IsVisible="{Binding IsBuyMode}" />
 
