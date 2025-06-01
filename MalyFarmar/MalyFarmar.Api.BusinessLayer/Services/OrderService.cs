@@ -29,20 +29,49 @@ public class OrderService : IOrderService
     {
         var order = orderDto.MapToEntity();
 
-        var addResult = await _context.Orders.AddAsync(order);
-        await _context.SaveChangesAsync();
+        using var transaction = await _context.Database.BeginTransactionAsync();
 
-        await addResult.Reference(o => o.Buyer).LoadAsync();
-        await addResult.Collection(o => o.Items).LoadAsync();
-
-        foreach (var item in addResult.Entity.Items)
+        try
         {
-            await _context.Entry(item).Reference(i => i.Product).LoadAsync();
+            var addResult = await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
 
-            await _context.Entry(item.Product).Reference(p => p.Seller).LoadAsync();
+            foreach (var productBought in addResult.Entity.Items)
+            {
+                var amountBought = productBought.Amount;
+                var item = await _context.Products
+                    .Where(p => p.Id == productBought.ProductId)
+                    .FirstOrDefaultAsync();
+
+                if (item == null || item.RemainingAmount < amountBought)
+                {
+                    throw new InvalidOperationException("Product not found or insufficient stock.");
+                }
+
+                item.RemainingAmount -= amountBought;
+                _context.Products.Update(item);
+            }
+
+            await _context.SaveChangesAsync();
+
+            await addResult.Reference(o => o.Buyer).LoadAsync();
+            await addResult.Collection(o => o.Items).LoadAsync();
+
+            foreach (var item in addResult.Entity.Items)
+            {
+                await _context.Entry(item).Reference(i => i.Product).LoadAsync();
+                await _context.Entry(item.Product).Reference(p => p.Seller).LoadAsync();
+            }
+
+            await transaction.CommitAsync();
+
+            return addResult.Entity.MapToDetailViewDto();
         }
-
-        return addResult.Entity.MapToDetailViewDto();
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 
     public async Task<bool> SetPickUpDateTime(int orderId, OrderSetPickUpDateDto pickUpDateDto)
