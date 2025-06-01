@@ -95,14 +95,6 @@
                                         Text="{Binding StatusId, Converter={StaticResource OrderStatusToStringConverter}}"
                                         TextColor="Gray" />
                                 </VerticalStackLayout>
-
-                                <!-- Right: “Cancel” button (visible only if status == Pending) -->
-                                <Button
-                                    Text="{x:Static strings:MyOrdersPageStrings.ButtonCancelText}"
-                                    VerticalOptions="Center"
-                                    IsVisible="{Binding StatusId, Converter={StaticResource IsOrderStatusCreatedConverter}}"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MyOrdersPageViewModel}}, Path=CancelOrderCommand}"
-                                    CommandParameter="{Binding Id}" />
                             </Grid>
 
                             <!-- Tapping the Frame (aside from “Cancel”) navigates to detail -->

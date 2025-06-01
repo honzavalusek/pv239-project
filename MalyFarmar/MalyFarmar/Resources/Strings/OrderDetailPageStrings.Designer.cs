@@ -248,5 +248,11 @@ namespace MalyFarmar.Resources.Strings {
                 return ResourceManager.GetString("ButtonCancelOrder", resourceCulture);
             }
         }
+        
+        internal static string LabelSellerInfo {
+            get {
+                return ResourceManager.GetString("LabelSellerInfo", resourceCulture);
+            }
+        }
     }
 }

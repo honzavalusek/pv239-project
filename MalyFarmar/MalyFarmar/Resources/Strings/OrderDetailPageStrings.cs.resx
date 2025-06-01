@@ -33,4 +33,7 @@
     <data name="AlertCancelConfirmCancel" xml:space="preserve"><value>Storno</value></data>
     <data name="AlertCancelCompletedSuccess" xml:space="preserve"><value>Objednávka úspěšně zrušena!</value></data>
     <data name="ButtonCancelOrder" xml:space="preserve"><value>Zrušit objednávku</value></data>
+    <data name="LabelSellerInfo" xml:space="preserve">
+        <value>Informace o prodejci</value>
+    </data>
 </root>

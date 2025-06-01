@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MalyFarmar.Clients;
 using MalyFarmar.Resources.Strings;
+using MalyFarmar.Services.Interfaces;
 using MalyFarmar.ViewModels.Shared;
 
 namespace MalyFarmar.ViewModels
@@ -11,6 +12,7 @@ namespace MalyFarmar.ViewModels
     public partial class OrderDetailViewModel : BaseViewModel
     {
         private readonly ApiClient _apiClient;
+        private readonly IPreferencesService _preferencesService;
 
         public int OrderId
         {
@@ -40,6 +42,12 @@ namespace MalyFarmar.ViewModels
         private bool _canCompleteOrder;
 
         [ObservableProperty]
+        private bool _isSellerTheCurrentUser = false;
+
+        [ObservableProperty]
+        private bool _isSellerNotTheCurrentUser = false;
+
+        [ObservableProperty]
         private DateTime _selectedPickUpDate = DateTime.Today.AddDays(1);
 
         [ObservableProperty]
@@ -62,9 +70,12 @@ namespace MalyFarmar.ViewModels
 
         private bool CanExecuteAction() => !IsSubmittingAction && !IsLoadingData && OrderDetail != null;
 
-        public OrderDetailViewModel(ApiClient apiClient)
+        private bool CanExecuteSellerOnlyAction() => CanExecuteAction() && IsSellerTheCurrentUser;
+
+        public OrderDetailViewModel(ApiClient apiClient, IPreferencesService preferencesService)
         {
             _apiClient = apiClient;
+            _preferencesService = preferencesService;
         }
 
         protected override async Task LoadDataAsync()
@@ -117,6 +128,9 @@ namespace MalyFarmar.ViewModels
                     SelectedPickUpTime = OrderDetail.PickUpAt.Value.TimeOfDay;
                 }
 
+                IsSellerTheCurrentUser = _preferencesService.GetCurrentUserId() == OrderDetail.Seller.Id;
+                IsSellerNotTheCurrentUser = !IsSellerTheCurrentUser;
+
                 UpdateActionVisibilities();
             }
             catch (OperationCanceledException)
@@ -142,11 +156,14 @@ namespace MalyFarmar.ViewModels
                 CanCompleteOrder = false;
                 return;
             }
-            CanSetPickUpDate = OrderDetail.StatusId == OrderStatusEnum.Created;
-            CanCompleteOrder = OrderDetail.StatusId == OrderStatusEnum.PickUpSet;
+
+            var currentUserId = _preferencesService.GetCurrentUserId();
+
+            CanSetPickUpDate = OrderDetail.StatusId == OrderStatusEnum.Created && OrderDetail.Seller.Id == currentUserId;
+            CanCompleteOrder = OrderDetail.StatusId == OrderStatusEnum.PickUpSet && OrderDetail.Seller.Id == currentUserId;
         }
 
-        [RelayCommand(CanExecute = nameof(CanExecuteAction))]
+        [RelayCommand(CanExecute = nameof(CanExecuteSellerOnlyAction))]
         private async Task SetPickUpDateTime(CancellationToken cancellationToken) // Method name changed for generated command
         {
             if (!CanSetPickUpDate) // Extra check, though CanExecute should handle
@@ -179,7 +196,7 @@ namespace MalyFarmar.ViewModels
             finally { IsSubmittingAction = false; }
         }
 
-        [RelayCommand(CanExecute = nameof(CanExecuteAction))]
+        [RelayCommand(CanExecute = nameof(CanExecuteSellerOnlyAction))]
         private async Task CompleteOrder(CancellationToken cancellationToken)
         {
             if (!CanCompleteOrder)

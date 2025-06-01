@@ -134,12 +134,10 @@ namespace MalyFarmar.ViewModels
         [RelayCommand]
         private async Task GoToOrderDetailsAsync(int orderId)
         {
-            var route = $"{nameof(MyOrderDetailPage)}";
-            var parameters = new Dictionary<string, object>
+            await Shell.Current.GoToAsync(nameof(OrderDetailPage), new Dictionary<string, object>
             {
-                [nameof(MyOrderDetailViewModel.OrderId)] = orderId
-            };
-            await Shell.Current.GoToAsync(route, parameters);
+                [nameof(OrderDetailViewModel.OrderId)] = orderId
+            });
         }
 
         /// <summary>
