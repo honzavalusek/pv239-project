@@ -50,7 +50,7 @@ public class ProductService : IProductService
         var productsListViewDtos = productsWithinBoundaries
             .Select(p => p.MapToListViewDto(userLocation))
             .Where(p => p.DistanceInMeters <= radiusInMeters)
-            .Where(p => searchDto.UserSearchingId == null || p.SellerId != searchDto.UserSearchingId)
+            .Where(p => p.SellerId != searchDto.UserSearchingId)
             .OrderBy(p => p.DistanceInMeters)
             .ToList();
 

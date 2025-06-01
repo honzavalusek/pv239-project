@@ -84,6 +84,7 @@ public static class MauiProgram
         services.AddTransient<MyReservationsViewModel>();
         services.AddTransient<OrderDetailViewModel>();
         services.AddTransient<MyOrdersPageViewModel>();
+        services.AddTransient<CreateOrderViewModel>();
     }
 
     private static void ConfigurePages(IServiceCollection services)
@@ -101,7 +102,6 @@ public static class MauiProgram
         services.AddTransient<AppShell>();
         services.AddTransient<BuyPage>();
         services.AddTransient<OrderDetailPage>();
-        services.AddTransient<CreateOrderViewModel>();
         services.AddTransient<MyOrdersPage>();
     }
 
