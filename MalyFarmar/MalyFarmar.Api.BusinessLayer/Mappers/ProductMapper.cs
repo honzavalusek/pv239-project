@@ -50,12 +50,13 @@ public static class ProductMapper
         return new ProductListViewDto
         {
             Id = entity.Id,
+            SellerId = entity.SellerId,
             Name = entity.Name,
             RemainingAmount = entity.RemainingAmount,
             Unit = entity.Unit,
             PricePerUnit = entity.PricePerUnit,
             DistanceInMeters = distance,
-            ImageUrl = entity.ImageUrl
+            ImageUrl = entity.ImageUrl,
         };
     }
 

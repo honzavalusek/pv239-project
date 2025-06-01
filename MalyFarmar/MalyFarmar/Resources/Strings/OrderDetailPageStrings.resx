@@ -52,4 +52,7 @@
     <data name="AlertCancelConfirmCancel" xml:space="preserve"><value>Back</value></data>
     <data name="AlertCancelCompletedSuccess" xml:space="preserve"><value>Order canceled successfully!</value></data>
     <data name="ButtonCancelOrder" xml:space="preserve"><value>Cancel Order</value></data>
+    <data name="LabelSellerInfo" xml:space="preserve">
+        <value>Seller Information</value>
+    </data>
 </root>

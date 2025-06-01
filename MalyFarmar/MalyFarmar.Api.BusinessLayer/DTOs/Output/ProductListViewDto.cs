@@ -3,6 +3,7 @@ namespace MalyFarmar.Api.BusinessLayer.DTOs.Output;
 public class ProductListViewDto
 {
     public int Id { get; set; }
+    public int SellerId { get; set; }
     public string Name { get; set; }
     public decimal RemainingAmount { get; set; }
     public string Unit { get; set; }

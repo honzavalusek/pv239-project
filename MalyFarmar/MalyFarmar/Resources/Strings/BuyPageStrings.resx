@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="BuyPageTitle" xml:space="preserve">
+        <value>Browse Offers</value>
+    </data>
+    <data name="StatusNoProductsAvailable" xml:space="preserve">
+        <value>No offers found</value>
+    </data>
+    <data name="StatusUnexpectedErrorPrefix" xml:space="preserve">
+        <value>Error</value>
+    </data>
+    <data name="StatusFailedToLoadProductsPrefix" xml:space="preserve">
+        <value>Failed to load products</value>
+    </data>
+    <data name="StatusLoadingCancelled" xml:space="preserve">
+        <value>Loading cancelled</value>
+    </data>
+    <data name="StatusNoProductsFound" xml:space="preserve">
+        <value>No products found</value>
+    </data>
+    <data name="StatusLocationUnavailable" xml:space="preserve">
+        <value>Location unavailable</value>
+    </data>
+    <data name="StatusCurrentUserError" xml:space="preserve">
+        <value>Could not identify current user. Please log in again.</value>
+    </data>
+</root>

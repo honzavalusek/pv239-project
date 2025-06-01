@@ -9,6 +9,7 @@ using MalyFarmar.ViewModels.Shared;
 namespace MalyFarmar.ViewModels
 {
     [QueryProperty(nameof(ProductId), nameof(ProductId))]
+    [QueryProperty(nameof(IsBuyMode), nameof(IsBuyMode))]
     public partial class ProductDetailViewModel : BaseViewModel
     {
         private readonly ApiClient _apiClient;
@@ -43,6 +44,12 @@ namespace MalyFarmar.ViewModels
         bool _hasError = false;
 
         private bool CanEditProduct() => Product != null && !IsLoading && !HasError && IsCurrentUserTheSeller();
+        public bool IsBuyMode
+        {
+            get;
+            set => SetProperty(ref field, value);
+        }
+
 
         public ProductDetailViewModel(ApiClient apiClient, IPreferencesService preferencesService)
         {
@@ -128,6 +135,17 @@ namespace MalyFarmar.ViewModels
             {
                 await Shell.Current.GoToAsync("..");
             }
+        }
+
+        [RelayCommand]
+        async Task BuyAsync()
+        {
+            if (Product == null)
+                return;
+
+            // goto create order page 
+            await Shell.Current.GoToAsync(
+                $"{nameof(CreateOrderPage)}?ProductId={Product.Id}");
         }
     }
 }

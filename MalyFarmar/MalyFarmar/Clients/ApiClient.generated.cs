@@ -1787,6 +1787,9 @@ namespace MalyFarmar.Clients
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int Id { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("sellerId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int SellerId { get; set; }
+
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Name { get; set; }
 
@@ -1810,11 +1813,8 @@ namespace MalyFarmar.Clients
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class ProductSearchDto
     {
-        [Newtonsoft.Json.JsonProperty("latitude", Required = Newtonsoft.Json.Required.Always)]
-        public double Latitude { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("longitude", Required = Newtonsoft.Json.Required.Always)]
-        public double Longitude { get; set; }
+        [Newtonsoft.Json.JsonProperty("userSearchingId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int UserSearchingId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("radiusInMeters", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? RadiusInMeters { get; set; }

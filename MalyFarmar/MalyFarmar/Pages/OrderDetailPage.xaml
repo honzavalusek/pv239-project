@@ -53,7 +53,8 @@
                         </Label.FormattedText>
                     </Label>
 
-                    <Label VerticalOptions="Center"> <Label.FormattedText>
+                    <Label VerticalOptions="Center">
+                         <Label.FormattedText>
                             <FormattedString>
                                 <Span Text="{x:Static strings:OrderDetailPageStrings.LabelCreatedAt}" FontAttributes="Bold"/>
                                 <Span Text=" "/> <Span Text="{Binding OrderDetail.CreatedAt, StringFormat='{0:g}'}"/>
@@ -61,11 +62,53 @@
                         </Label.FormattedText>
                     </Label>
                     
-                    <BoxView HeightRequest="1" BackgroundColor="LightGray" Margin="0,10,0,5"/>
-                    <Label Text="{x:Static strings:OrderDetailPageStrings.LabelBuyerInfo}" FontSize="Medium" FontAttributes="Bold"/>
-                    <Label Text="{Binding OrderDetail.Buyer.FullName, TargetNullValue='N/A'}" />
-                    <Label Text="{Binding OrderDetail.Buyer.Email, TargetNullValue='N/A'}" />
-                    <Label Text="{Binding OrderDetail.Buyer.PhoneNumber, TargetNullValue='N/A'}" />
+                    <VerticalStackLayout IsVisible="{Binding IsSellerTheCurrentUser}">
+                        <BoxView HeightRequest="1" BackgroundColor="LightGray" Margin="0,10,0,5"/>
+                        <Label Text="{x:Static strings:OrderDetailPageStrings.LabelBuyerInfo}" FontSize="Medium" FontAttributes="Bold"/>
+                        <Label Text="{Binding OrderDetail.Buyer.FullName, TargetNullValue='N/A'}" />
+                        <Label Text="{Binding OrderDetail.Buyer.Email, TargetNullValue='N/A'}" />
+                        <Label Text="{Binding OrderDetail.Buyer.PhoneNumber, TargetNullValue='N/A'}" />
+                        
+                        <Label VerticalOptions="Center"> <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Longitude: " />
+                                    <Span Text="{Binding OrderDetail.Buyer.UserLongitude, TargetNullValue='N/A'}"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        
+                        <Label VerticalOptions="Center"> <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Latitude: " />
+                                    <Span Text="{Binding OrderDetail.Buyer.UserLatitude, TargetNullValue='N/A'}"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </VerticalStackLayout>
+                    
+                    <VerticalStackLayout IsVisible="{Binding IsSellerNotTheCurrentUser}">
+                        <BoxView HeightRequest="1" BackgroundColor="LightGray" Margin="0,10,0,5"/>
+                        <Label Text="{x:Static strings:OrderDetailPageStrings.LabelSellerInfo}" FontSize="Medium" FontAttributes="Bold"/>
+                        <Label Text="{Binding OrderDetail.Seller.FullName, TargetNullValue='N/A'}" />
+                        <Label Text="{Binding OrderDetail.Seller.Email, TargetNullValue='N/A'}" />
+                        <Label Text="{Binding OrderDetail.Seller.PhoneNumber, TargetNullValue='N/A'}" />
+                        
+                        <Label VerticalOptions="Center"> <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Longitude: " />
+                                    <Span Text="{Binding OrderDetail.Seller.UserLongitude, TargetNullValue='N/A'}"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        
+                        <Label VerticalOptions="Center"> <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Latitude: " />
+                                    <Span Text="{Binding OrderDetail.Seller.UserLatitude, TargetNullValue='N/A'}"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </VerticalStackLayout>
 
                     <BoxView HeightRequest="1" BackgroundColor="LightGray" Margin="0,10,0,5"/>
                     <Label Text="{x:Static strings:OrderDetailPageStrings.LabelItems}" FontSize="Medium" FontAttributes="Bold"/>

@@ -28,7 +28,15 @@ public class ProductService : IProductService
 
     public async Task<ProductsListDto> GetProducts(ProductSearchDto searchDto)
     {
-        Coordinate userLocation = new Coordinate(searchDto.Latitude, searchDto.Longitude);
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Id == searchDto.UserSearchingId);
+
+        if (user == null || user.LocationLatitude == null || user.LocationLongitude == null)
+        {
+            throw new InvalidOperationException("User location is not set.");
+        }
+
+        Coordinate userLocation = new Coordinate(user.LocationLatitude.Value, user.LocationLongitude.Value);
         double radiusInMeters = searchDto.RadiusInMeters ?? 10_000;
 
         var boundaries = new CoordinateBoundaries(userLocation.Latitude, userLocation.Longitude, radiusInMeters, DistanceUnit.Meters);
@@ -42,6 +50,7 @@ public class ProductService : IProductService
         var productsListViewDtos = productsWithinBoundaries
             .Select(p => p.MapToListViewDto(userLocation))
             .Where(p => p.DistanceInMeters <= radiusInMeters)
+            .Where(p => p.SellerId != searchDto.UserSearchingId)
             .OrderBy(p => p.DistanceInMeters)
             .ToList();
 

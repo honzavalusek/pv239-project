@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
+        <TargetFrameworks>net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
         <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
         <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
         <!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
@@ -122,6 +122,16 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>HomePageStrings.resx</DependentUpon>
       </Compile>
+      <Compile Update="Resources\Strings\BuyPageStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>BuyPageStrings.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Strings\CreateOrderPageStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>CreateOrderPageStrings.resx</DependentUpon>
+      </Compile>
       <Compile Update="Resources\Strings\SellPageStrings.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
@@ -152,6 +162,11 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>OrderDetailPageStrings.resx</DependentUpon>
       </Compile>
+      <Compile Update="Resources\Strings\MyOrdersPageStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>MyOrdersPageStrings.resx</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -176,7 +191,6 @@
         <LastGenOutput>CreateUserPageStrings.Designer.cs</LastGenOutput>
       </EmbeddedResource>
       <EmbeddedResource Include="appsettings.json" />
-      <EmbeddedResource Include="appsettings.Development.json" />
       <EmbeddedResource Update="Resources\Strings\LocationStrings.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>LocationStrings.Designer.cs</LastGenOutput>
@@ -212,6 +226,18 @@
       <EmbeddedResource Update="Resources\Strings\OrderDetailPageStrings.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>OrderDetailPageStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Strings\BuyPageStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>BuyPageStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Strings\CreateOrderPageStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>CreateOrderPageStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Strings\MyOrdersPageStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>MyOrdersPageStrings.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
 

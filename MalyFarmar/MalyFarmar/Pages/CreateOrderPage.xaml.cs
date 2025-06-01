@@ -3,9 +3,9 @@ using MalyFarmar.Pages.Shared;
 
 namespace MalyFarmar.Pages
 {
-    public partial class BuyPage : BaseContentPage
+    public partial class CreateOrderPage : BaseContentPage
     {
-        public BuyPage(BuyPageViewModel viewModel) : base(viewModel)
+        public CreateOrderPage(CreateOrderViewModel viewModel) : base(viewModel)
         {
             InitializeComponent();
         }

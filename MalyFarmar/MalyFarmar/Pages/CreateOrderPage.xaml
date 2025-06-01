@@ -1,0 +1,33 @@
+<shared:BaseContentPage 
+    x:Class="MalyFarmar.Pages.CreateOrderPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:MalyFarmar.ViewModels"
+    xmlns:strings="clr-namespace:MalyFarmar.Resources.Strings"
+    xmlns:shared="clr-namespace:MalyFarmar.Pages.Shared"
+    x:DataType="vm:CreateOrderViewModel"
+    Title="{x:Static strings:CreateOrderPageStrings.Title}">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+            
+            <Label Text="{Binding Product.Name}" FontSize="Title" FontAttributes="Bold"/>
+            <Label Text="{Binding Product.PricePerUnit, StringFormat='Price: {0:C}'}"/>
+            
+            <Label Text="{x:Static strings:CreateOrderPageStrings.LabelQuantity}" />
+            <Entry Text="{Binding QuantityStr}" Keyboard="Numeric" Placeholder="0"/>
+            
+            <Label Text="{x:Static strings:CreateOrderPageStrings.LabelPickUpAt}" />
+            <DatePicker Date="{Binding PickUpDate}" />
+            
+            <Button
+                Text="{x:Static strings:CreateOrderPageStrings.PlaceOrderButton}"
+                Command="{Binding PlaceOrderCommand}"
+                IsEnabled="{Binding CanPlaceOrder}"
+            />
+      
+            <Label Text="{Binding ErrorMessage}" 
+                   TextColor="Red"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource IsStringNotNullOrEmptyConverter}}"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</shared:BaseContentPage>

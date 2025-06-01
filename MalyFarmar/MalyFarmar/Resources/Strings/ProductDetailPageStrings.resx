@@ -50,4 +50,7 @@
     <data name="ErrorFailedToLoadDetailsPrefix" xml:space="preserve">
         <value>Failed to load product details</value>
         </data>
+    <data name="BuyButtonText" xml:space="preserve">
+        <value>Buy</value>
+    </data>
 </root>

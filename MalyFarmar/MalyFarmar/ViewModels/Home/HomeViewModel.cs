@@ -47,9 +47,7 @@ public partial class HomeViewModel : BaseViewModel
     [RelayCommand]
     private async Task NavigateToMyOrdersAsync()
     {
-        // TODO: Implement navigation to My Orders page
-        var toast = Toast.Make("TODO: Implement Me!");
-        await toast.Show();
+        await Shell.Current.GoToAsync(nameof(MyOrdersPage));
     }
 
     [RelayCommand]
