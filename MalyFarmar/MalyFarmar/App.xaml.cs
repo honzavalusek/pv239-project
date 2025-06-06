@@ -39,4 +39,9 @@ public partial class App : Application
             _mainWindow.Page = _appShell;
         }
     }
+    
+    public void SwitchToLogin()
+    {
+        MainPage = _loginPage;
+    }
 }

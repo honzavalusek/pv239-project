@@ -41,6 +41,17 @@ public partial class ProfileViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private async Task Logout()
+    {
+        _preferencesService.UnsetCurrentUserId();
+        
+        if (Application.Current is App app)
+        {
+            app.SwitchToLogin();
+        }
+    }
+
+    [RelayCommand]
     private async Task SetLocationAsync()
     {
         var locationResult = await _locationService.GetCurrentLocationAsync();

@@ -113,6 +113,10 @@
                               HorizontalOptions="FillAndExpand" />
                    </VerticalStackLayout>
                </Border>
+               <Button
+                      Text="{x:Static strings:ProfilePageStrings.LogoutText}"
+                      Command="{Binding LogoutCommand}"
+                      HorizontalOptions="FillAndExpand" />
            </VerticalStackLayout>
        </ScrollView>
 </sharedPages:BaseContentPage>

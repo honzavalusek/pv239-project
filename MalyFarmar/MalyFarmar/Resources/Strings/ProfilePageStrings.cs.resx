@@ -44,4 +44,7 @@
     <data name="LatitudeLabel" xml:space="preserve">
         <value>Zeměpisná šířka:</value>
     </data>
+    <data name="LogoutText" xml:space="preserve">
+        <value>Odhlásit se</value>
+    </data>
 </root>
