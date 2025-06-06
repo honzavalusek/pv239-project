@@ -13,8 +13,9 @@ public partial class App : Application
     private Window? _mainWindow = null;
     private readonly AppShell _appShell;
     private readonly LoginPage _loginPage;
+    private readonly LoginViewModel _loginViewModel;
 
-    public App(IOptions<ApiOptions> apiOptions, AppShell appShell, LoginPage loginPage)
+    public App(IOptions<ApiOptions> apiOptions, AppShell appShell, LoginPage loginPage, LoginViewModel loginViewModel)
     {
         InitializeComponent();
 
@@ -23,6 +24,7 @@ public partial class App : Application
 
         _appShell = appShell;
         _loginPage = loginPage;
+        _loginViewModel = loginViewModel; 
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
@@ -40,8 +42,9 @@ public partial class App : Application
         }
     }
     
-    public void SwitchToLogin()
+    public async void SwitchToLogin()
     {
+        await _loginViewModel.ResetStateAsync();
         MainPage = _loginPage;
     }
 }
