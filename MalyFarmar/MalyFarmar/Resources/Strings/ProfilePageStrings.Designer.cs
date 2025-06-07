@@ -110,5 +110,11 @@ namespace MalyFarmar.Resources.Strings {
                 return ResourceManager.GetString("LongitudeLabel", resourceCulture);
             }
         }
+        
+        internal static string LogoutText {
+            get {
+                return ResourceManager.GetString("LogoutText", resourceCulture);
+            }
+        }
     }
 }

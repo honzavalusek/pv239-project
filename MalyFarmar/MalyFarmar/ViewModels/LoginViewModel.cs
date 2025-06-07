@@ -57,7 +57,11 @@ namespace MalyFarmar.ViewModels
             try
             {
                 var usersList = await _apiClient.GetAllUsersAsync();
+                SelectedUser = null;
                 Users.Clear();
+        
+                _preferencesService.UnsetCurrentUserId();
+                Console.WriteLine($"DEEEBUUUUGGGG: preferences current user: {_preferencesService.GetCurrentUserId()}");
                 if (usersList?.Users == null)
                 {
                     return;
@@ -77,6 +81,16 @@ namespace MalyFarmar.ViewModels
             {
                 IsBusy = false;
             }
+        }
+        
+        public async Task ResetStateAsync()
+        {
+            SelectedUser = null;
+            Users.Clear();
+        
+            _preferencesService.UnsetCurrentUserId();
+
+            await LoadDataAsync();
         }
 
         [RelayCommand(CanExecute = nameof(CanSignIn))]

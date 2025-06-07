@@ -26,6 +26,13 @@ public partial class ProfileViewModel : BaseViewModel
         _locationService = locationService;
     }
 
+    public override async Task OnAppearingAsync()
+    {
+        Console.WriteLine($"current user: {_preferencesService.GetCurrentUserId()}");
+        ForceDataRefresh = true;
+        await base.OnAppearingAsync();
+    }
+    
     protected override async Task LoadDataAsync()
     {
         var currentUserId = _preferencesService.GetCurrentUserId() ?? throw new Exception("User ID not found");
@@ -38,6 +45,17 @@ public partial class ProfileViewModel : BaseViewModel
         }
 
         Model = fetched.ToProfileDetailModel();
+    }
+
+    [RelayCommand]
+    private async Task Logout()
+    {
+        _preferencesService.UnsetCurrentUserId();
+        
+        if (Application.Current is App app)
+        {
+            app.SwitchToLogin();
+        }
     }
 
     [RelayCommand]
